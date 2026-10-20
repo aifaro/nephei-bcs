@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Combate · BCS Referencia</title>
+  <meta name="description" content="Los cinco tipos de combate del Battalion Combat Series v2.0: ataque regular, ataque de choque, enfrentamiento, ataque por fuego y bombardeo. Quién puede, contra qué y qué cuesta.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bcs.css">
+  <style>
+    .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .elegir { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; }
+    @media (max-width: 960px) { .elegir { grid-template-columns: 1fr; } }
+    .elegir h3 { font-size: .78rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+    .opciones-lista { display: grid; gap: 6px; }
+    .opciones-lista button { display: flex; align-items: center; gap: 12px; text-align: left; padding: 8px 10px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-size: .9rem; cursor: pointer; }
+    .opciones-lista button svg { width: 40px; height: 40px; flex: none; }
+    .opciones-lista button[aria-pressed="true"] { border-color: var(--amber); background: var(--amber-soft); color: var(--heading); }
+    .veredictos { display: grid; gap: 8px; }
+    .vd { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 10px 12px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); }
+    .vd .i { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-weight: 800; font-size: .8rem; }
+    .vd.si .i { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); }
+    .vd.no { opacity: .62; }
+    .vd.no .i { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
+    .vd strong { color: var(--heading); }
+    .vd p { margin: 2px 0 0; font-size: .84rem; color: var(--muted); }
+    .ataque { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 28px; }
+    @media (max-width: 900px) { .ataque { grid-template-columns: 1fr; } }
+    .ficha-tec { position: sticky; top: 90px; align-self: start; }
+    @media (max-width: 900px) { .ficha-tec { position: static; } }
+    .ficha-tec dl { margin: 0; display: grid; gap: 10px; }
+    .ficha-tec dt { font: 700 .68rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+    .ficha-tec dd { margin: 2px 0 0; color: var(--heading); font-size: .93rem; }
+    .ficha-tec .boton { margin-top: 16px; width: 100%; }
+    .num-ataque { font: 700 .78rem var(--mono); color: var(--amber); letter-spacing: .1em; }
+    .secuencia-at { list-style: none; counter-reset: s; padding: 0; margin: 0 0 1em; display: grid; gap: 6px; }
+    .secuencia-at li { counter-increment: s; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; font-size: .95rem; }
+    .secuencia-at li::before { content: counter(s); width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 .8rem var(--mono); }
+    .ejemplo { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin: 1em 0; }
+    .ejemplo h4 { font-size: .8rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--amber); margin-bottom: 8px; }
+    .ejemplo .cuenta { display: grid; grid-template-columns: 1fr auto; gap: 2px 14px; font-size: .9rem; }
+    .ejemplo .cuenta .v { font-family: var(--mono); font-weight: 700; text-align: right; }
+    .ejemplo .cuenta .t { border-top: 1px dashed var(--border-strong); padding-top: 4px; margin-top: 2px; font-weight: 600; color: var(--heading); }
+    .flujo { display: grid; gap: 12px; }
+    .flujo .caso { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface); }
+    @media (max-width: 720px) { .flujo .caso { grid-template-columns: 1fr; } }
+    .flujo .caso > div:first-child { padding: 14px 16px; background: var(--surface-3); font-family: var(--head); font-weight: 600; color: var(--heading); display: flex; align-items: center; gap: 10px; }
+    .flujo .caso > div:first-child::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--red); flex: none; }
+    .flujo .ramas { display: grid; }
+    .flujo .rama { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; padding: 10px 16px; border-top: 1px solid var(--border); font-size: .92rem; }
+    .flujo .rama:first-child { border-top: 0; }
+    .flujo .rama .efecto { color: var(--blue); font-weight: 600; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Combate</span>
+      <h1>Cinco maneras de combatir</h1>
+      <p class="lead">En el BCS no hay una única tabla de combate. Cada herramienta tiene su tabla, sus requisitos y su coste, y las unidades no pueden usarlas todas. Aprender a combinarlas es aprender a jugar.</p>
+      <nav class="indice" aria-label="En esta página">
+        <a class="chip" href="#elegir">¿Qué ataque uso?</a>
+        <a class="chip chip--amber" href="#regular">Ataque regular</a>
+        <a class="chip chip--amber" href="#choque">Ataque de choque</a>
+        <a class="chip chip--red" href="#enfrentamiento">Enfrentamiento</a>
+        <a class="chip chip--red" href="#fuego">Ataque por fuego</a>
+        <a class="chip chip--olive" href="#bombardeo">Bombardeo</a>
+        <a class="chip" href="#retiradas">Retiradas</a>
+        <a class="chip" href="#detencion">Stopping Engagements</a>
+      </nav>
+    </div>
+  </section>
+
+  <section class="seccion" id="elegir">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Elegir herramienta</span><h2>¿Qué ataque uso?</h2></div>
+        <p>Elige tu unidad y lo que hay en el hex enemigo. Te dice qué puedes hacer y qué no, según el Unit Capabilities Chart y los requisitos de cada ataque.</p>
+      </div>
+      <div class="elegir">
+        <div class="tarjeta tarjeta--plana"><h3>Mi unidad</h3><div class="opciones-lista" id="el-unidad"></div></div>
+        <div class="tarjeta tarjeta--plana"><h3>El hex enemigo</h3><div class="opciones-lista" id="el-blanco"></div></div>
+        <div class="tarjeta tarjeta--plana"><h3>Puedes…</h3><div class="veredictos" id="el-res"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="regular">
+    <div class="wrap ataque">
+      <aside class="tarjeta ficha-tec">
+        <span class="num-ataque">01 · REGULAR ATTACK</span>
+        <h2 style="margin-top:6px">Ataque regular</h2>
+        <dl>
+          <div><dt>Quién</dt><dd>Unidades con flecha de asalto (infantería y Dual)</dd></div>
+          <div><dt>Contra</dt><dd>Cualquier hex enemigo adyacente</dd></div>
+          <div><dt>Tabla</dt><dd>Combat Table · 2d6 + DRM</dd></div>
+          <div><dt>Coste</dt><dd>No gasta Fire Events, pero atacante y asistente quedan FINISHED</dd></div>
+          <div><dt>Artillería</dt><dd>Hasta 3 puntos (destrucción) o 1 de supresión (+2)</dd></div>
+          <div><dt>Regla</dt><dd><span class="regla">5.1</span></dd></div>
+        </dl>
+        <a class="boton boton--primario" href="simulador.html">Probarlo en el simulador</a>
+      </aside>
+      <div>
+        <p>El asalto de toda la vida: un batallón, con su artillería y una unidad de asistencia, intenta echar al enemigo de un hex. Es la única forma de que la infantería a pie haga daño por sí misma, y la que mejor conquista terreno.</p>
+        <h3>Secuencia de ataque <span class="regla">5.1b</span></h3>
+        <ol class="secuencia-at">
+          <li>El atacante declara el ataque y el hex defensor.</li>
+          <li>El defensor anuncia si puede usar la Prepared Defense.</li>
+          <li>El defensor elige qué unidad da su Action Rating.</li>
+          <li>El atacante elige la unidad atacante y, si quiere, una asistencia.</li>
+          <li>El atacante ejecuta el bombardeo, si lo hay.</li>
+          <li>Se calcula el DRM neto: AR del atacante y sus modificadores, menos los del defensor.</li>
+          <li>Se tiran 2d6 en el Combat Table.</li>
+          <li>Se aplican las pérdidas, las retiradas y el avance.</li>
+        </ol>
+        <h3>Requisitos</h3>
+        <ul class="rombos">
+          <li>La unidad atacante tiene flecha de asalto, está adyacente, podría entrar en el hex moviendo, tiene MA mayor que 0 y no está FINISHED ni sobreapilada. Puede estar STOPPED.</li>
+          <li>El hex defensor está en una OBJ Zone. El radio de mando no limita los ataques.</li>
+          <li>Un hex solo puede recibir <strong>un</strong> ataque regular por fase (pero si se retira, se le puede volver a atacar con otras unidades).</li>
+          <li>La asistencia (máximo una) tiene flecha de asalto o AV a la vista, es adyacente al defensor y al atacante (o está apilada con él), y da <strong>+1</strong>.</li>
+        </ul>
+        <div class="ejemplo">
+          <h4>Ejemplo de cálculo</h4>
+          <div class="cuenta">
+            <span>Infantería atacante, AR</span><span class="v">3</span>
+            <span>Apoyo Red AV de su formación</span><span class="v drm--pos">+1</span>
+            <span>Bombardeo de supresión</span><span class="v drm--pos">+2</span>
+            <span>Asistencia de un batallón de tanques</span><span class="v drm--pos">+1</span>
+            <span class="t">Total del atacante</span><span class="v t">7</span>
+            <span>Infantería defensora, AR</span><span class="v">3</span>
+            <span>En Prepared Defense, en un bosque (Terrain)</span><span class="v drm--pos">+1 +1</span>
+            <span class="t">Total del defensor</span><span class="v t">5</span>
+            <span class="t" style="color:var(--amber)">DRM neto: 7 − 5</span><span class="v t" style="color:var(--amber)">+2</span>
+          </div>
+        </div>
+        <h3>Lo que puede salir</h3>
+        <ul class="rombos">
+          <li><strong>A1, A2</strong>: el atacante pierde pasos, siempre de la unidad atacante (nunca del apoyo ni de la asistencia).</li>
+          <li><strong>[A1]</strong>: pierde un paso solo si el defensor está en Prepared Defense.</li>
+          <li><strong>D1, D2</strong>: el defensor pierde pasos, el primero de la unidad que dio el AR.</li>
+          <li><strong>Situacional</strong>: retirada de 3 hexes, o, si el defensor está en Prepared Defense o en Key Terrain, se queda pero cada unidad pierde un paso.</li>
+          <li><strong>Retreat</strong>: retirada automática; la infantería a pie vuelve junto a su HQ.</li>
+          <li>Si el hex queda vacío, la unidad atacante <strong>debe</strong> avanzar. La asistencia solo puede hacerlo si estaba apilada con ella.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="choque">
+    <div class="wrap ataque">
+      <aside class="tarjeta ficha-tec">
+        <span class="num-ataque">02 · SHOCK ATTACK</span>
+        <h2 style="margin-top:6px">Ataque de choque</h2>
+        <dl>
+          <div><dt>Quién</dt><dd>Una sola unidad con MA táctico: flecha de asalto, Red AV, Light AV o de ruptura</dd></div>
+          <div><dt>Contra</dt><dd>Un hex sin ningún AV, ni real ni de apoyo, que cueste 3 MP o menos</dd></div>
+          <div><dt>Tabla</dt><dd>Combat Table · 2d6 + DRM</dd></div>
+          <div><dt>Coste</dt><dd>1 Fire Event. No deja FINISHED</dd></div>
+          <div><dt>Artillería</dt><dd>Máximo 1 punto: supresión +1 o destrucción</dd></div>
+          <div><dt>Regla</dt><dd><span class="regla">5.1k · 5.1m</span></dd></div>
+        </dl>
+        <a class="boton boton--primario" href="simulador.html">Probarlo en el simulador</a>
+      </aside>
+      <div>
+        <p>La blitzkrieg en una ficha: un mecanizado aprovecha su blindaje y su velocidad para arrollar una posición sin defensa contracarro y <strong>sigue moviendo</strong> después. Si gana, avanza al hex gratis; si falla y le quedan MP y un Fire Event, puede intentarlo otra vez contra el mismo hex.</p>
+        <h3>Diferencias con el ataque regular</h3>
+        <ul class="rombos">
+          <li>Se puede atacar el mismo hex con choques todas las veces que se pueda, incluso con la misma unidad.</li>
+          <li>No admite asistencia. La unidad no puede estar STOPPED y necesita al menos 1 MP y 1 Fire Event.</li>
+          <li>La supresión da +1 (no +2). Si la propia unidad hizo antes un ataque por fuego contra ese hex y le queda un Fire Event, suma otro +1.</li>
+          <li>Un AV de ruptura suma +2; un Hard Red AV, +1 (solo uno de los dos).</li>
+          <li>Cada nuevo choque empieza con los modificadores a cero: hay que volver a ganárselos.</li>
+          <li>Tener apoyo protege: un hex con cualquier AV, aunque sea de apoyo, no puede recibir choques.</li>
+        </ul>
+        <p class="nota">El choque es para explotar huecos, no para romper frentes. Contra un hex con un cañón contracarro, aunque sea en apoyo, hay que quitarle antes el apoyo con un <a href="#enfrentamiento">enfrentamiento</a> (resultado Drop) o atacar de forma regular.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="enfrentamiento">
+    <div class="wrap ataque">
+      <aside class="tarjeta ficha-tec">
+        <span class="num-ataque">03 · ENGAGEMENT</span>
+        <h2 style="margin-top:6px">Enfrentamiento</h2>
+        <dl>
+          <div><dt>Quién</dt><dd>Unidades AV reales, salvo Light AV y unidades en Screen</dd></div>
+          <div><dt>Contra</dt><dd>Una unidad AV o el apoyo de un host, dentro del alcance</dd></div>
+          <div><dt>Tabla</dt><dd>Engagement Table · 2d6 + DRM</dd></div>
+          <div><dt>Coste</dt><dd>1 Fire Event. No cuesta MP</dd></div>
+          <div><dt>OBJ Zone</dt><dd>No hace falta</dd></div>
+          <div><dt>Regla</dt><dd><span class="regla">5.2</span></dd></div>
+        </dl>
+        <a class="boton boton--primario" href="simulador.html">Probarlo en el simulador</a>
+      </aside>
+      <div>
+        <p>Blindados contra blindados. No conquista terreno: sirve para destruir AV enemigos, para quitarle el apoyo a un hex (y abrirlo a tus choques) y para librarse de una ZOC blindada que te ha detenido. Se puede hacer en cualquier momento del movimiento y seguir moviendo después, si quedan Fire Events.</p>
+        <h3>Cómo se calcula</h3>
+        <p>Cada bando suma su <strong>AV + Action Rating</strong>. Si el blanco es un apoyo, se usa el AV del apoyo y el AR del host. El DRM neto es tirador menos blanco.</p>
+        <div class="tabla-wrap" style="margin-bottom:1em"><table class="t">
+          <thead><tr><th>Modificador</th><th class="num">DRM</th><th>Aplica a</th></tr></thead>
+          <tbody>
+            <tr><td>Blanco en Double OBJ Zone</td><td class="num drm--pos">+1</td><td>Tirador</td></tr>
+            <tr><td>El tirador es Limited AV</td><td class="num drm--neg">−1</td><td>Tirador</td></tr>
+            <tr><td>Prepared Defense y/o varios apoyos al alcance</td><td class="num drm--pos">+1</td><td>Blanco</td></tr>
+            <tr><td>Blanco Stand Off que no está en apoyo</td><td class="num drm--pos">+1</td><td>Blanco</td></tr>
+          </tbody>
+        </table></div>
+        <h3>Alcance</h3>
+        <ul class="rombos">
+          <li>El blanco tiene que estar dentro del alcance del <strong>tirador</strong>; si no, no hay disparo.</li>
+          <li>Si el tirador está fuera del alcance del <strong>blanco</strong>, se ignoran los resultados contra el tirador. Por eso los cañones largos son tan valiosos.</li>
+          <li>Si el blanco está en Terrain o en Prepared Defense, el alcance máximo es 1 hex.</li>
+          <li>A más de 1 hex hace falta línea de visión sin terreno que bloquee entre los dos hexes.</li>
+        </ul>
+        <h3>Quién es el blanco</h3>
+        <p>Lo elige el defensor, entre las unidades del hex con mayor AV o alcance, y por este orden: primero las AV reales; luego el apoyo de una formación con varios apoyos; por último el de una formación con un solo apoyo. Un resultado Drop deja sin apoyo a <strong>todas</strong> las unidades del hex.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="fuego">
+    <div class="wrap ataque">
+      <aside class="tarjeta ficha-tec">
+        <span class="num-ataque">04 · ATTACK BY FIRE</span>
+        <h2 style="margin-top:6px">Ataque por fuego</h2>
+        <dl>
+          <div><dt>Quién</dt><dd>Unidades AV reales (Red, Limited, Stand Off, Light y Dual)</dd></div>
+          <div><dt>Contra</dt><dd>Un hex adyacente sin AV, ni real ni de apoyo, en una OBJ Zone</dd></div>
+          <div><dt>Tabla</dt><dd>Barrage Table, columna Attack by Fire · 1d6 por unidad</dd></div>
+          <div><dt>Coste</dt><dd>1 Fire Event</dd></div>
+          <div><dt>Regla</dt><dd><span class="regla">5.3</span></dd></div>
+        </dl>
+        <a class="boton boton--primario" href="simulador.html">Probarlo en el simulador</a>
+      </aside>
+      <div>
+        <p>El tanque dispara explosivo contra la infantería. Funciona como un bombardeo de un solo punto, pero con su propia columna en la tabla, menos letal que la artillería. A diferencia del bombardeo, no hay límite: se pueden hacer todos los que se quiera contra un mismo hex, y en cualquier orden con los ataques.</p>
+        <ul class="rombos">
+          <li>Cada ataque por fuego lo hace una sola unidad y se resuelve por separado; nunca se suma a puntos de artillería.</li>
+          <li>El tirador puede estar STOPPED, pero no FINISHED. Si entró en una ZOC que exige un Stopping Engagement, tiene que ganarlo antes.</li>
+          <li>No vale como supresión para un ataque regular, pero sí da +1 a un choque inmediato de la misma unidad.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="bombardeo">
+    <div class="wrap ataque">
+      <aside class="tarjeta ficha-tec">
+        <span class="num-ataque">05 · BARRAGE</span>
+        <h2 style="margin-top:6px">Bombardeo</h2>
+        <dl>
+          <div><dt>Quién</dt><dd>Los puntos de artillería de la formación y los puntos aéreos del bando</dd></div>
+          <div><dt>Contra</dt><dd>Un hex enemigo en una OBJ Zone, con observador</dd></div>
+          <div><dt>Tabla</dt><dd>Barrage Table, columna Arty · 1d6 por punto y por unidad</dd></div>
+          <div><dt>Coste</dt><dd>Los puntos usados (la artillería se renueva en cada activación; la aviación, no)</dd></div>
+          <div><dt>Regla</dt><dd><span class="regla">5.4</span></dd></div>
+        </dl>
+        <a class="boton boton--primario" href="simulador.html">Probarlo en el simulador</a>
+      </aside>
+      <div>
+        <p>Dos usos muy distintos. La <strong>supresión</strong> gasta un punto dentro de un ataque y da +2 (o +1 en un choque) sin causar bajas: el enemigo agacha la cabeza. La <strong>destrucción</strong> tira en el Barrage Table para causar bajas, pero no da modificador al ataque.</p>
+        <div class="tabla-wrap" style="margin-bottom:1em"><table class="t">
+          <thead><tr><th>Destrucción</th><th class="num">Puntos máximos</th></tr></thead>
+          <tbody>
+            <tr><td>Dentro de un ataque regular</td><td class="num">3</td></tr>
+            <tr><td>Dentro de un ataque de choque</td><td class="num">1</td></tr>
+            <tr><td>Fuera de cualquier ataque (el observador queda STOPPED)</td><td class="num">1</td></tr>
+          </tbody>
+        </table></div>
+        <ul class="rombos">
+          <li><strong>Un solo bombardeo por hex y activación</strong>, de destrucción o de supresión (en hexes Urbanos, uno de destrucción y los de supresión que se quiera).</li>
+          <li>Hay que declarar los puntos antes de tirar. Se tira un dado por punto y por <em>unidad</em> del hex: 3 puntos contra 2 unidades son 6 dados. El apoyo nunca recibe bajas.</li>
+          <li>El observador debe ser de la formación activa (vale el HQ o los trenes), haber empezado la fase dentro del radio de mando, estar a 4 hexes o menos y tener línea de visión. Puede estar STOPPED o FINISHED.</li>
+          <li>Si un bombardeo de destrucción dentro de un ataque destruye todo el hex, el atacante avanza sin tirar en el Combat Table.</li>
+        </ul>
+        <p class="nota nota--olive"><strong>Fila del Barrage Table:</strong> unidades Hard, Stand Off desplegados y hexes Urbanos solo caen con un 6; Ciudad con 5-6; Terrain o Prepared Defense con 4-6; el resto con 3-6. Si aplican varias, la más favorable al objetivo. <a href="tablas.html#bombardeo">Ver la tabla</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="retiradas">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Retreat Execution</span><h2>Retiradas, paso a paso</h2></div>
+        <p>Busca el primer caso que se aplique y sigue sus ramas. Las pérdidas de la retirada son por unidad, no por pila, y se suman a las del resultado. <span class="regla">5.5</span></p>
+      </div>
+      <div class="flujo">
+        <div class="caso"><div>Retirada voluntaria</div><div class="ramas"><div class="rama"><span>Una unidad activa, en lugar de mover (con SNAFU Partial o Full)</span><span class="efecto">−1 paso, 3 hexes, cara de movimiento y FINISHED</span></div><div class="rama"><span>El HQ (incluso con Fail)</span><span class="efecto">Sin pérdida de pasos, pero +1 nivel de fatiga</span></div></div></div>
+        <div class="caso"><div>Sin camino seguro</div><div class="ramas">
+          <div class="rama"><span>MA táctico</span><span class="efecto">Retirada de 3 hexes y voltear</span></div>
+          <div class="rama"><span>MA de camión o a pie</span><span class="efecto">−1 paso más y no se retira</span></div>
+        </div></div>
+        <div class="caso"><div>Engagement Table</div><div class="ramas"><div class="rama"><span>Cualquier unidad</span><span class="efecto">Retirada de 3 hexes y voltear</span></div></div></div>
+        <div class="caso"><div>Combat Table: situacional</div><div class="ramas">
+          <div class="rama"><span>En Prepared Defense o Key Terrain</span><span class="efecto">−1 paso por unidad, no se retira</span></div>
+          <div class="rama"><span>En cualquier otro caso</span><span class="efecto">Retirada de 3 hexes y voltear</span></div>
+        </div></div>
+        <div class="caso"><div>Combat Table: automática</div><div class="ramas">
+          <div class="rama"><span>MA táctico, o independiente sin asignar</span><span class="efecto">Retirada de 3 hexes y voltear</span></div>
+          <div class="rama"><span>A pie o en camión, con refugio en su HQ</span><span class="efecto">Junto a su HQ (a 3 hexes o más del origen) y voltear</span></div>
+          <div class="rama"><span>A pie o en camión, sin refugio</span><span class="efecto">Sale del mapa y vuelve el turno siguiente junto al HQ</span></div>
+        </div></div>
+      </div>
+      <p class="muted" style="margin-top:14px;font-size:.92rem">El hex final no puede tener enemigos ni terreno prohibido; si no hay ninguno posible, cada unidad pierde un paso más y se queda. Si acaba en una ZOC enemiga que le afecte (todas para a pie y camión; solo las de AV real para táctico), pierde otro paso. Si la unidad atacante muere, se ignoran todas las retiradas.</p>
+    </div>
+  </section>
+
+  <section class="seccion" id="detencion">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Stopping Engagements</span><h2>Abrirse paso entre blindados</h2></div>
+        <p>Una unidad con MA táctico se detiene al entrar en una ZOC blindada. Con un Stopping Engagement puede anular ese STOP y seguir moviendo. <span class="regla">4.4</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta"><h3>¿Es obligatorio?</h3><p>Sí, si la ZOC blindada la genera una unidad AV real o un host con apoyo Stand Off: hay que disparar al menos una vez, aunque no quieras seguir. Si solo la generan hosts con otro tipo de apoyo, es opcional.</p></div>
+        <div class="tarjeta"><h3>¿Cuándo gano?</h3><p>Cuando ya no queda ninguna ZOC blindada en tu hex: porque destruiste, hiciste retirarse o dejaste sin apoyo (Drop) a quien la generaba. Cada disparo cuesta un Fire Event y, al gastar el último, te detienes igualmente.</p></div>
+        <div class="tarjeta"><h3>Excepciones</h3><p>Los Light AV y las unidades en Screen no pueden hacer un Stopping Engagement obligatorio: quedan FINISHED. El defensor elige el blanco entre las unidades que aportan la ZOC. Nunca hay Stopping Engagements al retirarse ni al avanzar tras el combate.</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="js/fichas.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/comun.js"></script>
+<script>
+(function () {
+  'use strict';
+  const U = Fichas.UNIDADES;
+  const MIAS = [
+    ['inf', 'Infantería a pie', { ac: true, tac: false }],
+    ['mec', 'Infantería mecanizada', { ac: true, tac: true }],
+    ['sherman', 'Tanque (Red AV)', { av: 'red', tac: true }],
+    ['tiger', 'Tanque de ruptura', { av: 'red', tac: true, ruptura: true }],
+    ['td', 'Cazacarros (Limited)', { av: 'limited', tac: true }],
+    ['flak', 'Cañón Stand Off', { av: 'standoff', tac: false }],
+    ['autoam', 'Autoametralladoras (Light)', { av: 'light', tac: true }],
+    ['recon', 'Reconocimiento (Dual)', { ac: true, av: 'red', tac: true, dual: true }]
+  ];
+  const BLANCOS = [
+    ['sinav', 'Infantería sin apoyo', 'inf'],
+    ['apoyo', 'Infantería con apoyo AV', 'inf'],
+    ['av', 'Una unidad AV real', 'panther']
+  ];
+  let mia = 'inf', blanco = 'sinav';
+
+  function lista(id, items, sel, al, bando) {
+    const c = document.getElementById(id);
+    c.innerHTML = '';
+    items.forEach(([k, t, x]) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-pressed', k === sel);
+      const u = U[typeof x === 'string' ? x : k];
+      b.innerHTML = Fichas.svgFicha(u, 'd', { tam: 40, bando }) + '<span>' + t + (k === 'apoyo' ? ' <span class="muted">(marcador de apoyo)</span>' : '') + '</span>';
+      b.addEventListener('click', () => al(k));
+      c.appendChild(b);
+    });
+  }
+
+  function evaluar() {
+    const p = MIAS.find((m) => m[0] === mia)[2];
+    const conAv = blanco !== 'sinav';
+    const rs = [];
+    const add = (ok, t, d, href) => rs.push({ ok, t, d, href });
+    add(!!p.ac, 'Ataque regular', p.ac ? 'Con flecha de asalto puedes ser la unidad atacante.' : (p.av ? 'Sin flecha de asalto no puedes atacar, pero sí asistir a otra unidad (+1).' : ''), '#regular');
+    const chq = p.tac && (p.ac || p.av === 'red' || p.av === 'light' || p.ruptura);
+    add(chq && !conAv, 'Ataque de choque', !p.tac ? 'Necesitas MA táctico.' : !chq ? 'Un Limited AV solo hace choques si es de ruptura.' : conAv ? 'El hex tiene AV' + (blanco === 'apoyo' ? ' de apoyo' : '') + ': primero quítaselo con un enfrentamiento.' : 'MA táctico y hex sin AV: adelante, y sigue moviendo después.', '#choque');
+    const enf = p.av && p.av !== 'light';
+    add(enf && conAv, 'Enfrentamiento', !p.av ? 'Hace falta tener AV.' : p.av === 'light' ? 'Los Light AV no pueden iniciar enfrentamientos.' : !conAv ? 'Solo contra blancos con AV, real o de apoyo.' : blanco === 'apoyo' ? 'Contra el apoyo: un Drop le quita el apoyo a todo el hex.' : 'AV + AR contra AV + AR.', '#enfrentamiento');
+    add(!!p.av && !conAv, 'Ataque por fuego', !p.av ? 'Hace falta tener AV.' : conAv ? 'Solo contra hexes sin ningún AV.' : 'Un dado por unidad del hex, columna Attack by Fire.', '#fuego');
+    add(true, 'Observar para un bombardeo', 'Cualquier unidad de la formación puede observar, incluso FINISHED, si empezó la fase en el radio de mando.', '#bombardeo');
+    document.getElementById('el-res').innerHTML = rs.map((r) => `<div class="vd ${r.ok ? 'si' : 'no'}"><span class="i">${r.ok ? '✓' : '✕'}</span><div><strong><a href="${r.href}" style="color:inherit">${r.t}</a></strong><p>${r.d}</p></div></div>`).join('');
+  }
+  function pintar() {
+    lista('el-unidad', MIAS, mia, (k) => { mia = k; pintar(); }, 'aliado');
+    lista('el-blanco', BLANCOS, blanco, (k) => { blanco = k; pintar(); }, 'eje');
+    evaluar();
+  }
+  pintar();
+})();
+</script>
+</body>
+</html>

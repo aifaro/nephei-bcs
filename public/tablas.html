@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tablas · BCS Referencia</title>
+  <meta name="description" content="Tablas del Battalion Combat Series v2.0: Combat, Engagement, Barrage, SNAFU, fatiga, aislamiento, STOPPED/FINISHED y capacidades de unidad.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bcs.css">
+  <style>
+    .tablas { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+    @media (max-width: 900px) { .tablas { grid-template-columns: minmax(0, 1fr); } }
+    .tablas .ancha { grid-column: 1 / -1; }
+    .bloque h2 { font-size: 1.3rem; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .bloque > p { font-size: .9rem; color: var(--muted); }
+    .bloque .tabla-wrap + .tabla-wrap { margin-top: 12px; }
+    .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    td.res { font-family: var(--mono); font-weight: 700; }
+    .leyenda { font-size: .84rem; color: var(--muted); margin-top: 10px; }
+    .leyenda strong { color: var(--heading); font-family: var(--mono); }
+    .si { color: var(--ok); font-weight: 700; }
+    .no { color: var(--bad); font-weight: 700; }
+    .medio { color: var(--amber); font-weight: 600; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Charts &amp; Tables</span>
+      <h1>Tablas para la mesa</h1>
+      <p class="lead">Las tablas de la serie, transcritas de los <em>BCS v2.0 Charts &amp; Tables</em>. Recuerda que cada juego trae además su tabla de efectos del terreno y sus modificadores propios.</p>
+      <div class="botones" style="margin-top:18px"><button class="boton boton--peq" type="button" onclick="window.print()">Imprimir las tablas</button></div>
+      <nav class="indice" aria-label="Tablas">
+        <a class="chip" href="#combate">Combat Table</a>
+        <a class="chip" href="#enfrentamiento">Engagement Table</a>
+        <a class="chip" href="#bombardeo">Barrage Table</a>
+        <a class="chip" href="#snafu">SNAFU</a>
+        <a class="chip" href="#efectos-snafu">Efectos del SNAFU</a>
+        <a class="chip" href="#fatiga">Fatiga</a>
+        <a class="chip" href="#aislamiento">Aislamiento</a>
+        <a class="chip" href="#stop">STOPPED / FINISHED</a>
+        <a class="chip" href="#capacidades">Capacidades</a>
+      </nav>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="tablas">
+      <section class="bloque tarjeta" id="combate">
+        <h2>Combat Table <span class="regla">5.1 · 2d6 modificados</span></h2>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Tirada</th><th>Pérdida</th><th>Retirada*</th><th>Tráfico</th></tr></thead>
+          <tbody>
+            <tr><td class="num">4 o menos</td><td class="res res-a">A2</td><td>—</td><td>—</td></tr>
+            <tr><td class="num">5-6</td><td class="res res-a">A1</td><td>—</td><td>—</td></tr>
+            <tr><td class="num">7-8</td><td class="res res-a">A1</td><td>D: Situacional</td><td>Traffic</td></tr>
+            <tr><td class="num">9-10</td><td class="res res-a">[A1]</td><td>D: Situacional</td><td>Traffic</td></tr>
+            <tr><td class="num">11-12</td><td class="res res-d">D1</td><td>D: Retirada</td><td>—</td></tr>
+            <tr><td class="num">13 o más</td><td class="res res-d">D2</td><td>D: Retirada</td><td>—</td></tr>
+          </tbody>
+        </table></div>
+        <div class="leyenda">
+          <p><strong>A#</strong> el atacante pierde # pasos de su unidad atacante. <strong>[A1]</strong> A1 solo si el defensor está en Prepared Defense. <strong>D#</strong> el defensor pierde # pasos, el primero de su unidad del AR.</p>
+          <p><strong>Situacional</strong> retirada de 3 hexes y voltear; en Prepared Defense o en/tras Key Terrain no se retira, pero cada unidad pierde un paso. <strong>Retirada</strong> automática (5.5e). <strong>Traffic</strong> solo si el defensor se retira o es destruido.</p>
+          <p>* Si la unidad atacante muere, se ignoran todas las retiradas.</p>
+        </div>
+      </section>
+
+      <section class="bloque tarjeta">
+        <h2>Modificadores del Combat Table</h2>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Cada bando parte de su Action Rating y suma…</th><th class="num">DRM</th></tr></thead>
+          <tbody>
+            <tr class="grupo"><td colspan="2">Comunes</td></tr>
+            <tr><td>Dual o apoyo apropiado (atacante: solo Red AV; defensor: cualquier AV)</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Marcador MSR Blocked</td><td class="num drm--neg">−1</td></tr>
+            <tr class="grupo"><td colspan="2">Solo el atacante</td></tr>
+            <tr><td>Double OBJ Zone</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>La formación atacante está en Prepared Defense</td><td class="num drm--neg">−1</td></tr>
+            <tr><td>Bombardeo de supresión (regular / choque)</td><td class="num drm--pos">+2 / +1</td></tr>
+            <tr><td>Asistencia (solo ataque regular)</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Ataque desde fuera del mapa</td><td class="num drm--pos">+2</td></tr>
+            <tr><td>Choque precedido de ataque por fuego</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Unidad AV del choque: ruptura / Hard Red (solo uno)</td><td class="num drm--pos">+2 / +1</td></tr>
+            <tr class="grupo"><td colspan="2">Solo el defensor</td></tr>
+            <tr><td>Prepared Defense</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Exactamente dos unidades de combate en el hex</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Más de dos unidades de combate</td><td class="num drm--neg">−2</td></tr>
+            <tr><td>El atacante cruza un lado de hex con Terrain</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Dual, infantería o Stand Off real en: hex de Terrain / Ciudad o Urbano</td><td class="num drm--pos">+1 / +2</td></tr>
+            <tr><td>Hard Red AV en hex abierto (no Dual, apoyo ni PD)</td><td class="num drm--pos">+2</td></tr>
+            <tr><td>Unidad AV en hex Urbano (no Stand Off desplegado ni apoyo)</td><td class="num drm--neg">−3</td></tr>
+          </tbody>
+        </table></div>
+        <p class="leyenda"><strong>DRM neto</strong> = total del atacante − total del defensor.</p>
+      </section>
+
+      <section class="bloque tarjeta" id="enfrentamiento">
+        <h2>Engagement Table <span class="regla">5.2 · 2d6 modificados</span></h2>
+        <p>Cada bando: AV + Action Rating (el apoyo usa el AR de su host). DRM neto = tirador − blanco.</p>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Modificador</th><th class="num">DRM</th></tr></thead>
+          <tbody>
+            <tr class="grupo"><td colspan="2">Solo el tirador</td></tr>
+            <tr><td>Double OBJ Zone</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Limited AV</td><td class="num drm--neg">−1</td></tr>
+            <tr class="grupo"><td colspan="2">Solo el blanco</td></tr>
+            <tr><td>Prepared Defense y/o varios apoyos (5.2d)</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Unidad Stand Off que no está en apoyo</td><td class="num drm--pos">+1</td></tr>
+          </tbody>
+        </table></div>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th colspan="3">Blanco: AV real</th></tr></thead>
+          <tbody>
+            <tr><td class="num">5 o menos</td><td class="num">6-8</td><td class="num">9 o más</td></tr>
+            <tr><td class="res-a">Pérdida del tirador y Tráfico</td><td>Pérdida para ambos*</td><td class="res-d">Pérdida del blanco y retirada</td></tr>
+          </tbody>
+        </table></div>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th colspan="4">Blanco: apoyo</th></tr></thead>
+          <tbody>
+            <tr><td class="num">3 o menos</td><td class="num">4-5</td><td class="num">6-10</td><td class="num">11 o más</td></tr>
+            <tr><td class="res-a">Pérdida del tirador y Tráfico</td><td>Sin resultado</td><td class="res-d">Drop</td><td class="res-d">Pérdida y Drop</td></tr>
+          </tbody>
+        </table></div>
+        <div class="leyenda">
+          <p>Tráfico en el hex del tirador. Retirada: 3 hexes y voltear a la cara de movimiento.</p>
+          <p>1) Se ignora el resultado contra el tirador si está fuera del alcance del blanco. 2) No hay disparo si el blanco está fuera del alcance del tirador. 3) Si el blanco está en Terrain o en PD, alcance máximo 1 hex.</p>
+          <p>* Contra una unidad en Screen, «pérdida para ambos» pasa a «sin pérdidas; el blanco se retira 3 hexes».</p>
+        </div>
+      </section>
+
+      <section class="bloque tarjeta" id="bombardeo">
+        <h2>Barrage Table <span class="regla">5.3 · 5.4 · 1d6</span></h2>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Objetivo</th><th class="num">Arty</th><th class="num">Attack by Fire</th></tr></thead>
+          <tbody>
+            <tr><td>Unidad Hard · Stand Off <em>desplegado</em> · hex Urbano</td><td class="num">6</td><td class="num">6</td></tr>
+            <tr><td>Hex de Ciudad</td><td class="num">5-6</td><td class="num">6</td></tr>
+            <tr><td>Hex de Terrain · Prepared Defense</td><td class="num">4-6</td><td class="num">5-6</td></tr>
+            <tr><td>Ninguno de los anteriores</td><td class="num">3-6</td><td class="num">4-6</td></tr>
+          </tbody>
+        </table></div>
+        <p class="leyenda">Un dado por unidad del hex (por cada punto, en la artillería). Cada dado en el rango es una baja. Si aplican varias filas, se usa la de <strong>menos</strong> probabilidad de baja.</p>
+      </section>
+
+      <section class="bloque tarjeta" id="snafu">
+        <h2>SNAFU Table <span class="regla">3.2 · 2d6 modificados</span></h2>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th class="num">2 o menos</th><th class="num">3-6</th><th class="num">7 o más</th></tr></thead>
+          <tbody><tr><td class="num no">FAIL</td><td class="num medio">PARTIAL</td><td class="num si">FULL</td></tr></tbody>
+        </table></div>
+        <p class="leyenda">Con Prepared Defense, el mejor resultado posible es PARTIAL.</p>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Modificador</th><th class="num">DRM</th></tr></thead>
+          <tbody>
+            <tr class="grupo"><td colspan="2">Siempre</td></tr>
+            <tr><td>Fresh</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Marcador de Coordination</td><td class="num drm--neg">−1</td></tr>
+            <tr><td>Nivel de fatiga X</td><td class="num drm--neg">−X</td></tr>
+            <tr><td>Formaciones mezcladas</td><td class="num drm--neg">−1</td></tr>
+            <tr><td>Modificador propio del juego</td><td class="num">±X</td></tr>
+            <tr class="grupo"><td colspan="2">MSR completa</td></tr>
+            <tr><td>Distancia óptima (trenes a 5-15 hexes del HQ)</td><td class="num drm--pos">+1</td></tr>
+            <tr><td>Trenes Ghost</td><td class="num drm--neg">−1</td></tr>
+            <tr><td>Crossing the Streams</td><td class="num drm--neg">−1</td></tr>
+            <tr><td>La MSR usa pistas: buena / mala transitabilidad</td><td class="num drm--neg">−1 / −2</td></tr>
+            <tr class="grupo"><td colspan="2">MSR no completa</td></tr>
+            <tr><td>Trenes fuera del mapa</td><td class="num drm--neg">−3</td></tr>
+            <tr><td>MSR Blocked nivel 1 / nivel 2</td><td class="num drm--neg">−1 / −2</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section class="bloque tarjeta" id="efectos-snafu">
+        <h2>Efectos del resultado de SNAFU</h2>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Acción</th><th class="num">Full</th><th class="num">Partial</th><th class="num">Fail</th></tr></thead>
+          <tbody>
+            <tr class="grupo"><td colspan="4">Objetivos</td></tr>
+            <tr><td>OBJ creados por el HQ</td><td class="num">2</td><td class="num">1</td><td class="num">0</td></tr>
+            <tr><td>OBJ creados por Recon</td><td class="num si">✓</td><td class="num si">✓</td><td class="num no">✕</td></tr>
+            <tr class="grupo"><td colspan="4">Movimiento</td></tr>
+            <tr><td>Uso del MA</td><td class="num si">✓</td><td class="num medio">½ MA</td><td class="num no">✕</td></tr>
+            <tr><td>Retirada voluntaria</td><td class="num si">✓</td><td class="num si">✓</td><td class="num medio">solo HQ</td></tr>
+            <tr><td>Voltear fichas</td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td></tr>
+            <tr><td>Trenes de combate</td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td></tr>
+            <tr class="grupo"><td colspan="4">Bombardeo</td></tr>
+            <tr><td>Artillería</td><td class="num si">✓</td><td class="num medio">½ puntos</td><td class="num no">✕</td></tr>
+            <tr><td>Aviación</td><td class="num si">✓</td><td class="num si">✓</td><td class="num no">✕</td></tr>
+            <tr class="grupo"><td colspan="4">Combate</td></tr>
+            <tr><td>Todo</td><td class="num si">✓</td><td class="num si">✓</td><td class="num no">✕</td></tr>
+            <tr class="grupo"><td colspan="4">Otros</td></tr>
+            <tr><td>Prepared Defense</td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td></tr>
+            <tr><td>Recuperar el apoyo perdido</td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td></tr>
+            <tr><td>Entrar en Screen</td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td></tr>
+          </tbody>
+        </table></div>
+        <p class="leyenda">Los puntos de artillería se redondean hacia abajo; el MA no se redondea. El requisito de un punto de artillería para la Prepared Defense se mira antes de redondear.</p>
+      </section>
+
+      <section class="bloque tarjeta" id="fatiga">
+        <h2>Fatigue Increase Table <span class="regla">1.8 · 1d6</span></h2>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Causa (colocado, usado o hecho)</th><th class="num">Sube con</th></tr></thead>
+          <tbody>
+            <tr><td>OBJ de combate</td><td class="num">1</td></tr>
+            <tr><td>Enfrentamiento, ataque por fuego, Segunda Activación</td><td class="num">1-2</td></tr>
+            <tr><td>Secuencia de ataque</td><td class="num">1-3</td></tr>
+            <tr><td>Retirada voluntaria del HQ</td><td class="num">Automática</td></tr>
+          </tbody>
+        </table></div>
+        <p class="leyenda">Se tira una vez por la causa con más probabilidad. No cuentan los March OBJ ni las Segundas Activaciones con Fail.</p>
+      </section>
+
+      <section class="bloque tarjeta" id="aislamiento">
+        <h2>Isolation <span class="regla">3.6</span></h2>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Camino seguro</th><th>En radio de mando</th><th>MSR Blocked</th><th class="num">Pasos perdidos por unidad</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="3">Sí</td><td>Sí</td><td>Sí o no</td><td class="num">0</td></tr>
+            <tr><td>No</td><td>No</td><td class="num">1</td></tr>
+            <tr><td>No</td><td>Sí</td><td class="num">2</td></tr>
+            <tr><td rowspan="4">No</td><td>Sí</td><td>No</td><td class="num">1</td></tr>
+            <tr><td>Sí</td><td>Sí</td><td class="num">2</td></tr>
+            <tr><td>No</td><td>No</td><td class="num">2</td></tr>
+            <tr><td>No</td><td>Sí</td><td class="num">3</td></tr>
+          </tbody>
+        </table></div>
+        <p class="leyenda">Camino seguro: una ruta de hexes hasta el HQ sin enemigos ni ZOC que afecten a su clase de movimiento, de largo máximo el radio de mando + 5.</p>
+      </section>
+
+      <section class="bloque tarjeta" id="stop">
+        <h2>STOPPED / FINISHED <span class="regla">3.4</span></h2>
+        <div class="tabla-wrap"><table class="t">
+          <tbody>
+            <tr class="grupo"><td>Te detienen (STOP)</td></tr>
+            <tr><td>Gastar los dos Fire Events · efectos del terreno · marcadores de Tráfico · MA a pie o camión en cualquier ZOC enemiga · MA táctico en una ZOC blindada · empezar a mover otra unidad · camión en una zona de enfrentamiento · perder un Stopping Engagement obligatorio · observar un bombardeo fuera de un ataque</td></tr>
+            <tr class="grupo"><td>Detenida puedes…</td></tr>
+            <tr><td>Observar bombardeos · iniciar enfrentamientos · atacar · atacar por fuego · asistir</td></tr>
+            <tr class="grupo"><td>Detenida no puedes…</td></tr>
+            <tr><td>Mover · hacer Recon · hacer un ataque de choque</td></tr>
+            <tr class="grupo"><td>Te dejan FINISHED</td></tr>
+            <tr><td>Participar en un ataque regular · retirada voluntaria · entrar como Light AV o en Screen en un hex con Stopping Engagement obligatorio</td></tr>
+            <tr class="grupo"><td>FINISHED solo puedes…</td></tr>
+            <tr><td>Observar bombardeos. Nada de mover, Fire Events, atacar, asistir ni entrar en Screen.</td></tr>
+          </tbody>
+        </table></div>
+      </section>
+
+      <section class="bloque tarjeta ancha" id="capacidades">
+        <h2>Unit Capabilities Chart <span class="regla">1.1e</span></h2>
+        <div class="tabla-wrap"><table class="t capacidades">
+          <thead><tr><th>Tipo</th><th>Regular Attack</th><th>Assist</th><th>Support Attack</th><th>Shock Attack</th><th>Attack by Fire</th><th>Engage</th><th>Recon</th><th>2.ª unidad en defensa</th><th>Support Defense</th><th>Spot Barrage</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Attack-Capable</strong></td><td class="cap-si">✓</td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td><td></td><td></td><td class="cap-si">✓</td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td></tr>
+            <tr><td><strong>Red AV</strong></td><td></td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td><td class="cap-si">✓</td><td class="cap-si">✓</td><td class="cap-si">✓</td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td></tr>
+            <tr><td><strong>Limited AV **</strong></td><td></td><td class="cap-si">✓</td><td></td><td></td><td class="cap-si">✓</td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td></tr>
+            <tr><td><strong>Stand Off AV **</strong></td><td></td><td class="cap-si">✓</td><td></td><td></td><td class="cap-si">✓</td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td></tr>
+            <tr><td><strong>Dual</strong></td><td class="cap-si">✓</td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td><td class="cap-si">✓</td><td class="cap-si">✓</td><td class="cap-si">✓</td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td></tr>
+            <tr><td><strong>Light AV</strong></td><td></td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td><td class="cap-si">✓</td><td class="cap-blanco">solo blanco</td><td class="cap-si">✓</td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td></tr>
+            <tr><td><strong>Support</strong></td><td></td><td></td><td class="cap-si">✓ solo Red</td><td></td><td></td><td class="cap-blanco">solo blanco</td><td></td><td></td><td class="cap-si">✓</td><td></td></tr>
+            <tr><td><strong>Unprepared</strong></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="cap-si">✓</td><td></td><td class="cap-si">✓</td></tr>
+            <tr><td><strong>HQ</strong></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="cap-si">✓</td></tr>
+            <tr><td><strong>Combat Trains</strong></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="cap-si">✓</td></tr>
+          </tbody>
+        </table></div>
+        <p class="leyenda">De Regular Attack a Attack by Fire exigen OBJ Zone. Shock Attack, Attack by Fire, Engage y Recon gastan un Fire Event (máximo 2). El choque exige MA táctico. ** Si además es de ruptura, añade Shock Attack. Recon solo para unidades de reconocimiento.</p>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script src="js/fichas.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/comun.js"></script>
+</body>
+</html>

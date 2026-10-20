@@ -1,0 +1,13 @@
+// Sitio estático en Cloudflare Workers: solo assets, sin código de servidor.
+// El "name" debe coincidir con el Worker conectado al repositorio en el panel de Cloudflare.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nephei-bcs",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public",
+    "not_found_handling": "404-page"
+  },
+  "workers_dev": false,
+  "routes": [ { "pattern": "bcs.nephei.org", "custom_domain": true } ]
+}
