@@ -23,12 +23,14 @@
       bandos: [{ nombre: 'Aliados', formaciones: [] }, { nombre: 'Eje', formaciones: [] }],
       saco: { modo: 'modificada', turno: 1, usadas: [], sacadas: [], fuera: [] },
       ordenes: {},
-      verBando: 0
+      verBando: 0,
+      secreto: false, reveladas: {}
     };
   }
   let E;
   try { E = JSON.parse(Comun.leer(CLAVE)); } catch (e) { E = null; }
   if (!E || E.version !== 1) E = nueva();
+  E.reveladas = E.reveladas || {};
 
   function guardar() {
     Comun.guardar(CLAVE, JSON.stringify(E));
@@ -153,7 +155,11 @@
     const vaso = enVaso();
     if (!vaso.length) { cambiarTurno(E.turno + 1); return; }
     if (E.saco.modo === 'modificada' && vaso.length >= 3) E.saco.sacadas = azar(vaso, 3).map((f) => f.id);
-    else E.saco.usadas.push(azar(vaso, 1)[0].id);
+    else {
+      const id = azar(vaso, 1)[0].id;
+      E.saco.usadas.push(id);
+      revelar(id, true);
+    }
     guardar();
     pintarSaco();
   });
@@ -162,6 +168,7 @@
     if (!b) return;
     E.saco.usadas.push(b.dataset.activar);
     E.saco.sacadas = [];
+    revelar(b.dataset.activar, true);
     guardar();
     pintarSaco();
   });
@@ -196,18 +203,36 @@
     (E.ordenes[E.turno] = E.ordenes[E.turno] || {})[id] = nuevo;
     guardar();
   }
+  // Modo secreto: cada orden está tapada hasta que se revela (al activarse la formación o a mano).
+  // Al empezar otro turno todas vuelven a estar tapadas.
+  const revelada = (id) => (E.reveladas[E.turno] || []).includes(id);
+  const oculta = (id) => E.secreto && !revelada(id);
+  function revelar(id, v) {
+    const l = (E.reveladas[E.turno] || []).filter((x) => x !== id);
+    if (v) l.push(id);
+    E.reveladas[E.turno] = l;
+    guardar();
+    pintarCuaderno();
+  }
   const textoOrden = (v) => v.o.map((x) => ORDENES[x].nombre).join(' + ') + (v.o.includes('hq') && v.ruta ? ` (ruta: ${v.ruta})` : '');
 
   function pintarCuaderno() {
     $('cuaderno-turno').textContent = 'turno ' + E.turno;
+    const btn = $('ocultar');
+    btn.setAttribute('aria-pressed', E.secreto);
+    btn.textContent = E.secreto ? 'Desactivar el modo secreto' : 'Modo secreto';
+    $('revelar-todas').hidden = !E.secreto;
+    $('cuaderno').classList.toggle('secreto', E.secreto);
     $('cuaderno-bando').innerHTML = E.bandos.map((b, i) => `<button type="button" data-b="${i}" aria-pressed="${E.verBando === i}">${esc(etiquetaBando(i))}</button>`).join('');
     const fs = E.bandos[E.verBando].formaciones;
     $('cuaderno-lista').innerHTML = fs.length ? fs.map((f) => {
       const v = vigente(E.turno, f.id), propia = v.desde === E.turno;
       const estado = propia ? (v.desde > 1 && JSON.stringify(vigente(E.turno - 1, f.id).o) !== JSON.stringify(v.o) ? '<span class="estado nueva">Cambiada este turno</span>' : '<span class="estado nueva">Anotada este turno</span>')
         : v.desde ? `<span class="estado">Vigente desde el turno ${v.desde}</span>` : '<span class="estado">Por defecto</span>';
-      return `<div class="orden" data-f="${f.id}">
-        <div class="orden__cab"><strong>${esc(f.nombre)}</strong>${estado}</div>
+      const tapada = oculta(f.id);
+      const ojo = E.secreto ? `<button type="button" class="ojo" data-revelar="${f.id}" aria-pressed="${!tapada}">${tapada ? 'Revelar' : 'Ocultar'}</button>` : '';
+      return `<div class="orden${tapada ? ' orden--oculta' : ''}" data-f="${f.id}">
+        <div class="orden__cab"><strong>${esc(f.nombre)}</strong>${tapada ? '<span class="estado">Orden secreta</span>' : estado}</div>${ojo}
         <div class="orden__botones" role="group" aria-label="Orden de ${esc(f.nombre)}">${Object.entries(ORDENES).map(([k, o]) => `<button type="button" class="orden-chip ${k}" data-o="${k}" aria-pressed="${v.o.includes(k)}">${o.nombre}</button>`).join('')}</div>
         <div class="orden__campos">
           ${v.o.includes('hq') ? `<label><span>Ruta del HQ</span><input type="text" data-campo="ruta" value="${esc(v.ruta || '')}" placeholder="Puntos de paso y hex final: por 12.08 y 15.10 hasta 18.12" maxlength="160"></label>` : ''}
@@ -221,6 +246,7 @@
     const cols = Array.from({ length: ultimo }, (_, i) => i + 1);
     $('historial').innerHTML = fs.length ? `<thead><tr><th>Formación</th>${cols.map((t) => `<th class="num">T${t}</th>`).join('')}</tr></thead><tbody>${fs.map((f) => `<tr><td>${esc(f.nombre)}</td>${cols.map((t) => {
       const v = vigente(t, f.id), propia = v.desde === t;
+      if (t === E.turno && oculta(f.id)) return '<td class="num heredada" title="Orden secreta">?</td>';
       return `<td class="num${propia ? '' : ' heredada'}" title="${esc(textoOrden(v))}">${v.o.map((x) => ORDENES[x].corto).join('+')}</td>`;
     }).join('')}</tr>`).join('')}</tbody>` : '';
   }
@@ -232,6 +258,8 @@
     pintarCuaderno();
   });
   $('cuaderno-lista').addEventListener('click', (e) => {
+    const r = e.target.closest('[data-revelar]');
+    if (r) { revelar(r.dataset.revelar, !revelada(r.dataset.revelar)); return; }
     const b = e.target.closest('[data-o]');
     if (!b) return;
     const id = b.closest('.orden').dataset.f, k = b.dataset.o;
@@ -255,11 +283,18 @@
     est.className = 'estado nueva';
     est.textContent = 'Anotada este turno';
   });
-  $('ocultar').addEventListener('click', (e) => {
-    const v = e.currentTarget.getAttribute('aria-pressed') !== 'true';
-    e.currentTarget.setAttribute('aria-pressed', v);
-    e.currentTarget.textContent = v ? 'Mostrar órdenes' : 'Ocultar órdenes';
-    $('cuaderno').classList.toggle('tapado', v);
+  $('ocultar').addEventListener('click', () => {
+    E.secreto = !E.secreto;
+    if (E.secreto) E.reveladas[E.turno] = [];
+    guardar();
+    pintarCuaderno();
+  });
+  $('revelar-todas').addEventListener('click', () => {
+    const fs = E.bandos[E.verBando].formaciones.map((f) => f.id);
+    const todas = fs.every(revelada);
+    E.reveladas[E.turno] = (E.reveladas[E.turno] || []).filter((x) => !fs.includes(x)).concat(todas ? [] : fs);
+    guardar();
+    pintarCuaderno();
   });
   $('copiar').addEventListener('click', async (e) => {
     const txt = [`Órdenes · turno ${E.turno}`].concat(E.bandos.flatMap((b, i) => b.formaciones.length ? ['', etiquetaBando(i)].concat(b.formaciones.map((f) => {

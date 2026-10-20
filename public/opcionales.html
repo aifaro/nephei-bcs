@@ -117,10 +117,11 @@
           <div><span class="antetitulo">Utilidad</span><h3>Cuaderno de órdenes · <span id="cuaderno-turno">turno 1</span></h3></div>
           <div class="flex">
             <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Bando"></div>
-            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Ocultar órdenes</button>
+            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Modo secreto</button>
+            <button type="button" class="boton boton--peq" id="revelar-todas" hidden>Revelar u ocultar todas</button>
           </div>
         </div>
-        <p class="muted" style="font-size:.88rem;margin:0 0 14px">Si no cambias nada, cada formación conserva la orden del turno anterior (aparece como <em>vigente desde el turno N</em>). Pulsa «Ocultar» antes de pasarle la pantalla a tu rival.</p>
+        <p class="muted" style="font-size:.88rem;margin:0 0 14px">Si no cambias nada, cada formación conserva la orden del turno anterior (aparece como <em>vigente desde el turno N</em>). Con el <strong>modo secreto</strong> cada orden queda tapada y se revela por separado: sola, cuando la formación se activa en el saco de activaciones, o a mano con su botón «Revelar». Al empezar otro turno se tapan todas de nuevo.</p>
         <div id="cuaderno-lista" class="cuaderno"></div>
         <div class="cuaderno__pie">
           <button type="button" class="boton boton--peq" id="copiar">Copiar las órdenes del turno</button>
