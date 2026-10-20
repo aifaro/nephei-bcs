@@ -3,6 +3,8 @@
 // pruebas (tests/reglas.test.js).
 (function (root) {
   'use strict';
+  // Traducción (js/i18n.js en el navegador; en Node, los textos quedan en castellano)
+  const t = (root.I18N && root.I18N.t) || ((x, v) => (v ? x.replace(/\{(\w+)\}/g, (m, k) => v[k]) : x));
 
   // ---------- Dados ----------
 
@@ -117,52 +119,52 @@
     const ca = ctx.atacante.cara, ua = ctx.atacante.unidad;
     const cd = ctx.defensor.cara, ud = ctx.defensor.unidad;
 
-    a.push({ id: 'ar', texto: 'Action Rating de ' + ua.nombre, valor: ca.ar, base: true });
-    d.push({ id: 'ar', texto: 'Action Rating de ' + ud.nombre, valor: cd.ar, base: true });
+    a.push({ id: 'ar', texto: t('Action Rating de {u}', { u: ua.nombre }), valor: ca.ar, base: true });
+    d.push({ id: 'ar', texto: t('Action Rating de {u}', { u: ud.nombre }), valor: cd.ar, base: true });
 
     // Comunes
     const apoyoAtacante = ctx.atacante.apoyo === 'red' && puedeSerHost(ca);
-    if (esDual(ca)) a.push({ id: 'dual', texto: 'Unidad Dual', valor: 1 });
-    else if (apoyoAtacante) a.push({ id: 'apoyo', texto: 'Apoyo Red AV', valor: 1 });
+    if (esDual(ca)) a.push({ id: 'dual', texto: t('Unidad Dual'), valor: 1 });
+    else if (apoyoAtacante) a.push({ id: 'apoyo', texto: t('Apoyo Red AV'), valor: 1 });
     else if (ctx.atacante.apoyo && ctx.atacante.apoyo !== 'red' && puedeSerHost(ca)) {
-      avisos.push('Al atacante solo le vale el apoyo Red AV; el ' + nombreApoyo(ctx.atacante.apoyo) + ' no da modificador al ataque.');
+      avisos.push(t('Al atacante solo le vale el apoyo Red AV; el {a} no da modificador al ataque.', { a: nombreApoyo(ctx.atacante.apoyo) }));
     }
-    if (ctx.msrAtacante) a.push({ id: 'msr', texto: 'Marcador MSR Blocked', valor: -1 });
+    if (ctx.msrAtacante) a.push({ id: 'msr', texto: t('Marcador MSR Blocked'), valor: -1 });
 
     const apoyoDefensor = !!ctx.defensor.apoyo && puedeSerHost(cd);
-    if (esDual(cd)) d.push({ id: 'dual', texto: 'Unidad Dual', valor: 1 });
-    else if (apoyoDefensor) d.push({ id: 'apoyo', texto: 'Apoyo (' + nombreApoyo(ctx.defensor.apoyo) + ')', valor: 1 });
-    if (ctx.msrDefensor) d.push({ id: 'msr', texto: 'Marcador MSR Blocked', valor: -1 });
+    if (esDual(cd)) d.push({ id: 'dual', texto: t('Unidad Dual'), valor: 1 });
+    else if (apoyoDefensor) d.push({ id: 'apoyo', texto: t('Apoyo ({a})', { a: nombreApoyo(ctx.defensor.apoyo) }), valor: 1 });
+    if (ctx.msrDefensor) d.push({ id: 'msr', texto: t('Marcador MSR Blocked'), valor: -1 });
 
     // Solo atacante
-    if (ctx.dobleObj) a.push({ id: 'dobleobj', texto: 'Double OBJ Zone', valor: 1 });
-    if (ctx.pdAtacante) a.push({ id: 'pdatt', texto: 'La formación atacante está en Prepared Defense', valor: -1 });
-    if (ctx.supresion) a.push({ id: 'supresion', texto: 'Bombardeo de supresión', valor: shock ? 1 : 2 });
-    if (!shock && ctx.asistente) a.push({ id: 'assist', texto: 'Asistencia de ' + ctx.asistente.unidad.nombre, valor: 1 });
-    if (!shock && ctx.desdeFuera) a.push({ id: 'offmap', texto: 'Ataque desde fuera del mapa', valor: 2 });
-    if (shock && ctx.fuegoPrevio) a.push({ id: 'abf', texto: 'Precedido de Ataque por fuego', valor: 1 });
+    if (ctx.dobleObj) a.push({ id: 'dobleobj', texto: t('Double OBJ Zone'), valor: 1 });
+    if (ctx.pdAtacante) a.push({ id: 'pdatt', texto: t('La formación atacante está en Prepared Defense'), valor: -1 });
+    if (ctx.supresion) a.push({ id: 'supresion', texto: t('Bombardeo de supresión'), valor: shock ? 1 : 2 });
+    if (!shock && ctx.asistente) a.push({ id: 'assist', texto: t('Asistencia de {u}', { u: ctx.asistente.unidad.nombre }), valor: 1 });
+    if (!shock && ctx.desdeFuera) a.push({ id: 'offmap', texto: t('Ataque desde fuera del mapa'), valor: 2 });
+    if (shock && ctx.fuegoPrevio) a.push({ id: 'abf', texto: t('Precedido de Ataque por fuego'), valor: 1 });
     if (shock && tieneAv(ca)) {
-      if (ua.ruptura) a.push({ id: 'ruptura', texto: 'Unidad AV de ruptura (Breakthrough)', valor: 2 });
-      else if (esDuroRojo(ua, ca)) a.push({ id: 'durorojo', texto: 'Unidad Hard Red AV', valor: 1 });
+      if (ua.ruptura) a.push({ id: 'ruptura', texto: t('Unidad AV de ruptura (Breakthrough)'), valor: 2 });
+      else if (esDuroRojo(ua, ca)) a.push({ id: 'durorojo', texto: t('Unidad Hard Red AV'), valor: 1 });
     }
 
     // Solo defensor
     const pdValida = ctx.pdDefensor && ctx.defensorDesplegado !== false;
-    if (pdValida) d.push({ id: 'pd', texto: 'Prepared Defense', valor: 1 });
-    if (ctx.numDefensores === 2) d.push({ id: 'dos', texto: 'Exactamente dos unidades de combate', valor: 1 });
-    if (ctx.numDefensores > 2) d.push({ id: 'sobre', texto: 'Más de dos unidades (sobreapilado)', valor: -2 });
-    if (ctx.ladoHex) d.push({ id: 'lado', texto: 'El atacante cruza un lado de hex con Terrain', valor: 1 });
+    if (pdValida) d.push({ id: 'pd', texto: t('Prepared Defense'), valor: 1 });
+    if (ctx.numDefensores === 2) d.push({ id: 'dos', texto: t('Exactamente dos unidades de combate'), valor: 1 });
+    if (ctx.numDefensores > 2) d.push({ id: 'sobre', texto: t('Más de dos unidades (sobreapilado)'), valor: -2 });
+    if (ctx.ladoHex) d.push({ id: 'lado', texto: t('El atacante cruza un lado de hex con Terrain'), valor: 1 });
 
     const standoffReal = cd.tipoAv === 'standoff';
     if (esDual(cd) || esInfanteria(cd) || standoffReal) {
-      if (ctx.terreno === 'terreno') d.push({ id: 'terr', texto: 'En hex de Terrain', valor: 1 });
-      if (ctx.terreno === 'ciudad' || ctx.terreno === 'urbano') d.push({ id: 'terr', texto: 'En hex de Ciudad o Urbano', valor: 2 });
+      if (ctx.terreno === 'terreno') d.push({ id: 'terr', texto: t('En hex de Terrain'), valor: 1 });
+      if (ctx.terreno === 'ciudad' || ctx.terreno === 'urbano') d.push({ id: 'terr', texto: t('En hex de Ciudad o Urbano'), valor: 2 });
     }
     if (esDuroRojo(ud, cd) && !esDual(cd) && !pdValida && ctx.terreno === 'abierto') {
-      d.push({ id: 'duroabierto', texto: 'Hard Red AV en terreno abierto', valor: 2 });
+      d.push({ id: 'duroabierto', texto: t('Hard Red AV en terreno abierto'), valor: 2 });
     }
     if (tieneAv(cd) && ctx.terreno === 'urbano' && !(standoffReal && ctx.defensorDesplegado !== false)) {
-      d.push({ id: 'avurbano', texto: 'Unidad AV en hex Urbano', valor: -3 });
+      d.push({ id: 'avurbano', texto: t('Unidad AV en hex Urbano'), valor: -3 });
     }
 
     const suma = (l) => l.reduce((s, m) => s + m.valor, 0);
@@ -180,23 +182,23 @@
     const ca = ctx.atacante.cara, ua = ctx.atacante.unidad;
     const ok = (cond, texto) => r.push({ ok: !!cond, texto });
     if (ctx.tipo === 'regular') {
-      ok(esCapazDeAtacar(ca), 'La unidad atacante tiene la flecha de asalto (Attack-Capable)');
-      ok(ca.ma > 0, 'La unidad atacante tiene MA mayor que 0');
+      ok(esCapazDeAtacar(ca), t('La unidad atacante tiene la flecha de asalto (Attack-Capable)'));
+      ok(ca.ma > 0, t('La unidad atacante tiene MA mayor que 0'));
       if (ctx.asistente) {
         const cs = ctx.asistente.cara;
-        ok(esCapazDeAtacar(cs) || tieneAv(cs), 'El asistente tiene capacidad de ataque o un AV a la vista');
+        ok(esCapazDeAtacar(cs) || tieneAv(cs), t('El asistente tiene capacidad de ataque o un AV a la vista'));
       }
-      ok(ctx.numDefensores >= 1, 'El hex defensor tiene al menos una unidad enemiga');
+      ok(ctx.numDefensores >= 1, t('El hex defensor tiene al menos una unidad enemiga'));
     } else {
-      ok(ca.claseMa === 'tac', 'La unidad atacante tiene MA táctico (rojo)');
+      ok(ca.claseMa === 'tac', t('La unidad atacante tiene MA táctico (rojo)'));
       const habilitada = esCapazDeAtacar(ca) || ca.tipoAv === 'red' || ca.tipoAv === 'light' || ua.ruptura;
-      ok(habilitada, 'Muestra flecha de asalto, Red AV, Light AV o es de ruptura');
-      ok(!ctx.defensorConAv, 'El hex defensor no contiene ningún AV (ni real ni de apoyo)');
-      ok(ctx.costeMp !== false, 'El hex defensor cuesta 3 MP o menos para MA táctico');
-      ok(!ctx.detenida, 'La unidad no está STOPPED y le queda un Fire Event');
+      ok(habilitada, t('Muestra flecha de asalto, Red AV, Light AV o es de ruptura'));
+      ok(!ctx.defensorConAv, t('El hex defensor no contiene ningún AV (ni real ni de apoyo)'));
+      ok(ctx.costeMp !== false, t('El hex defensor cuesta 3 MP o menos para MA táctico'));
+      ok(!ctx.detenida, t('La unidad no está STOPPED y le queda un Fire Event'));
     }
-    ok(!ctx.sobreapilado, 'La unidad atacante no está sobreapilada');
-    ok(ctx.enZonaObj !== false, 'El hex defensor está dentro de una OBJ Zone');
+    ok(!ctx.sobreapilado, t('La unidad atacante no está sobreapilada'));
+    ok(ctx.enZonaObj !== false, t('El hex defensor está dentro de una OBJ Zone'));
     return r;
   }
 
@@ -208,8 +210,8 @@
     if (p === 'A2') res.perdidaAtacante = 2;
     if (p === 'A1') res.perdidaAtacante = 1;
     if (p === '[A1]') {
-      if (ctx.pdDefensor) { res.perdidaAtacante = 1; res.notas.push('[A1]: el defensor está en Prepared Defense, así que el atacante pierde un paso.'); }
-      else res.notas.push('[A1]: sin Prepared Defense del defensor, el atacante no pierde nada.');
+      if (ctx.pdDefensor) { res.perdidaAtacante = 1; res.notas.push(t('[A1]: el defensor está en Prepared Defense, así que el atacante pierde un paso.')); }
+      else res.notas.push(t('[A1]: sin Prepared Defense del defensor, el atacante no pierde nada.'));
     }
     if (p === 'D1') res.perdidaDefensor = 1;
     if (p === 'D2') res.perdidaDefensor = 2;
@@ -218,17 +220,17 @@
       if (ctx.pdDefensor || ctx.claveTerreno) {
         res.retirada = null;
         res.perdidaPorUnidad = 1;
-        res.notas.push('Retirada situacional: el defensor ' + (ctx.pdDefensor ? 'está en Prepared Defense' : 'está en Key Terrain') + ', aguanta en el hex y cada unidad pierde un paso.');
+        res.notas.push(t(ctx.pdDefensor ? 'Retirada situacional: el defensor está en Prepared Defense, aguanta en el hex y cada unidad pierde un paso.' : 'Retirada situacional: el defensor está en Key Terrain, aguanta en el hex y cada unidad pierde un paso.'));
       } else {
         res.retirada = 'tres';
-        res.notas.push('Retirada situacional: el defensor se retira 3 hexes y voltea a su cara de movimiento.');
+        res.notas.push(t('Retirada situacional: el defensor se retira 3 hexes y voltea a su cara de movimiento.'));
       }
     }
     if (fila.retirada === 'retirada') {
       res.retirada = ctx.defensorClaseMa === 'tac' ? 'tres' : 'hq';
-      res.notas.push(res.retirada === 'tres'
+      res.notas.push(t(res.retirada === 'tres'
         ? 'Retirada automática: con MA táctico, el defensor se retira 3 hexes y voltea a cara de movimiento.'
-        : 'Retirada automática: con MA a pie o de camión, el defensor se retira junto a su HQ (HQ Refuge) o, si no puede, sale del mapa y vuelve el turno siguiente.');
+        : 'Retirada automática: con MA a pie o de camión, el defensor se retira junto a su HQ (HQ Refuge) o, si no puede, sale del mapa y vuelve el turno siguiente.'));
     }
     res.trafico = fila.trafico;
     return res;
@@ -239,29 +241,29 @@
   //   blancoEsApoyo, apoyo: {av, tipoAv, alcance}, host: {unidad, cara},
   //   distancia, dobleObj, pdBlanco, variosApoyos, terrenoBlanco }
   function modificadoresEnfrentamiento(ctx) {
-    const f = [], t = [];
+    const f = [], bl = [];
     const cf = ctx.tirador.cara;
-    f.push({ id: 'av', texto: 'AV del tirador', valor: cf.av, base: true });
-    f.push({ id: 'ar', texto: 'Action Rating del tirador', valor: cf.ar, base: true });
-    if (ctx.dobleObj) f.push({ id: 'dobleobj', texto: 'Blanco en Double OBJ Zone', valor: 1 });
-    if (cf.tipoAv === 'limited') f.push({ id: 'limited', texto: 'El tirador es Limited AV', valor: -1 });
+    f.push({ id: 'av', texto: t('AV del tirador'), valor: cf.av, base: true });
+    f.push({ id: 'ar', texto: t('Action Rating del tirador'), valor: cf.ar, base: true });
+    if (ctx.dobleObj) f.push({ id: 'dobleobj', texto: t('Blanco en Double OBJ Zone'), valor: 1 });
+    if (cf.tipoAv === 'limited') f.push({ id: 'limited', texto: t('El tirador es Limited AV'), valor: -1 });
 
     if (ctx.blancoEsApoyo) {
-      t.push({ id: 'av', texto: 'AV del apoyo', valor: ctx.apoyo.av, base: true });
-      t.push({ id: 'ar', texto: 'Action Rating del host', valor: ctx.host.cara.ar, base: true });
+      bl.push({ id: 'av', texto: t('AV del apoyo'), valor: ctx.apoyo.av, base: true });
+      bl.push({ id: 'ar', texto: t('Action Rating del host'), valor: ctx.host.cara.ar, base: true });
     } else {
       const cb = ctx.blanco.cara;
-      t.push({ id: 'av', texto: 'AV del blanco', valor: cb.av, base: true });
-      t.push({ id: 'ar', texto: 'Action Rating del blanco', valor: cb.ar, base: true });
-      if (cb.tipoAv === 'standoff') t.push({ id: 'standoff', texto: 'Blanco Stand Off (no en apoyo)', valor: 1 });
+      bl.push({ id: 'av', texto: t('AV del blanco'), valor: cb.av, base: true });
+      bl.push({ id: 'ar', texto: t('Action Rating del blanco'), valor: cb.ar, base: true });
+      if (cb.tipoAv === 'standoff') bl.push({ id: 'standoff', texto: t('Blanco Stand Off (no en apoyo)'), valor: 1 });
     }
     const varios = ctx.blancoEsApoyo && ctx.variosApoyos;
     if (ctx.pdBlanco || varios) {
-      t.push({ id: 'pd', texto: ctx.pdBlanco && varios ? 'Prepared Defense y varios apoyos' : (ctx.pdBlanco ? 'Prepared Defense' : 'Varios apoyos en la formación'), valor: 1 });
+      bl.push({ id: 'pd', texto: t(ctx.pdBlanco && varios ? 'Prepared Defense y varios apoyos' : (ctx.pdBlanco ? 'Prepared Defense' : 'Varios apoyos en la formación')), valor: 1 });
     }
     const suma = (l) => l.reduce((s, m) => s + m.valor, 0);
-    const totalF = suma(f), totalT = suma(t);
-    return { tirador: f, blanco: t, totalF, totalT, neto: totalF - totalT };
+    const totalF = suma(f), totalT = suma(bl);
+    return { tirador: f, blanco: bl, totalF, totalT, neto: totalF - totalT };
   }
 
   function alcanceBlanco(ctx) {
@@ -272,12 +274,12 @@
     const r = [];
     const ok = (cond, texto) => r.push({ ok: !!cond, texto });
     const cf = ctx.tirador.cara;
-    ok(tieneAv(cf), 'El tirador es una unidad AV real (no en apoyo)');
-    ok(cf.tipoAv !== 'light', 'El tirador no es Light AV (los Light AV solo pueden ser blanco)');
-    ok(!ctx.pantallaTirador, 'El tirador no está en Screen');
-    ok(ctx.distancia <= rango(cf.alcance), 'El blanco está dentro del alcance del tirador (' + rango(cf.alcance) + ')');
-    if (ctx.terrenoBlanco || ctx.pdBlanco) ok(ctx.distancia <= 1, 'Blanco en Terrain o Prepared Defense: el tirador tiene que estar adyacente');
-    if (ctx.blancoEsApoyo) ok(puedeSerHost(ctx.host.cara), 'El host es infantería con capacidad de ataque (puede llevar apoyo)');
+    ok(tieneAv(cf), t('El tirador es una unidad AV real (no en apoyo)'));
+    ok(cf.tipoAv !== 'light', t('El tirador no es Light AV (los Light AV solo pueden ser blanco)'));
+    ok(!ctx.pantallaTirador, t('El tirador no está en Screen'));
+    ok(ctx.distancia <= rango(cf.alcance), t('El blanco está dentro del alcance del tirador ({n})', { n: rango(cf.alcance) }));
+    if (ctx.terrenoBlanco || ctx.pdBlanco) ok(ctx.distancia <= 1, t('Blanco en Terrain o Prepared Defense: el tirador tiene que estar adyacente'));
+    if (ctx.blancoEsApoyo) ok(puedeSerHost(ctx.host.cara), t('El host es infantería con capacidad de ataque (puede llevar apoyo)'));
     return r;
   }
 
@@ -287,11 +289,11 @@
     let clave = fila.clave;
     if (clave === 'ambos' && ctx.opcionalLejos && ctx.distancia > 1) {
       clave = 'nada';
-      res.notas.push('Regla opcional 5.2f: a más de un hex, "Pérdida para ambos" pasa a "Sin efecto".');
+      res.notas.push(t('Regla opcional 5.2f: a más de un hex, "Pérdida para ambos" pasa a "Sin efecto".'));
     }
     if (clave === 'ambos' && ctx.blancoPantalla) {
       clave = 'pantalla';
-      res.notas.push('El blanco está en Screen: "Pérdida para ambos" pasa a "Sin pérdidas, el blanco se retira 3 hexes".');
+      res.notas.push(t('El blanco está en Screen: "Pérdida para ambos" pasa a "Sin pérdidas, el blanco se retira 3 hexes".'));
       res.retiradaBlanco = true;
     }
     if (clave === 'firer') { res.perdidaTirador = 1; res.traficoTirador = true; }
@@ -301,10 +303,10 @@
     if (clave === 'loss-drop') { res.perdidaBlanco = 1; res.drop = true; }
     if (fueraDeAlcance && (res.perdidaTirador || res.traficoTirador)) {
       res.perdidaTirador = 0; res.traficoTirador = false;
-      res.notas.push('El tirador está fuera del alcance del blanco (' + alcanceBlanco(ctx) + '), así que se ignora cualquier resultado contra el tirador.');
+      res.notas.push(t('El tirador está fuera del alcance del blanco ({n}), así que se ignora cualquier resultado contra el tirador.', { n: alcanceBlanco(ctx) }));
     }
-    if (ctx.blancoEsApoyo && res.perdidaBlanco) res.notas.push('La pérdida la sufre la unidad de apoyo, nunca el host.');
-    if (res.drop) res.notas.push('Drop: todas las unidades del hex del blanco pierden el apoyo hasta que acabe esta activación.');
+    if (ctx.blancoEsApoyo && res.perdidaBlanco) res.notas.push(t('La pérdida la sufre la unidad de apoyo, nunca el host.'));
+    if (res.drop) res.notas.push(t('Drop: todas las unidades del hex del blanco pierden el apoyo hasta que acabe esta activación.'));
     return res;
   }
 

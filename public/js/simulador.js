@@ -6,19 +6,20 @@
   const R = Reglas, F = Fichas, U = Fichas.UNIDADES;
   const $ = (s) => document.querySelector(s);
   const esc = F.esc;
+  const t = I18N.t;
 
   // ---------- Modos ----------
   const MODOS = {
-    regular: { nombre: 'Ataque regular', sub: 'Combat Table · 2d6', regla: '5.1', tabla: 'Combat Table',
-      explica: 'Un asalto preparado: la unidad atacante con flecha de asalto entra en el hex enemigo con ayuda de una asistencia y de la artillería. Al terminar, atacante y asistente quedan FINISHED.' },
-    shock: { nombre: 'Ataque de choque', sub: 'Combat Table · 2d6', regla: '5.1m', tabla: 'Combat Table',
-      explica: 'Un mecanizado con MA táctico arrolla un hex sin ningún AV, ni real ni de apoyo. Gasta un Fire Event, no admite asistencia y, si no queda detenida, la unidad sigue moviendo después.' },
-    enfrentamiento: { nombre: 'Enfrentamiento', sub: 'Engagement Table · 2d6', regla: '5.2', tabla: 'Engagement Table',
-      explica: 'Duelo entre blindados: una unidad AV dispara a otra unidad AV o al apoyo de un host. No conquista terreno, pero causa bajas, quita el apoyo enemigo y abre paso a tus otras unidades.' },
-    fuego: { nombre: 'Ataque por fuego', sub: 'Barrage Table · 1d6', regla: '5.3', tabla: 'Barrage Table · Attack by Fire',
-      explica: 'Una unidad AV dispara explosivo contra un hex adyacente sin AV. Se tira un dado por cada unidad del hex, en la columna Attack by Fire del Barrage Table.' },
-    bombardeo: { nombre: 'Bombardeo', sub: 'Barrage Table · 1d6', regla: '5.4', tabla: 'Barrage Table · Arty',
-      explica: 'Artillería o aviación contra un hex en una OBJ Zone, con un observador. Bombardeo de destrucción: un dado por cada punto y por cada unidad del hex.' }
+    regular: { nombre: t('Ataque regular'), sub: 'Combat Table · 2d6', regla: '5.1', tabla: 'Combat Table',
+      explica: t('Un asalto preparado: la unidad atacante con flecha de asalto entra en el hex enemigo con ayuda de una asistencia y de la artillería. Al terminar, atacante y asistente quedan FINISHED.') },
+    shock: { nombre: t('Ataque de choque'), sub: 'Combat Table · 2d6', regla: '5.1m', tabla: 'Combat Table',
+      explica: t('Un mecanizado con MA táctico arrolla un hex sin ningún AV, ni real ni de apoyo. Gasta un Fire Event, no admite asistencia y, si no queda detenida, la unidad sigue moviendo después.') },
+    enfrentamiento: { nombre: t('Enfrentamiento'), sub: 'Engagement Table · 2d6', regla: '5.2', tabla: 'Engagement Table',
+      explica: t('Duelo entre blindados: una unidad AV dispara a otra unidad AV o al apoyo de un host. No conquista terreno, pero causa bajas, quita el apoyo enemigo y abre paso a tus otras unidades.') },
+    fuego: { nombre: t('Ataque por fuego'), sub: 'Barrage Table · 1d6', regla: '5.3', tabla: 'Barrage Table · Attack by Fire',
+      explica: t('Una unidad AV dispara explosivo contra un hex adyacente sin AV. Se tira un dado por cada unidad del hex, en la columna Attack by Fire del Barrage Table.') },
+    bombardeo: { nombre: t('Bombardeo'), sub: 'Barrage Table · 1d6', regla: '5.4', tabla: 'Barrage Table · Arty',
+      explica: t('Artillería o aviación contra un hex en una OBJ Zone, con un observador. Bombardeo de destrucción: un dado por cada punto y por cada unidad del hex.') }
   };
 
   const ROL_AV = ['tq-us', 'tq-de', 'panther', 'tiger', 'td', 'flak', 'rec-us', 'rec-de'];
@@ -44,7 +45,7 @@
   let resultado = null;     // efectos de la última tirada sobre el mapa
   let animando = false;
   let historial = [];
-  try { historial = JSON.parse(Comun.leer('bcs-sim-hist') || '[]'); } catch (e) { historial = []; }
+  try { historial = JSON.parse(Comun.leer('bcs-sim-hist' + (I18N.en ? '-en' : '')) || '[]'); } catch (e) { historial = []; }
 
   function guardar() { Comun.guardar('bcs-sim', JSON.stringify(S)); }
   function cargar() {
@@ -60,7 +61,7 @@
   function cara(i) { return U[i.k][i.lado]; }
   function unidad(i) { return U[i.k]; }
   function vivos(lista) { return lista.filter((i) => i.pasos > 0); }
-  function conNombre(i) { return Object.assign({}, U[i.k], { nombre: U[i.k].nombre.toLowerCase() }); }
+  function conNombre(i) { return Object.assign({}, U[i.k], { nombre: I18N.en ? U[i.k].nombre : U[i.k].nombre.toLowerCase() }); }
 
   // ---------- Contextos para el motor ----------
   function ctxCombate() {
@@ -109,18 +110,18 @@
     const r = [];
     const ok = (c, t) => r.push({ ok: !!c, texto: t });
     const c = cara(S.tirador);
-    ok(R.tieneAv(c), 'El tirador es una unidad AV real (no en apoyo)');
-    ok(!S.defensores.some((i) => R.tieneAv(cara(i))) && !S.apoyoDef, 'El hex objetivo no contiene ningún AV, ni real ni de apoyo');
-    ok(true, 'Tirador y objetivo son adyacentes, y el objetivo está en una OBJ Zone');
-    ok(true, 'El tirador puede estar STOPPED, pero no FINISHED; gasta un Fire Event');
+    ok(R.tieneAv(c), t('El tirador es una unidad AV real (no en apoyo)'));
+    ok(!S.defensores.some((i) => R.tieneAv(cara(i))) && !S.apoyoDef, t('El hex objetivo no contiene ningún AV, ni real ni de apoyo'));
+    ok(true, t('Tirador y objetivo son adyacentes, y el objetivo está en una OBJ Zone'));
+    ok(true, t('El tirador puede estar STOPPED, pero no FINISHED; gasta un Fire Event'));
     return r;
   }
   function requisitosBombardeo() {
     return [
-      { ok: true, texto: 'El hex objetivo está en una OBJ Zone y contiene una unidad enemiga' },
-      { ok: true, texto: 'Un observador de la formación, a 4 hexes o menos y con línea de visión, que empezó la fase dentro del radio de mando' },
-      { ok: S.enAtaque || S.puntos <= 1, texto: S.enAtaque ? 'Dentro de un ataque regular: hasta 3 puntos' : 'Fuera de un ataque: un solo punto (el observador queda STOPPED)' },
-      { ok: true, texto: 'Solo un bombardeo por hex y activación (salvo en hexes Urbanos)' }
+      { ok: true, texto: t('El hex objetivo está en una OBJ Zone y contiene una unidad enemiga') },
+      { ok: true, texto: t('Un observador de la formación, a 4 hexes o menos y con línea de visión, que empezó la fase dentro del radio de mando') },
+      { ok: S.enAtaque || S.puntos <= 1, texto: S.enAtaque ? t('Dentro de un ataque regular: hasta 3 puntos') : t('Fuera de un ataque: un solo punto (el observador queda STOPPED)') },
+      { ok: true, texto: t('Solo un bombardeo por hex y activación (salvo en hexes Urbanos)') }
     ];
   }
 
@@ -130,12 +131,12 @@
   const COL_ENF_APOYO = ['#d6453a', '#8a8f86', '#8cc265', '#3f9d58'];
 
   const TXT_COMBATE = [
-    'El atacante pierde 2 pasos',
-    'El atacante pierde 1 paso',
-    'Atacante -1 y retirada situacional del defensor',
-    '[A1] y retirada situacional del defensor',
-    'El defensor pierde 1 paso y se retira',
-    'El defensor pierde 2 pasos y se retira'
+    t('El atacante pierde 2 pasos'),
+    t('El atacante pierde 1 paso'),
+    t('Atacante -1 y retirada situacional del defensor'),
+    t('[A1] y retirada situacional del defensor'),
+    t('El defensor pierde 1 paso y se retira'),
+    t('El defensor pierde 2 pasos y se retira')
   ];
 
   // ---------- Pintado general ----------
@@ -157,7 +158,7 @@
     }));
     $('#explica').textContent = MODOS[S.modo].explica;
     $('#regla-tabla').textContent = MODOS[S.modo].tabla + ' · ' + MODOS[S.modo].regla;
-    $('#t-mod-txt').textContent = S.modo === 'fuego' || S.modo === 'bombardeo' ? 'Fila de la tabla' : 'Modificadores';
+    $('#t-mod-txt').textContent = S.modo === 'fuego' || S.modo === 'bombardeo' ? t('Fila de la tabla') : t('Modificadores');
   }
 
   // ---------- Mapa ----------
@@ -182,8 +183,8 @@
       e.pilas.push({ id: 'def', c: 2, r: 1, unidades: S.defensores, bando: 'eje' });
       e.flechas.push({ de: [1, 1], a: [2, 1], tipo: 'ataque' });
       if (S.modo === 'regular' && S.asistente) e.flechas.push({ de: [2, 0], a: [2, 1], tipo: 'asist' });
-      e.etiquetas.push({ c: 1, r: 1, t: 'Atacante', cls: 'a' }, { c: 2, r: 1, t: 'Defensor', cls: 'd' });
-      if (S.modo === 'regular' && S.asistente) e.etiquetas.push({ c: 2, r: 0, t: 'Asistente', cls: 'a' });
+      e.etiquetas.push({ c: 1, r: 1, t: t('Atacante'), cls: 'a' }, { c: 2, r: 1, t: t('Defensor'), cls: 'd' });
+      if (S.modo === 'regular' && S.asistente) e.etiquetas.push({ c: 2, r: 0, t: t('Asistente'), cls: 'a' });
       e.marcas.push({ tipo: S.dobleObj ? 'dobleobj' : 'obj', c: 2, r: 1, dx: 0.42, dy: -0.5 });
       if (S.apoyoAtt && R.puedeSerHost(cara(S.atacante))) e.marcas.push({ tipo: S.apoyoAtt, c: 1, r: 1, dx: -0.48, dy: -0.42 });
       if (S.apoyoDef && R.puedeSerHost(cara(S.defensores[S.arDef] || S.defensores[0]))) e.marcas.push({ tipo: S.apoyoDef, c: 2, r: 1, dx: -0.48, dy: -0.42 });
@@ -198,7 +199,7 @@
       const alc = S.terreno !== 'abierto' || S.pdDef ? 1 : Math.max(1, cara(S.tirador).alcance || 1);
       for (let c = 2; c <= Math.min(COLS - 1, 1 + alc); c++) e.zona.push([c, 1]);
       e.flechas.push({ de: [1, 1], a: [tc, 1], tipo: 'fuego' });
-      e.etiquetas.push({ c: 1, r: 1, t: 'Tirador', cls: 'a' }, { c: tc, r: 1, t: S.blancoTipo === 'apoyo' ? 'Host + apoyo' : 'Blanco', cls: 'd' });
+      e.etiquetas.push({ c: 1, r: 1, t: t('Tirador'), cls: 'a' }, { c: tc, r: 1, t: S.blancoTipo === 'apoyo' ? t('Host + apoyo') : t('Blanco'), cls: 'd' });
       if (S.blancoTipo === 'apoyo') e.marcas.push({ tipo: S.apoyoBlanco, c: tc, r: 1, dx: -0.48, dy: -0.42 });
       if (S.dobleObj) e.marcas.push({ tipo: 'dobleobj', c: tc, r: 1, dx: 0.42, dy: -0.5 });
       if (S.pdDef) e.marcas.push({ tipo: 'pd', c: tc, r: 1, dx: 0.45, dy: 0.42 });
@@ -208,7 +209,7 @@
       e.pilas.push({ id: 'tir', c: 1, r: 1, unidades: [S.tirador], bando: 'aliado' });
       e.pilas.push({ id: 'def', c: 2, r: 1, unidades: S.defensores, bando: 'eje' });
       e.flechas.push({ de: [1, 1], a: [2, 1], tipo: 'fuego' });
-      e.etiquetas.push({ c: 1, r: 1, t: 'Tirador', cls: 'a' }, { c: 2, r: 1, t: 'Objetivo', cls: 'd' });
+      e.etiquetas.push({ c: 1, r: 1, t: t('Tirador'), cls: 'a' }, { c: 2, r: 1, t: t('Objetivo'), cls: 'd' });
       e.marcas.push({ tipo: 'obj', c: 2, r: 1, dx: 0.42, dy: -0.5 });
       if (S.pdDef) e.marcas.push({ tipo: 'pd', c: 2, r: 1, dx: 0.45, dy: 0.42 });
     } else {
@@ -219,7 +220,7 @@
       e.marcas.push({ tipo: 'obj', c: 4, r: 1, dx: 0.42, dy: -0.5 });
       if (S.pdDef) e.marcas.push({ tipo: 'pd', c: 4, r: 1, dx: 0.45, dy: 0.42 });
       e.flechas.push({ de: [0, 0], a: [4, 1], tipo: 'arty' }, { de: [1, 1], a: [4, 1], tipo: 'vista' });
-      e.etiquetas.push({ c: 1, r: 1, t: 'Observador', cls: 'a' }, { c: 4, r: 1, t: 'Objetivo', cls: 'd' }, { c: 0, r: 0, t: 'Artillería', cls: 'n' });
+      e.etiquetas.push({ c: 1, r: 1, t: t('Observador'), cls: 'a' }, { c: 4, r: 1, t: t('Objetivo'), cls: 'd' }, { c: 0, r: 0, t: t('Artillería'), cls: 'n' });
     }
     return e;
   }
@@ -286,9 +287,9 @@
       el.textContent = t.t;
       m.appendChild(el);
     });
-    const ley = { regular: [['#d98a12', 'Ataque'], ['#a8690f', 'Asistencia'], ['#3d78c2', 'Lado de hex con terreno (río)']], shock: [['#d98a12', 'Choque'], ['#3d78c2', 'Lado de hex con terreno']],
-      enfrentamiento: [['#c8221d', 'Línea de fuego'], ['rgba(200,34,29,.5)', 'Alcance del tirador']], fuego: [['#c8221d', 'Ataque por fuego']], bombardeo: [['#c8221d', 'Fuego de artillería'], ['#6b6b5a', 'Línea de visión del observador']] }[S.modo];
-    $('#leyenda').innerHTML = ley.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('') + '<span style="margin-left:auto">Terreno del objetivo: <strong>' + { abierto: 'abierto', terreno: 'Terrain (bosque)', ciudad: 'Ciudad', urbano: 'Urbano' }[S.terreno] + '</strong></span>';
+    const ley = { regular: [['#d98a12', t('Ataque')], ['#a8690f', t('Asistencia')], ['#3d78c2', t('Lado de hex con terreno (río)')]], shock: [['#d98a12', t('Choque')], ['#3d78c2', t('Lado de hex con terreno')]],
+      enfrentamiento: [['#c8221d', t('Línea de fuego')], ['rgba(200,34,29,.5)', t('Alcance del tirador')]], fuego: [['#c8221d', t('Ataque por fuego')]], bombardeo: [['#c8221d', t('Fuego de artillería')], ['#6b6b5a', t('Línea de visión del observador')]] }[S.modo];
+    $('#leyenda').innerHTML = ley.map(([c, t]) => `<span><i style="background:${c}"></i>${t}</span>`).join('') + '<span style="margin-left:auto">' + t('Terreno del objetivo') + ': <strong>' + { abierto: t('abierto'), terreno: t('Terrain (bosque)'), ciudad: t('Ciudad'), urbano: t('Urbano') }[S.terreno] + '</strong></span>';
   }
 
   function ponerMarca(k, nueva) {
@@ -335,8 +336,8 @@
   }
   function selectorApoyo(valor, al, rotulo) {
     const sel = document.createElement('select');
-    sel.setAttribute('aria-label', rotulo || 'Apoyo');
-    sel.innerHTML = '<option value="">Sin apoyo</option>' + Object.entries(F.APOYOS).map(([k, a]) => `<option value="${k}"${k === valor ? ' selected' : ''}>${esc(a.nombre)} (${R.nombreApoyo(k)} ${a.av})</option>`).join('');
+    sel.setAttribute('aria-label', rotulo || t('Apoyo'));
+    sel.innerHTML = `<option value="">${t('Sin apoyo')}</option>` + Object.entries(F.APOYOS).map(([k, a]) => `<option value="${k}"${k === valor ? ' selected' : ''}>${esc(t(a.nombre))} (${R.nombreApoyo(k)} ${a.av})</option>`).join('');
     sel.addEventListener('change', () => al(sel.value || null));
     return sel;
   }
@@ -350,12 +351,12 @@
     const cab = d.querySelector('.slot__cab'), ctl = d.querySelector('.slot__controles');
     cab.appendChild(selectorUnidad(inst.k, opciones, (k) => { inst.k = k; inst.lado = 'd'; inst.pasos = U[k].pasos; cambio(); }));
     if (extra.quitar) {
-      const x = document.createElement('button'); x.type = 'button'; x.className = 'x-quitar'; x.textContent = '✕'; x.setAttribute('aria-label', 'Quitar ' + rol);
+      const x = document.createElement('button'); x.type = 'button'; x.className = 'x-quitar'; x.textContent = '✕'; x.setAttribute('aria-label', t('Quitar {x}', { x: rol }));
       x.addEventListener('click', extra.quitar); cab.appendChild(x);
     }
     // Cara
-    const mini = document.createElement('div'); mini.className = 'mini'; mini.setAttribute('role', 'group'); mini.setAttribute('aria-label', 'Cara visible');
-    [['d', 'Desplegada'], ['m', 'Movimiento']].forEach(([l, t]) => {
+    const mini = document.createElement('div'); mini.className = 'mini'; mini.setAttribute('role', 'group'); mini.setAttribute('aria-label', t('Cara visible'));
+    [['d', t('Desplegada')], ['m', t('Movimiento')]].forEach(([l, t]) => {
       const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.setAttribute('aria-pressed', inst.lado === l);
       if (u.unaCara) b.disabled = l === 'm';
       b.addEventListener('click', () => { inst.lado = l; cambio(); });
@@ -364,7 +365,7 @@
     ctl.appendChild(mini);
     // Pasos
     const pc = document.createElement('div'); pc.className = 'pasos-ctrl';
-    pc.innerHTML = `<button type="button" aria-label="Quitar un paso">−</button><span>${inst.pasos} de ${u.pasos} ${u.pasos === 1 ? 'paso' : 'pasos'}</span><button type="button" aria-label="Añadir un paso">+</button>`;
+    pc.innerHTML = `<button type="button" aria-label="${t('Quitar un paso')}">−</button><span>${t(u.pasos === 1 ? '{a} de {b} paso' : '{a} de {b} pasos', { a: inst.pasos, b: u.pasos })}</span><button type="button" aria-label="${t('Añadir un paso')}">+</button>`;
     const [menos, mas] = pc.querySelectorAll('button');
     menos.disabled = inst.pasos <= 1; mas.disabled = inst.pasos >= u.pasos;
     menos.addEventListener('click', () => { inst.pasos = Math.max(1, inst.pasos - 1); cambio(); });
@@ -372,11 +373,11 @@
     ctl.appendChild(pc);
     if (extra.apoyo) {
       if (R.puedeSerHost(cara(inst))) ctl.appendChild(selectorApoyo(extra.apoyo.valor, extra.apoyo.al));
-      else { const n = document.createElement('span'); n.className = 'muted'; n.style.fontSize = '.78rem'; n.textContent = R.esDual(cara(inst)) ? 'Dual: no usa apoyo' : (R.tieneAv(cara(inst)) ? 'AV: no usa apoyo' : 'Desprevenida: sin apoyo'); ctl.appendChild(n); }
+      else { const n = document.createElement('span'); n.className = 'muted'; n.style.fontSize = '.78rem'; n.textContent = R.esDual(cara(inst)) ? t('Dual: no usa apoyo') : (R.tieneAv(cara(inst)) ? t('AV: no usa apoyo') : t('Desprevenida: sin apoyo')); ctl.appendChild(n); }
     }
     if (extra.ar) {
       const l = document.createElement('label'); l.className = 'radio-ar';
-      l.innerHTML = `<input type="radio" name="ar" ${extra.ar.marcado ? 'checked' : ''}> Da el AR`;
+      l.innerHTML = `<input type="radio" name="ar" ${extra.ar.marcado ? 'checked' : ''}> ${t('Da el AR')}`;
       l.querySelector('input').addEventListener('change', extra.ar.al);
       ctl.appendChild(l);
     }
@@ -391,15 +392,15 @@
       c.appendChild(slot('Atacante', 'a', S.atacante, TODAS, { apoyo: { valor: S.apoyoAtt, al: (v) => { S.apoyoAtt = v; cambio(); } } }));
       if (m === 'regular') {
         if (S.asistente) c.appendChild(slot('Asistente', 'a', S.asistente, TODAS, { quitar: () => { S.asistente = null; cambio(); } }));
-        else c.appendChild(botonAnadir('+ Añadir asistencia', () => { S.asistente = nueva('tq-us'); cambio(); }));
+        else c.appendChild(botonAnadir(t('+ Añadir asistencia'), () => { S.asistente = nueva('tq-us'); cambio(); }));
       }
     }
     if (m === 'enfrentamiento') {
       c.appendChild(slot('Tirador', 'a', S.tirador, ROL_AV));
       const tipo = document.createElement('div'); tipo.className = 'campo';
-      tipo.innerHTML = '<span class="muted">El blanco es</span>';
+      tipo.innerHTML = `<span class="muted">${t('El blanco es')}</span>`;
       const mini = document.createElement('div'); mini.className = 'mini';
-      [['real', 'una unidad AV real'], ['apoyo', 'el apoyo de un host']].forEach(([v, t]) => {
+      [['real', t('una unidad AV real')], ['apoyo', t('el apoyo de un host')]].forEach(([v, t]) => {
         const b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.setAttribute('aria-pressed', S.blancoTipo === v);
         b.addEventListener('click', () => { S.blancoTipo = v; cambio(); }); mini.appendChild(b);
       });
@@ -408,7 +409,7 @@
       else {
         c.appendChild(slot('Host', 'd', S.host, HOSTS));
         const sa = document.createElement('div'); sa.className = 'campo';
-        sa.innerHTML = '<span class="muted">Apoyo de la formación del host:</span>';
+        sa.innerHTML = `<span class="muted">${t('Apoyo de la formación del host:')}</span>`;
         const sel = selectorApoyo(S.apoyoBlanco, (v) => { S.apoyoBlanco = v || 'red'; cambio(); });
         sel.querySelector('option[value=""]').remove();
         sa.appendChild(sel); c.appendChild(sa);
@@ -416,7 +417,7 @@
     }
     if (m === 'fuego') c.appendChild(slot('Tirador', 'a', S.tirador, ROL_AV));
     if (m !== 'enfrentamiento') {
-      const etiqueta = m === 'fuego' || m === 'bombardeo' ? 'Objetivo' : 'Defensor';
+      const etiqueta = m === 'fuego' || m === 'bombardeo' ? t('Objetivo') : t('Defensor');
       S.defensores.forEach((inst, i) => {
         const extra = { quitar: S.defensores.length > 1 ? () => { S.defensores.splice(i, 1); S.arDef = 0; cambio(); } : null };
         if (m === 'regular' || m === 'shock') {
@@ -425,7 +426,7 @@
         }
         c.appendChild(slot(etiqueta + (S.defensores.length > 1 ? ' ' + (i + 1) : ''), 'd', inst, TODAS, extra));
       });
-      if (S.defensores.length < 3) c.appendChild(botonAnadir('+ Añadir otra unidad al hex' + (S.defensores.length === 2 ? ' (sobreapilar)' : ''), () => { S.defensores.push(nueva('inf-de')); cambio(); }));
+      if (S.defensores.length < 3) c.appendChild(botonAnadir(t('+ Añadir otra unidad al hex') + (S.defensores.length === 2 ? ' ' + t('(sobreapilar)') : ''), () => { S.defensores.push(nueva('inf-de')); cambio(); }));
     }
   }
   function botonAnadir(t, al) {
@@ -461,55 +462,55 @@
     const c = $('#circ');
     c.innerHTML = '';
     const m = S.modo;
-    const terrenos = [['abierto', 'Abierto'], ['terreno', 'Terrain (bosque, monte…)'], ['ciudad', 'Ciudad'], ['urbano', 'Urbano']];
-    grupo(c, m === 'enfrentamiento' ? 'Terreno del blanco' : 'Terreno del hex objetivo', terrenos.map(([v, t]) => op(t, '', S.terreno === v, () => { S.terreno = v; cambio(); }, { def: true })));
+    const terrenos = [['abierto', t('Abierto')], ['terreno', t('Terrain (bosque, monte…)')], ['ciudad', t('Ciudad')], ['urbano', t('Urbano')]];
+    grupo(c, m === 'enfrentamiento' ? t('Terreno del blanco') : t('Terreno del hex objetivo'), terrenos.map(([v, t]) => op(t, '', S.terreno === v, () => { S.terreno = v; cambio(); }, { def: true })));
 
     if (m === 'regular' || m === 'shock') {
       const atac = [
         op('Double OBJ Zone', '+1', S.dobleObj, alternar('dobleObj')),
-        op('Formación atacante en Prepared Defense', '−1', S.pdAtt, alternar('pdAtt')),
-        op('Atacante con MSR Blocked', '−1', S.msrAtt, alternar('msrAtt'))
+        op(t('Formación atacante en Prepared Defense'), '−1', S.pdAtt, alternar('pdAtt')),
+        op(t('Atacante con MSR Blocked'), '−1', S.msrAtt, alternar('msrAtt'))
       ];
-      if (m === 'regular') atac.push(op('Ataque desde fuera del mapa', '+2', S.desdeFuera, alternar('desdeFuera')));
-      else atac.push(op('Precedido de ataque por fuego de la misma unidad', '+1', S.fuegoPrevio, alternar('fuegoPrevio')));
-      grupo(c, 'Atacante', atac);
+      if (m === 'regular') atac.push(op(t('Ataque desde fuera del mapa'), '+2', S.desdeFuera, alternar('desdeFuera')));
+      else atac.push(op(t('Precedido de ataque por fuego de la misma unidad'), '+1', S.fuegoPrevio, alternar('fuegoPrevio')));
+      grupo(c, t('Atacante'), atac);
       const maxPts = m === 'regular' ? 3 : 1;
-      const bo = grupo(c, 'Artillería del atacante', [
-        op('Sin bombardeo', '', S.bombardeo === 'ninguno', () => { S.bombardeo = 'ninguno'; cambio(); }),
-        op('Supresión (1 punto)', m === 'regular' ? '+2' : '+1', S.bombardeo === 'supresion', () => { S.bombardeo = 'supresion'; cambio(); }),
-        op('Destrucción', 'sin DRM', S.bombardeo === 'destruccion', () => { S.bombardeo = 'destruccion'; S.puntos = Math.min(S.puntos, maxPts); cambio(); })
+      const bo = grupo(c, t('Artillería del atacante'), [
+        op(t('Sin bombardeo'), '', S.bombardeo === 'ninguno', () => { S.bombardeo = 'ninguno'; cambio(); }),
+        op(t('Supresión (1 punto)'), m === 'regular' ? '+2' : '+1', S.bombardeo === 'supresion', () => { S.bombardeo = 'supresion'; cambio(); }),
+        op(t('Destrucción'), t('sin DRM'), S.bombardeo === 'destruccion', () => { S.bombardeo = 'destruccion'; S.puntos = Math.min(S.puntos, maxPts); cambio(); })
       ]);
       if (S.bombardeo === 'destruccion' && maxPts > 1) {
-        [1, 2, 3].forEach((n) => bo.appendChild(op(n + (n === 1 ? ' punto' : ' puntos'), '', S.puntos === n, () => { S.puntos = n; cambio(); })));
+        [1, 2, 3].forEach((n) => bo.appendChild(op(t(n === 1 ? '{n} punto' : '{n} puntos', { n }), '', S.puntos === n, () => { S.puntos = n; cambio(); })));
       }
       const def = [
         op('Prepared Defense', '+1', S.pdDef, alternar('pdDef'), { def: true }),
-        op('Key Terrain', 'aguanta', S.claveTerreno, alternar('claveTerreno'), { def: true }),
-        op('El ataque cruza un lado de hex con Terrain', '+1', S.ladoHex, alternar('ladoHex'), { def: true }),
-        op('Defensor con MSR Blocked', '−1', S.msrDef, alternar('msrDef'), { def: true })
+        op('Key Terrain', t('aguanta'), S.claveTerreno, alternar('claveTerreno'), { def: true }),
+        op(t('El ataque cruza un lado de hex con Terrain'), '+1', S.ladoHex, alternar('ladoHex'), { def: true }),
+        op(t('Defensor con MSR Blocked'), '−1', S.msrDef, alternar('msrDef'), { def: true })
       ];
-      if (m === 'shock') def.push(op('El hex cuesta 3 MP o menos (táctico)', '', S.costeMp, alternar('costeMp'), { def: true }));
-      grupo(c, 'Defensor', def);
+      if (m === 'shock') def.push(op(t('El hex cuesta 3 MP o menos (táctico)'), '', S.costeMp, alternar('costeMp'), { def: true }));
+      grupo(c, t('Defensor'), def);
     }
     if (m === 'enfrentamiento') {
       const d = document.createElement('div'); d.className = 'grupo-op';
-      d.innerHTML = `<h3>Distancia</h3><div class="campo"><input class="rango" type="range" min="1" max="4" value="${S.distancia}" aria-label="Distancia en hexes"><strong>${S.distancia} ${S.distancia === 1 ? 'hex (adyacente)' : 'hexes'}</strong></div>`;
+      d.innerHTML = `<h3>Distancia</h3><div class="campo"><input class="rango" type="range" min="1" max="4" value="${S.distancia}" aria-label="${t('Distancia en hexes')}"><strong>${t(S.distancia === 1 ? '{n} hex (adyacente)' : '{n} hexes', { n: S.distancia })}</strong></div>`;
       d.querySelector('input').addEventListener('input', (e) => { S.distancia = +e.target.value; cambio(); });
       c.appendChild(d);
-      grupo(c, 'Tirador', [op('Blanco en Double OBJ Zone', '+1', S.dobleObj, alternar('dobleObj'))]);
+      grupo(c, t('Tirador'), [op(t('Blanco en Double OBJ Zone'), '+1', S.dobleObj, alternar('dobleObj'))]);
       const bl = [op('Prepared Defense', '+1', S.pdDef, alternar('pdDef'), { def: true })];
-      if (S.blancoTipo === 'apoyo') bl.push(op('La formación tiene varios apoyos al alcance', '+1', S.variosApoyos, alternar('variosApoyos'), { def: true }));
-      else bl.push(op('El blanco está en Screen', '', S.pantalla, alternar('pantalla'), { def: true }));
-      grupo(c, 'Blanco', bl);
-      grupo(c, 'Reglas opcionales', [op('5.2f: «Pérdida para ambos» a más de 1 hex no tiene efecto', '', S.opcionalLejos, alternar('opcionalLejos'))]);
+      if (S.blancoTipo === 'apoyo') bl.push(op(t('La formación tiene varios apoyos al alcance'), '+1', S.variosApoyos, alternar('variosApoyos'), { def: true }));
+      else bl.push(op(t('El blanco está en Screen'), '', S.pantalla, alternar('pantalla'), { def: true }));
+      grupo(c, t('Blanco'), bl);
+      grupo(c, t('Reglas opcionales'), [op(t('5.2f: «Pérdida para ambos» a más de 1 hex no tiene efecto'), '', S.opcionalLejos, alternar('opcionalLejos'))]);
     }
     if (m === 'fuego' || m === 'bombardeo') {
-      const g = [op('Prepared Defense', 'fila', S.pdDef, alternar('pdDef'), { def: true })];
-      grupo(c, 'Objetivo', g);
+      const g = [op('Prepared Defense', t('fila'), S.pdDef, alternar('pdDef'), { def: true })];
+      grupo(c, t('Objetivo'), g);
     }
     if (m === 'bombardeo') {
-      const o = grupo(c, 'Puntos de artillería o aviación', [1, 2, 3].map((n) => op(n + (n === 1 ? ' punto' : ' puntos'), '', S.puntos === n, () => { S.puntos = n; if (n > 1) S.enAtaque = true; cambio(); })));
-      o.appendChild(op('Forma parte de un ataque regular', '', S.enAtaque, () => { S.enAtaque = !S.enAtaque; if (!S.enAtaque) S.puntos = 1; cambio(); }));
+      const o = grupo(c, t('Puntos de artillería o aviación'), [1, 2, 3].map((n) => op(t(n === 1 ? '{n} punto' : '{n} puntos', { n }), '', S.puntos === n, () => { S.puntos = n; if (n > 1) S.enAtaque = true; cambio(); })));
+      o.appendChild(op(t('Forma parte de un ataque regular'), '', S.enAtaque, () => { S.enAtaque = !S.enAtaque; if (!S.enAtaque) S.puntos = 1; cambio(); }));
     }
   }
 
@@ -531,36 +532,36 @@
       const mod = R.modificadoresCombate(ctx);
       reqs = R.requisitosCombate(ctx);
       avisos = mod.avisos.slice();
-      if (S.bombardeo === 'destruccion') avisos.push('El bombardeo de destrucción se tira antes del Combat Table y no da modificador. Si destruye a todo el hex, el atacante avanza sin tirar en la tabla.');
-      if (S.pdDef && S.defensores[S.arDef].lado === 'm') avisos.push('La unidad que da el AR está en su cara de movimiento: no puede usar la Prepared Defense.');
+      if (S.bombardeo === 'destruccion') avisos.push(t('El bombardeo de destrucción se tira antes del Combat Table y no da modificador. Si destruye a todo el hex, el atacante avanza sin tirar en la tabla.'));
+      if (S.pdDef && S.defensores[S.arDef].lado === 'm') avisos.push(t('La unidad que da el AR está en su cara de movimiento: no puede usar la Prepared Defense.'));
       calculo = { tipo: 'combate', ctx, mod, filas: R.TABLA_COMBATE, colores: COL_COMBATE, textos: TXT_COMBATE };
-      $('#balanza').innerHTML = `<div class="balanza">${ladoDrm('a', 'Atacante', mod.atacante, mod.totalA)}<div class="neto"><small>DRM neto</small><strong>${signo(mod.neto)}</strong><span>atacante − defensor</span></div>${ladoDrm('d', 'Defensor', mod.defensor, mod.totalD)}</div>`;
+      $('#balanza').innerHTML = `<div class="balanza">${ladoDrm('a', t('Atacante'), mod.atacante, mod.totalA)}<div class="neto"><small>DRM neto</small><strong>${signo(mod.neto)}</strong><span>${t('atacante − defensor')}</span></div>${ladoDrm('d', t('Defensor'), mod.defensor, mod.totalD)}</div>`;
     } else if (m === 'enfrentamiento') {
       const ctx = ctxEnfrentamiento();
       const mod = R.modificadoresEnfrentamiento(ctx);
       reqs = R.requisitosEnfrentamiento(ctx);
       const alcB = R.alcanceBlanco(ctx);
-      if (ctx.distancia > alcB) avisos.push(`Estás fuera del alcance del blanco (${alcB}): si sale un resultado contra el tirador, se ignora.`);
-      if (ctx.blancoEsApoyo) avisos.push('Contra un apoyo se usa la parte baja del Engagement Table, con el AV del apoyo y el Action Rating del host.');
+      if (ctx.distancia > alcB) avisos.push(t('Estás fuera del alcance del blanco ({n}): si sale un resultado contra el tirador, se ignora.', { n: alcB }));
+      if (ctx.blancoEsApoyo) avisos.push(t('Contra un apoyo se usa la parte baja del Engagement Table, con el AV del apoyo y el Action Rating del host.'));
       const filas = ctx.blancoEsApoyo ? R.TABLA_ENFRENTAMIENTO_APOYO : R.TABLA_ENFRENTAMIENTO_REAL;
       calculo = { tipo: 'enfrentamiento', ctx, mod, filas, colores: ctx.blancoEsApoyo ? COL_ENF_APOYO : COL_ENF_REAL, textos: filas.map((f) => f.texto) };
-      $('#balanza').innerHTML = `<div class="balanza">${ladoDrm('a', 'Tirador', mod.tirador, mod.totalF)}<div class="neto"><small>DRM neto</small><strong>${signo(mod.neto)}</strong><span>tirador − blanco</span></div>${ladoDrm('d', ctx.blancoEsApoyo ? 'Apoyo' : 'Blanco', mod.blanco, mod.totalT)}</div>`;
+      $('#balanza').innerHTML = `<div class="balanza">${ladoDrm('a', t('Tirador'), mod.tirador, mod.totalF)}<div class="neto"><small>DRM neto</small><strong>${signo(mod.neto)}</strong><span>${t('tirador − blanco')}</span></div>${ladoDrm('d', ctx.blancoEsApoyo ? t('Apoyo') : t('Blanco'), mod.blanco, mod.totalT)}</div>`;
     } else {
       const col = m === 'fuego' ? 'fuego' : 'arty';
       reqs = m === 'fuego' ? requisitosFuego() : requisitosBombardeo();
       const dadosPor = m === 'fuego' ? 1 : S.puntos;
       const filasU = S.defensores.map((i) => ({ i, fila: filaPara(i) }));
       calculo = { tipo: 'barrage', col, dadosPor, filasU };
-      $('#balanza').innerHTML = '<div class="tabla-wrap"><table class="t"><thead><tr><th>Objetivo</th><th class="num">' + (col === 'fuego' ? 'Attack by Fire' : 'Arty') + '</th></tr></thead><tbody>' +
-        R.TABLA_BOMBARDEO.map((f) => `<tr class="${filasU.some((x) => x.fila === f) ? 'sel-fila' : ''}"><td>${esc(f.texto)}</td><td class="num">${f[col] === 6 ? '6' : f[col] + '-6'}</td></tr>`).join('') +
-        '</tbody></table></div><p class="muted" style="font-size:.84rem;margin:10px 0 0">Se tira un dado por ' + (m === 'fuego' ? 'cada unidad del hex' : 'cada punto y por cada unidad del hex') + '. Si a una unidad le valen varias filas, se usa la de menos probabilidad de baja.</p>';
+      $('#balanza').innerHTML = '<div class="tabla-wrap"><table class="t"><thead><tr><th>' + t('Objetivo') + '</th><th class="num">' + (col === 'fuego' ? 'Attack by Fire' : 'Arty') + '</th></tr></thead><tbody>' +
+        R.TABLA_BOMBARDEO.map((f) => `<tr class="${filasU.some((x) => x.fila === f) ? 'sel-fila' : ''}"><td>${esc(t(f.texto))}</td><td class="num">${f[col] === 6 ? '6' : f[col] + '-6'}</td></tr>`).join('') +
+        '</tbody></table></div><p class="muted" style="font-size:.84rem;margin:10px 0 0">' + t(m === 'fuego' ? 'Se tira un dado por cada unidad del hex. Si a una unidad le valen varias filas, se usa la de menos probabilidad de baja.' : 'Se tira un dado por cada punto y por cada unidad del hex. Si a una unidad le valen varias filas, se usa la de menos probabilidad de baja.') + '</p>';
     }
-    $('#requisitos').innerHTML = reqs.map((r) => `<li class="${r.ok ? '' : 'no'}">${esc(r.texto)}</li>`).join('');
-    $('#avisos').innerHTML = avisos.map((a) => `<p class="nota" style="margin:8px 0 0;font-size:.86rem">${esc(a)}</p>`).join('');
+    $('#requisitos').innerHTML = reqs.map((r) => `<li class="${r.ok ? '' : 'no'}">${esc(t(r.texto))}</li>`).join('');
+    $('#avisos').innerHTML = avisos.map((a) => `<p class="nota" style="margin:8px 0 0;font-size:.86rem">${esc(t(a))}</p>`).join('');
     calculo.bloqueado = reqs.filter((r) => !r.ok);
     const btn = $('#btn-tirar');
     btn.disabled = calculo.bloqueado.length > 0 || animando;
-    btn.title = calculo.bloqueado.length ? 'No se cumple: ' + calculo.bloqueado.map((r) => r.texto).join('; ') : '';
+    btn.title = calculo.bloqueado.length ? t('No se cumple: ') + calculo.bloqueado.map((r) => t(r.texto)).join('; ') : '';
     pintarProbs();
   }
 
@@ -571,25 +572,25 @@
     const filas = calculo.filas;
     const dist = R.distribucion(filas, neto);
     const maxP = 6 / 36;
-    let h = '<div class="histo" role="img" aria-label="Probabilidad de cada suma de dos dados y su resultado">';
+    let h = '<div class="histo" role="img" aria-label="' + t('Probabilidad de cada suma de dos dados y su resultado') + '">';
     for (let s = 2; s <= 12; s++) {
       const f = R.filaDe(filas, s + neto);
       h += `<div class="col"><div class="barra${salioSuma === s ? ' salio' : ''}" style="height:${(R.DOS_DADOS[s] / maxP * 100).toFixed(1)}%;background:${calculo.colores[f]}"><span class="tot">${s + neto}</span></div></div>`;
     }
     h += '</div><div class="histo-eje">' + Array.from({ length: 11 }, (_, i) => `<span>${i + 2}</span>`).join('') + '</div>';
-    h += `<div class="histo-pie"><span>Arriba: total con el DRM (${signo(neto)})</span><span>Abajo: lo que sale en 2d6</span></div>`;
-    h += '<div class="resultados">' + filas.map((f, i) => `<div class="res-fila${resultado && resultado.fila === i ? ' salio' : ''}" style="color:${calculo.colores[i]}"><span class="sw" style="background:${calculo.colores[i]}"></span><span class="r">${f.rango}</span><span style="color:var(--text)">${esc(calculo.textos[i])}<div class="bar" style="width:${(dist[i] * 100).toFixed(1)}%"></div></span><span class="p">${(dist[i] * 100).toFixed(1)}%</span></div>`).join('') + '</div>';
+    h += `<div class="histo-pie"><span>${t('Arriba: total con el DRM ({d})', { d: signo(neto) })}</span><span>${t('Abajo: lo que sale en 2d6')}</span></div>`;
+    h += '<div class="resultados">' + filas.map((f, i) => `<div class="res-fila${resultado && resultado.fila === i ? ' salio' : ''}" style="color:${calculo.colores[i]}"><span class="sw" style="background:${calculo.colores[i]}"></span><span class="r">${t(f.rango)}</span><span style="color:var(--text)">${esc(t(calculo.textos[i]))}<div class="bar" style="width:${(dist[i] * 100).toFixed(1)}%"></div></span><span class="p">${(dist[i] * 100).toFixed(1)}%</span></div>`).join('') + '</div>';
     if (calculo.tipo === 'combate') {
       const pd = calculo.ctx.pdDefensor;
       const pierdeA = dist[0] + dist[1] + dist[2] + (pd ? dist[3] : 0);
       const defenso = dist[2] + dist[3] + dist[4] + dist[5];
-      h += `<div class="resumen-prob"><div><strong style="color:var(--def)">${(defenso * 100).toFixed(0)}%</strong><span>de que el defensor pierda pasos o se retire</span></div><div><strong style="color:var(--att)">${(pierdeA * 100).toFixed(0)}%</strong><span>de que el atacante pierda algún paso</span></div></div>`;
-      resumen([['DRM neto', signo(neto), 'amber'], ['Defensor afectado', (defenso * 100).toFixed(0) + '%', 'blue'], ['Atacante pierde', (pierdeA * 100).toFixed(0) + '%', 'red']]);
+      h += `<div class="resumen-prob"><div><strong style="color:var(--def)">${(defenso * 100).toFixed(0)}%</strong><span>${t('de que el defensor pierda pasos o se retire')}</span></div><div><strong style="color:var(--att)">${(pierdeA * 100).toFixed(0)}%</strong><span>${t('de que el atacante pierda algún paso')}</span></div></div>`;
+      resumen([[t('DRM neto'), signo(neto), 'amber'], [t('Defensor afectado'), (defenso * 100).toFixed(0) + '%', 'blue'], [t('Atacante pierde'), (pierdeA * 100).toFixed(0) + '%', 'red']]);
     } else {
       const pF = calculo.filas.reduce((s, f, i) => s + (f.clave === 'firer' || f.clave === 'ambos' ? dist[i] : 0), 0);
       const pT = calculo.filas.reduce((s, f, i) => s + (['target', 'ambos', 'loss-drop', 'drop'].includes(f.clave) ? dist[i] : 0), 0);
-      h += `<div class="resumen-prob"><div><strong style="color:var(--def)">${(pT * 100).toFixed(0)}%</strong><span>de dañar al blanco (baja o Drop)</span></div><div><strong style="color:var(--att)">${(pF * 100).toFixed(0)}%</strong><span>de que el tirador pierda un paso${calculo.ctx.distancia > R.alcanceBlanco(calculo.ctx) ? ' (se ignoraría: fuera de alcance)' : ''}</span></div></div>`;
-      resumen([['DRM neto', signo(neto), 'amber'], ['Daña al blanco', (pT * 100).toFixed(0) + '%', 'blue'], ['Tirador pierde', calculo.ctx.distancia > R.alcanceBlanco(calculo.ctx) ? '0%' : (pF * 100).toFixed(0) + '%', 'red']]);
+      h += `<div class="resumen-prob"><div><strong style="color:var(--def)">${(pT * 100).toFixed(0)}%</strong><span>${t('de dañar al blanco (baja o Drop)')}</span></div><div><strong style="color:var(--att)">${(pF * 100).toFixed(0)}%</strong><span>${t('de que el tirador pierda un paso')}${calculo.ctx.distancia > R.alcanceBlanco(calculo.ctx) ? t(' (se ignoraría: fuera de alcance)') : ''}</span></div></div>`;
+      resumen([[t('DRM neto'), signo(neto), 'amber'], [t('Daña al blanco'), (pT * 100).toFixed(0) + '%', 'blue'], [t('Tirador pierde'), calculo.ctx.distancia > R.alcanceBlanco(calculo.ctx) ? '0%' : (pF * 100).toFixed(0) + '%', 'red']]);
     }
     c.innerHTML = h;
   }
@@ -597,16 +598,16 @@
   function pintarProbsBarrage(c) {
     const n = calculo.dadosPor;
     const colores = ['#8a8f86', '#e9bf3c', '#e9893c', '#d6453a'];
-    let h = `<p class="muted" style="font-size:.86rem;margin-top:0">${n} ${n === 1 ? 'dado' : 'dados'} por unidad. Cada dado en el rango causa una baja.</p><div class="dados-unidad">`;
+    let h = `<p class="muted" style="font-size:.86rem;margin-top:0">${t(n === 1 ? '{n} dado por unidad. Cada dado en el rango causa una baja.' : '{n} dados por unidad. Cada dado en el rango causa una baja.', { n })}</p><div class="dados-unidad">`;
     calculo.filasU.forEach(({ i, fila }, idx) => {
       const minimo = fila[calculo.col];
       const p = (7 - minimo) / 6;
       const b = R.binomial(n, p);
-      h += `<div class="du" data-idx="${idx}">${F.ficha(U[i.k], i.lado, { pasos: i.pasos, tam: 46 })}<div><strong style="color:var(--heading);font-size:.9rem">${esc(U[i.k].nombre)}${i.lado === 'm' ? ' · en marcha' : ''}</strong><div class="fila-tabla">Fila: ${esc(fila.texto)} · baja con ${minimo === 6 ? '6' : minimo + '-6'} (${(p * 100).toFixed(0)}% por dado)</div><div class="barras">${b.map((q, k) => q > 0.0005 ? `<div style="width:${(q * 100).toFixed(2)}%;background:${colores[Math.min(k, 3)]}" title="${k} ${k === 1 ? 'baja' : 'bajas'}: ${(q * 100).toFixed(1)}%">${q > 0.09 ? k + (k === 1 ? ' baja ' : ' bajas ') + Math.round(q * 100) + '%' : ''}</div>` : '').join('')}</div></div></div>`;
+      h += `<div class="du" data-idx="${idx}">${F.ficha(U[i.k], i.lado, { pasos: i.pasos, tam: 46 })}<div><strong style="color:var(--heading);font-size:.9rem">${esc(t(U[i.k].nombre))}${i.lado === 'm' ? t(' · en marcha') : ''}</strong><div class="fila-tabla">${t('Fila: {f} · baja con {r} ({p}% por dado)', { f: esc(t(fila.texto)), r: minimo === 6 ? '6' : minimo + '-6', p: (p * 100).toFixed(0) })}</div><div class="barras">${b.map((q, k) => q > 0.0005 ? `<div style="width:${(q * 100).toFixed(2)}%;background:${colores[Math.min(k, 3)]}" title="${t(k === 1 ? '{k} baja' : '{k} bajas', { k })}: ${(q * 100).toFixed(1)}%">${q > 0.09 ? t(k === 1 ? '{k} baja' : '{k} bajas', { k }) + ' ' + Math.round(q * 100) + '%' : ''}</div>` : '').join('')}</div></div></div>`;
     });
     c.innerHTML = h + '</div>';
     const esperadas = calculo.filasU.reduce((s, x) => s + n * (7 - x.fila[calculo.col]) / 6, 0);
-    resumen([['Dados', n * calculo.filasU.length, 'amber'], ['Bajas esperadas', esperadas.toFixed(2).replace('.', ','), 'blue']]);
+    resumen([[t('Dados'), n * calculo.filasU.length, 'amber'], [t('Bajas esperadas'), I18N.num(esperadas, 2), 'blue']]);
   }
 
   function resumen(items) {
@@ -705,14 +706,14 @@
     } finally {
       animando = false;
       $('#btn-tirar').disabled = false;
-      $('#btn-tirar').lastChild.textContent = 'Tirar otra vez';
+      $('#btn-tirar').lastChild.textContent = t('Tirar otra vez');
     }
   }
 
   function registrar(txt, codigo) {
     historial.unshift({ m: MODOS[S.modo].nombre, txt, codigo, t: Date.now() });
     historial = historial.slice(0, 30);
-    Comun.guardar('bcs-sim-hist', JSON.stringify(historial));
+    Comun.guardar('bcs-sim-hist' + (I18N.en ? '-en' : ''), JSON.stringify(historial));
     pintarHistorial();
   }
 
@@ -739,14 +740,14 @@
       dadosEl.innerHTML = tiradas.map((t) => htmlDado(t.v, 'rojo ' + (t.ok ? 'acierto' : 'fallo'))).join('');
       tiradas.forEach((t) => { if (t.ok && defs[t.idx].pasos > 0) { defs[t.idx].pasos--; bajas++; } });
       if (bajas) { golpe('def', bajas); repintarPila('def', defs, 'eje'); }
-      notas.push(`Bombardeo de destrucción (${pts} ${pts === 1 ? 'punto' : 'puntos'}): ${bajas ? bajas + (bajas === 1 ? ' baja' : ' bajas') : 'sin bajas'}.`);
+      notas.push(t('Bombardeo de destrucción ({p}): {b}.', { p: t(pts === 1 ? '{n} punto' : '{n} puntos', { n: pts }), b: bajas ? t(bajas === 1 ? '{k} baja' : '{k} bajas', { k: bajas }) : t('sin bajas') }));
       await espera(1100);
       if (vivos(defs).length === 0) {
         moverPila('att', 2, 1);
         flechaEfecto({ de: [1, 1], a: [2, 1], tipo: 'avance' });
-        notas.push('El bombardeo ha destruido el hex: el atacante avanza sin tirar en el Combat Table. Las unidades del ataque quedan igualmente FINISHED' + (shock ? '' : '') + '.');
-        veredicto('El bombardeo barre el hex', 'Sin tirada en el Combat Table', notas);
-        registrar('Bombardeo destruye el hex', '—');
+        notas.push(t('El bombardeo ha destruido el hex: el atacante avanza sin tirar en el Combat Table. Las unidades del ataque quedan igualmente FINISHED.'));
+        veredicto(t('El bombardeo barre el hex'), t('Sin tirada en el Combat Table'), notas);
+        registrar(t('Bombardeo destruye el hex'), '—');
         return;
       }
     }
@@ -759,7 +760,7 @@
     const ctx = ctxCombate();
     const mod = R.modificadoresCombate(ctx);
     S = guardado;
-    if (mod.neto !== calculo.mod.neto) notas.push(`Tras el bombardeo el DRM neto pasa a ${signo(mod.neto)}.`);
+    if (mod.neto !== calculo.mod.neto) notas.push(t('Tras el bombardeo el DRM neto pasa a {d}.', { d: signo(mod.neto) }));
 
     await rodar(dadosEl, 2, '', 900);
     const [d1, d2] = R.tirar(2);
@@ -790,40 +791,40 @@
     await espera(700);
 
     let retirada = atacanteMuerto ? null : res.retirada;
-    if (atacanteMuerto && fila.retirada) notas.push('La unidad atacante ha muerto: se ignora cualquier retirada.');
-    if (res.perdidaPorUnidad && atacanteMuerto) notas.push('Al morir el atacante tampoco se aplican las pérdidas de la retirada situacional.');
+    if (atacanteMuerto && fila.retirada) notas.push(t('La unidad atacante ha muerto: se ignora cualquier retirada.'));
+    if (res.perdidaPorUnidad && atacanteMuerto) notas.push(t('Al morir el atacante tampoco se aplican las pérdidas de la retirada situacional.'));
     const vivosDef = vivos(defs);
     let hexVacio = vivosDef.length === 0;
     if (retirada && vivosDef.length) {
       // En la retirada automática cada unidad va según su MA; el simulador mueve la pila según la mayoría.
       const tac = vivosDef.filter((d) => cara(d).claseMa === 'tac').length;
       const tipo = fila.retirada === 'retirada' ? (tac >= vivosDef.length / 2 ? 'tres' : 'hq') : 'tres';
-      if (fila.retirada === 'retirada' && tac && tac < vivosDef.length) notas.push('Pila mixta: las unidades con MA táctico se retiran 3 hexes y las demás van junto a su HQ.');
+      if (fila.retirada === 'retirada' && tac && tac < vivosDef.length) notas.push(t('Pila mixta: las unidades con MA táctico se retiran 3 hexes y las demás van junto a su HQ.'));
       defs.forEach((d) => { if (!U[d.k].unaCara) d.lado = 'm'; });
       repintarPila('def', defs, 'eje');
       if (tipo === 'tres') { moverPila('def', 5, 1); flechaEfecto({ de: [2, 1], a: [5, 1], tipo: 'retirada' }); }
       else { moverPila('def', 6, 1); flechaEfecto({ de: [2, 1], a: [6, 1], tipo: 'retirada' }); setTimeout(() => { const p = pila('def'); if (p) p.classList.add('huida'); }, 700); }
       hexVacio = true;
       await espera(1000);
-      if (tipo === 'hq') bocadillo('def', 'Al HQ', 30);
+      if (tipo === 'hq') bocadillo('def', t('Al HQ'), 30);
     }
     if (hexVacio && fila.trafico) ponerMarca({ tipo: 'trafico', c: 2, r: 1, dx: 0.4, dy: 0.42 }, true);
     if (hexVacio && !atacanteMuerto) {
       await espera(350);
       moverPila('att', 2, 1);
       flechaEfecto({ de: [1, 1], a: [2, 1], tipo: 'avance' });
-      notas.push('El hex ha quedado vacío: la unidad atacante avanza tras el combate (obligatorio, sin coste de MP).' + (shock ? ' Después puede seguir moviendo si no está detenida.' : ''));
-      if (fila.trafico) notas.push('Se coloca un marcador de Tráfico en el hex del defensor: la unidad que avanza queda STOPPED allí.');
+      notas.push(t('El hex ha quedado vacío: la unidad atacante avanza tras el combate (obligatorio, sin coste de MP).') + (shock ? ' ' + t('Después puede seguir moviendo si no está detenida.') : ''));
+      if (fila.trafico) notas.push(t('Se coloca un marcador de Tráfico en el hex del defensor: la unidad que avanza queda STOPPED allí.'));
     } else if (fila.trafico && !hexVacio) {
-      notas.push('El marcador de Tráfico solo se pone si el defensor se retira o es destruido; aquí no.');
+      notas.push(t('El marcador de Tráfico solo se pone si el defensor se retira o es destruido; aquí no.'));
     }
-    if (!shock && !atacanteMuerto) notas.push('Atacante' + (S.asistente ? ' y asistente quedan' : ' queda') + ' FINISHED.');
-    if (shock && !atacanteMuerto) notas.push('El choque ha gastado un Fire Event; si era el último, la unidad queda STOPPED.');
-    if (atacanteMuerto) notas.push('La unidad atacante ha perdido todos sus pasos.');
-    vivos(defs).length === 0 && !retirada && notas.push('El defensor ha sido destruido.');
+    if (!shock && !atacanteMuerto) notas.push(t(S.asistente ? 'Atacante y asistente quedan FINISHED.' : 'Atacante queda FINISHED.'));
+    if (shock && !atacanteMuerto) notas.push(t('El choque ha gastado un Fire Event; si era el último, la unidad queda STOPPED.'));
+    if (atacanteMuerto) notas.push(t('La unidad atacante ha perdido todos sus pasos.'));
+    vivos(defs).length === 0 && !retirada && notas.push(t('El defensor ha sido destruido.'));
 
-    const titulo = TXT_COMBATE[filaIdx];
-    veredicto(titulo, `${fila.rango} · ${fila.perdida}${fila.retirada ? ' · D: ' + (fila.retirada === 'situacional' ? 'Situational' : 'Retreat') : ''}${fila.trafico ? ' · Traffic' : ''}`, res.notas.map(esc).concat(notas.map(esc)));
+    const titulo = t(TXT_COMBATE[filaIdx]);
+    veredicto(titulo, `${t(fila.rango)} · ${fila.perdida}${fila.retirada ? ' · D: ' + (fila.retirada === 'situacional' ? 'Situational' : 'Retreat') : ''}${fila.trafico ? ' · Traffic' : ''}`, res.notas.map((x) => esc(t(x))).concat(notas.map(esc)));
     registrar(titulo, total + ' → ' + fila.perdida);
   }
 
@@ -852,7 +853,7 @@
         const mk = document.querySelector(`#mapa .marca-hex[data-tipo="${S.apoyoBlanco}"]`);
         if (mk) { mk.style.transform = 'translate(-50%,-50%) scale(1.25)'; setTimeout(() => { mk.style.transform = ''; }, 500); }
         golpe('bla', 1);
-        notas.push('El apoyo pierde un paso. Si se queda sin pasos, la formación pierde ese apoyo.');
+        notas.push(t('El apoyo pierde un paso. Si se queda sin pasos, la formación pierde ese apoyo.'));
       } else { bla.pasos = Math.max(0, bla.pasos - 1); golpe('bla', 1); repintarPila('bla', [bla], 'eje'); }
     }
     if (res.drop) {
@@ -867,14 +868,14 @@
       const dest = Math.min(COLS - 1, tc + 3);
       moverPila('bla', dest, 1);
       flechaEfecto({ de: [tc, 1], a: [dest, 1], tipo: 'retirada' });
-      notas.push('El blanco se retira 3 hexes y voltea a su cara de movimiento.' + (tc + 3 > COLS - 1 ? ' (En el mapa no caben los 3 hexes.)' : ''));
+      notas.push(t('El blanco se retira 3 hexes y voltea a su cara de movimiento.') + (tc + 3 > COLS - 1 ? ' ' + t('(En el mapa no caben los 3 hexes.)') : ''));
     }
-    if (res.traficoTirador) notas.push('Marcador de Tráfico en el hex del tirador.');
-    if (tir.pasos <= 0) notas.push('El tirador ha perdido su último paso.');
-    if (!ctx.blancoEsApoyo && bla.pasos <= 0) notas.push('El blanco ha sido destruido.');
-    notas.push('El enfrentamiento ha gastado un Fire Event del tirador. No hay avance tras el combate.');
-    veredicto(fila.texto, `${fila.rango} · ${ctx.blancoEsApoyo ? 'Target is Support' : 'Target is Real AV'}`, res.notas.map(esc).concat(notas.map(esc)));
-    registrar(fila.texto, total + ' → ' + fila.rango);
+    if (res.traficoTirador) notas.push(t('Marcador de Tráfico en el hex del tirador.'));
+    if (tir.pasos <= 0) notas.push(t('El tirador ha perdido su último paso.'));
+    if (!ctx.blancoEsApoyo && bla.pasos <= 0) notas.push(t('El blanco ha sido destruido.'));
+    notas.push(t('El enfrentamiento ha gastado un Fire Event del tirador. No hay avance tras el combate.'));
+    veredicto(t(fila.texto), `${t(fila.rango)} · ${ctx.blancoEsApoyo ? 'Target is Support' : 'Target is Real AV'}`, res.notas.map((x) => esc(t(x))).concat(notas.map(esc)));
+    registrar(t(fila.texto), total + ' → ' + t(fila.rango));
   }
 
   async function tiradaBarrage() {
@@ -898,23 +899,23 @@
     if (total) golpe('def', total);
     repintarPila('def', defs, 'eje');
     await espera(700);
-    const notas = defs.map((d, i) => `${esc(U[d.k].nombre)}: ${porUnidad[i] ? porUnidad[i] + (porUnidad[i] === 1 ? ' baja' : ' bajas') : 'sin bajas'}${d.pasos <= 0 ? ' — destruida' : ''}.`);
-    if (S.modo === 'fuego') notas.push('El ataque por fuego ha gastado un Fire Event del tirador. Se puede repetir contra el mismo hex: no cuenta como bombardeo.');
-    else notas.push(S.enAtaque ? 'Bombardeo dentro de un ataque: si no queda nadie, el atacante avanza sin tirar en el Combat Table.' : 'Bombardeo suelto: el observador queda STOPPED. Ese hex ya no puede recibir otro bombardeo en esta activación.');
-    const titulo = total ? `${total} ${total === 1 ? 'baja' : 'bajas'} en el objetivo` : 'Sin bajas';
-    veredicto(titulo, `${tiradas.length} ${tiradas.length === 1 ? 'dado' : 'dados'} · ${MODOS[S.modo].tabla}`, notas);
+    const notas = defs.map((d, i) => `${esc(t(U[d.k].nombre))}: ${porUnidad[i] ? t(porUnidad[i] === 1 ? '{k} baja' : '{k} bajas', { k: porUnidad[i] }) : t('sin bajas')}${d.pasos <= 0 ? ' — ' + t('destruida') : ''}.`);
+    if (S.modo === 'fuego') notas.push(t('El ataque por fuego ha gastado un Fire Event del tirador. Se puede repetir contra el mismo hex: no cuenta como bombardeo.'));
+    else notas.push(S.enAtaque ? t('Bombardeo dentro de un ataque: si no queda nadie, el atacante avanza sin tirar en el Combat Table.') : t('Bombardeo suelto: el observador queda STOPPED. Ese hex ya no puede recibir otro bombardeo en esta activación.'));
+    const titulo = total ? t(total === 1 ? '{k} baja en el objetivo' : '{k} bajas en el objetivo', { k: total }) : t('Sin bajas');
+    veredicto(titulo, `${t(tiradas.length === 1 ? '{n} dado' : '{n} dados', { n: tiradas.length })} · ${MODOS[S.modo].tabla}`, notas);
     registrar(titulo, tiradas.map((t) => t.v).join(' '));
   }
 
   function pintarHistorial() {
     const h = $('#historial');
-    h.innerHTML = historial.length ? historial.map((x, i) => `<li><span class="n">${historial.length - i}</span><span><strong style="color:var(--heading)">${esc(x.m)}</strong> · ${esc(x.txt)}</span><span class="t">${esc(x.codigo)}</span></li>`).join('') : '<li class="vacio" style="background:none">Todavía no has tirado.</li>';
+    h.innerHTML = historial.length ? historial.map((x, i) => `<li><span class="n">${historial.length - i}</span><span><strong style="color:var(--heading)">${esc(x.m)}</strong> · ${esc(x.txt)}</span><span class="t">${esc(x.codigo)}</span></li>`).join('') : `<li class="vacio" style="background:none">${t('Todavía no has tirado.')}</li>`;
   }
 
   // ---------- Arranque ----------
   $('#btn-tirar').addEventListener('click', tirarDados);
-  $('#btn-reiniciar').addEventListener('click', () => { if (!animando) { resultado = null; limpiarTirada(); $('#btn-tirar').lastChild.textContent = 'Tirar los dados'; pintarTodo(); } });
-  $('#btn-borrar-hist').addEventListener('click', () => { historial = []; Comun.guardar('bcs-sim-hist', '[]'); pintarHistorial(); });
+  $('#btn-reiniciar').addEventListener('click', () => { if (!animando) { resultado = null; limpiarTirada(); $('#btn-tirar').lastChild.textContent = t('Tirar los dados'); pintarTodo(); } });
+  $('#btn-borrar-hist').addEventListener('click', () => { historial = []; Comun.guardar('bcs-sim-hist' + (I18N.en ? '-en' : ''), '[]'); pintarHistorial(); });
   pintarTodo();
   pintarHistorial();
 })();

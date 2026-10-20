@@ -194,6 +194,11 @@ kbd {
 .boton-icono svg { width: 17px; height: 17px; }
 .boton-icono kbd { font-size: 0.7rem; }
 .menu-movil { display: none; }
+.idioma { display: inline-flex; align-items: center; height: 38px; padding: 3px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); font: 700 .74rem var(--mono); letter-spacing: .04em; }
+.idioma span { display: grid; place-items: center; height: 100%; padding: 0 8px; border-radius: 7px; color: var(--muted); }
+.idioma span.on { background: var(--amber); color: #1a1405; }
+.idioma:hover { text-decoration: none; border-color: var(--border-strong); }
+.idioma:hover span:not(.on) { color: var(--heading); }
 
 @media (max-width: 1020px) {
   .nav { display: none; position: absolute; top: 64px; left: 0; right: 0; flex-direction: column; background: var(--surface); border-bottom: 1px solid var(--border); padding: 10px 20px 16px; }

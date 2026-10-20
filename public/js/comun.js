@@ -1,32 +1,33 @@
 // Cabecera, pie, tema y buscador, comunes a todas las páginas.
 (function () {
   'use strict';
+  const tr = I18N.t, EN = I18N.en;
 
   // El reglamento, en el orden de las Series Rules
   const CAPITULOS = [
-    ['fichas.html', 'Fichas y unidades', 'Cómo leer una ficha, tipos de unidad, AV, apoyo y marcadores'],
-    ['secuencia.html', 'Secuencia y SNAFU', 'El turno, la activación, el SNAFU y la Segunda Activación'],
-    ['mando.html', 'Mando y suministro', 'Formaciones, HQ, trenes, MSR, OBJ, Safe Path y aislamiento'],
-    ['movimiento.html', 'Movimiento y ZOC', 'Terreno, apilamiento, ZOC, zonas de enfrentamiento y pantallas'],
-    ['combate.html', 'Combate', 'Ataques, enfrentamientos, fuego, bombardeos y retiradas'],
-    ['opcionales.html', 'Reglas opcionales', 'Órdenes, chits de activación, Planned Fatigue y otras']
+    ['fichas.html', tr('Fichas y unidades'), tr('Cómo leer una ficha, tipos de unidad, AV, apoyo y marcadores')],
+    ['secuencia.html', tr('Secuencia y SNAFU'), tr('El turno, la activación, el SNAFU y la Segunda Activación')],
+    ['mando.html', tr('Mando y suministro'), tr('Formaciones, HQ, trenes, MSR, OBJ, Safe Path y aislamiento')],
+    ['movimiento.html', tr('Movimiento y ZOC'), tr('Terreno, apilamiento, ZOC, zonas de enfrentamiento y pantallas')],
+    ['combate.html', tr('Combate'), tr('Ataques, enfrentamientos, fuego, bombardeos y retiradas')],
+    ['opcionales.html', tr('Reglas opcionales'), tr('Órdenes, chits de activación, Planned Fatigue y otras')]
   ];
   // Rango que se gana al superar cada lección
-  const RANGOS = ['Recluta', 'Soldado', 'Cabo', 'Sargento', 'Teniente', 'Capitán', 'Comandante'];
+  const RANGOS = [tr('Recluta'), tr('Soldado'), tr('Cabo'), tr('Sargento'), tr('Teniente'), tr('Capitán'), tr('Comandante')];
   // Herramientas para la mesa
   const UTILIDADES = [
-    ['simulador.html', 'Simulador de ataques', 'Fichas en el mapa, probabilidades y tiradas animadas'],
-    ['combate.html#elegir', '¿Qué ataque uso?', 'Elige tu unidad y el blanco, y te dice qué puedes hacer'],
-    ['secuencia.html#snafu', 'Calculadora de SNAFU', 'Modificadores y probabilidad de Full, Partial y Fail'],
-    ['opcionales.html#chits', 'Saco de activaciones', 'Saca chits de 3 en 3: el bando con mayoría elige'],
-    ['opcionales.html#ordenes', 'Cuaderno de órdenes', 'Anota las órdenes de cada formación, turno a turno']
+    ['simulador.html', tr('Simulador de ataques'), tr('Fichas en el mapa, probabilidades y tiradas animadas')],
+    ['combate.html#elegir', tr('¿Qué ataque uso?'), tr('Elige tu unidad y el blanco, y te dice qué puedes hacer')],
+    ['secuencia.html#snafu', tr('Calculadora de SNAFU'), tr('Modificadores y probabilidad de Full, Partial y Fail')],
+    ['opcionales.html#chits', tr('Saco de activaciones'), tr('Saca chits de 3 en 3: el bando con mayoría elige')],
+    ['opcionales.html#ordenes', tr('Cuaderno de órdenes'), tr('Anota las órdenes de cada formación, turno a turno')]
   ];
   const PAGINAS = [
-    ['index.html', 'Inicio'],
-    ['reglamento', 'Reglamento'],
-    ['utilidades', 'Utilidades'],
-    ['tablas.html', 'Tablas'],
-    ['glosario.html', 'Glosario']
+    ['index.html', tr('Inicio')],
+    ['reglamento', tr('Reglamento')],
+    ['utilidades', tr('Utilidades')],
+    ['tablas.html', tr('Tablas')],
+    ['glosario.html', tr('Glosario')]
   ];
   const actual = location.pathname.split('/').pop().replace(/\.html$/, '') || 'index';
   const esActual = (href) => href.replace(/\.html$/, '') === actual;
@@ -53,6 +54,16 @@
     return document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
   }
 
+  // La misma página en el otro idioma: /x.html ↔ /en/x.html
+  function otroIdioma() {
+    const pag = (location.pathname.split('/').pop() || 'index.html') + location.hash;
+    return EN ? '../' + pag : 'en/' + pag;
+  }
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a.idioma');
+    if (a) a.href = otroIdioma();
+  });
+
   function cabecera() {
     const grupo = (txt, items, marca, actualGrupo) => `<div class="nav__grupo"><button type="button" class="nav__btn${actualGrupo ? ' actual' : ''}" aria-expanded="false">${txt} ${ICONOS.flecha}</button><div class="nav__menu" data-titulo="${txt}">${items.map(([h, t, d], i) => `<a href="${h}"${esActual(h) ? ' aria-current="page"' : ''}><span class="nav__n">${marca(i)}</span><span><strong>${t}</strong><small>${d}</small></span></a>`).join('')}</div></div>`;
     const enlaces = PAGINAS.map(([href, txt]) => {
@@ -63,12 +74,13 @@
     const h = document.createElement('header');
     h.className = 'cabecera';
     h.innerHTML = `<div class="wrap cabecera__fila">
-      <a class="marca" href="index.html">${LOGO}<span class="marca__txt">Academia BCS<small>Battalion Combat Series v2.0</small></span></a>
-      <nav class="nav" id="nav" aria-label="Secciones">${enlaces}</nav>
+      <a class="marca" href="index.html">${LOGO}<span class="marca__txt">${tr('Academia BCS')}<small>Battalion Combat Series v2.0</small></span></a>
+      <nav class="nav" id="nav" aria-label="${tr('Secciones')}">${enlaces}</nav>
       <div class="acciones">
-        <button class="boton-icono" id="btn-buscar" type="button" aria-label="Buscar">${ICONOS.buscar}<span class="buscar-txt">Buscar</span> <kbd class="buscar-txt">Ctrl K</kbd></button>
-        <button class="boton-icono" id="btn-tema" type="button" aria-label="Cambiar tema"></button>
-        <button class="boton-icono menu-movil" id="btn-menu" type="button" aria-label="Menú" aria-expanded="false" aria-controls="nav">${ICONOS.menu}</button>
+        <a class="idioma" href="${otroIdioma()}" hreflang="${EN ? 'es' : 'en'}" lang="${EN ? 'es' : 'en'}" title="${tr('Read this page in English')}"><span${EN ? '' : ' class="on"'}>ES</span><span${EN ? ' class="on"' : ''}>EN</span></a>
+        <button class="boton-icono" id="btn-buscar" type="button" aria-label="${tr('Buscar')}">${ICONOS.buscar}<span class="buscar-txt">${tr('Buscar')}</span> <kbd class="buscar-txt">Ctrl K</kbd></button>
+        <button class="boton-icono" id="btn-tema" type="button" aria-label="${tr('Cambiar tema')}"></button>
+        <button class="boton-icono menu-movil" id="btn-menu" type="button" aria-label="${tr('Menú')}" aria-expanded="false" aria-controls="nav">${ICONOS.menu}</button>
       </div>
     </div>`;
     document.body.prepend(h);
@@ -117,7 +129,7 @@
     const hero = document.querySelector('main .hero');
     const tira = document.createElement('nav');
     tira.className = 'capitulos';
-    tira.setAttribute('aria-label', 'Capítulos del reglamento');
+    tira.setAttribute('aria-label', tr('Capítulos del reglamento'));
     tira.innerHTML = `<div class="wrap"><ol>${CAPITULOS.map(([h, t], i) => `<li><a href="${h}"${i === capActual ? ' aria-current="page"' : ''}><span class="nav__n">${i + 1}</span>${t}</a></li>`).join('')}</ol></div>`;
     if (hero) hero.after(tira);
     const ol = tira.querySelector('ol'), sel = ol.querySelector('[aria-current]').parentElement;
@@ -125,16 +137,16 @@
     const ant = CAPITULOS[capActual - 1], sig = CAPITULOS[capActual + 1];
     const pasar = document.createElement('nav');
     pasar.className = 'wrap pasar';
-    pasar.setAttribute('aria-label', 'Capítulo anterior y siguiente');
-    pasar.innerHTML = (ant ? `<a class="pasar__ant" href="${ant[0]}"><small>← Capítulo ${capActual}</small><strong>${ant[1]}</strong></a>` : '<span></span>')
-      + (sig ? `<a class="pasar__sig" href="${sig[0]}"><small>Capítulo ${capActual + 2} →</small><strong>${sig[1]}</strong></a>` : '<a class="pasar__sig" href="simulador.html"><small>Para practicar →</small><strong>Simulador de ataques</strong></a>');
+    pasar.setAttribute('aria-label', tr('Capítulo anterior y siguiente'));
+    pasar.innerHTML = (ant ? `<a class="pasar__ant" href="${ant[0]}"><small>← ${tr('Capítulo {n}', { n: capActual })}</small><strong>${ant[1]}</strong></a>` : '<span></span>')
+      + (sig ? `<a class="pasar__sig" href="${sig[0]}"><small>${tr('Capítulo {n}', { n: capActual + 2 })} →</small><strong>${sig[1]}</strong></a>` : `<a class="pasar__sig" href="simulador.html"><small>${tr('Para practicar')} →</small><strong>${tr('Simulador de ataques')}</strong></a>`);
     const href = CAPITULOS[capActual][0];
     const sello = document.createElement('div');
     sello.className = 'wrap sello';
     const pintarSello = () => {
       const l = lecciones(), hecha = l.includes(href);
-      sello.innerHTML = `<div class="sello__caja${hecha ? ' hecha' : ''}"><div><span class="antetitulo">Lección ${capActual + 1} de ${CAPITULOS.length}</span><strong>${hecha ? 'Lección superada' : '¿Lo tienes claro, recluta?'}</strong><p>${hecha ? `Rango actual: <b>${rango(l.length)}</b>. Sigue con la siguiente lección o repasa esta cuando quieras.` : `Márcala como superada y asciende a <b>${rango(l.length + 1)}</b>. Se guarda solo en este navegador.`}</p></div>
-        <button type="button" class="boton${hecha ? '' : ' boton--primario'}">${hecha ? 'Desmarcar' : '✓ Lección superada'}</button></div>`;
+      sello.innerHTML = `<div class="sello__caja${hecha ? ' hecha' : ''}"><div><span class="antetitulo">${tr('Lección {a} de {b}', { a: capActual + 1, b: CAPITULOS.length })}</span><strong>${hecha ? tr('Lección superada') : tr('¿Lo tienes claro, recluta?')}</strong><p>${hecha ? tr('Rango actual: <b>{r}</b>. Sigue con la siguiente lección o repasa esta cuando quieras.', { r: rango(l.length) }) : tr('Márcala como superada y asciende a <b>{r}</b>. Se guarda solo en este navegador.', { r: rango(l.length + 1) })}</p></div>
+        <button type="button" class="boton${hecha ? '' : ' boton--primario'}">${hecha ? tr('Desmarcar') : tr('✓ Lección superada')}</button></div>`;
       sello.querySelector('button').addEventListener('click', () => { marcarLeccion(href, !hecha); pintarSello(); });
     };
     pintarSello();
@@ -145,6 +157,7 @@
   // Enlaza la primera aparición de cada término en cada sección y muestra su definición al pasar por encima.
   // [expresión, término del glosario]
   const TERMINOS = [
+    ['Command Radius', 'Command Radius (CR)'], ['Reinforcements?', 'Reinforcements'], ['Replacements?', 'Replacements (Repls)'], ['Formations?', 'Formation'], ['Out of Command', 'Out of Command'],
     ['March OBJs?', 'March OBJ'], ['Planned Fatigue', 'Planned Fatigue'], ['Soft Jumps?', 'Soft Jump'], ['Unit Traffic', 'Unit Traffic'],
     ['Non-AV ZOC', 'Non-AV ZOC'], ['Real AV ZOC', 'Real AV ZOC'], ['Support AV ZOC', 'Support AV ZOC'],
     ['ZOC blindadas?', 'AV ZOC'], ['AV E?ZOCs?', 'AV ZOC'], ['E?ZOCs?', 'ZOC'],
@@ -231,7 +244,13 @@
   function pie() {
     const f = document.createElement('footer');
     f.className = 'pie';
-    f.innerHTML = `<div class="wrap pie__fila">
+    f.innerHTML = EN ? `<div class="wrap pie__fila">
+      <div>
+        <p><strong>BCS Academy</strong> is an unofficial, fan-made play aid: basic training for recruits and a quick reference for veterans. It summarises the series rules (v2.0) and leaves out each game's own rules.</p>
+        <p><em>Battalion Combat Series</em>, its rules, charts and counters are © Multi-Man Publishing / The Gamers. The complete, current rules are at <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. The counters shown come from the VASSAL modules for <em>Arracourt</em>, <em>Danger Forward</em> and <em>Valley of Tears</em>.</p>
+      </div>
+      <div><p><a href="https://nephei.org">nephei.org</a> · <a href="https://rpg.nephei.org">rpg.nephei.org</a></p></div>
+    </div>` : `<div class="wrap pie__fila">
       <div>
         <p><strong>Academia BCS</strong> es una ayuda de juego no oficial, hecha por un aficionado: instrucción para reclutas y consulta para veteranos. Resume las reglas de la serie (v2.0) sin entrar en las reglas propias de cada juego.</p>
         <p><em>Battalion Combat Series</em>, sus reglas, tablas y fichas son © Multi-Man Publishing / The Gamers. Las reglas completas y vigentes están en <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. Las fichas que se muestran vienen de los módulos de VASSAL de <em>Arracourt</em>, <em>Danger Forward</em> y <em>Valley of Tears</em>.</p>
@@ -247,7 +266,7 @@
   function indice() {
     const items = [];
     (window.Datos ? Datos.SECCIONES : []).forEach(([t, href, donde]) => items.push({ t, href, donde, d: '' }));
-    (window.Datos ? Datos.GLOSARIO : []).forEach(([t, es, d]) => items.push({ t: t + (es && es !== t ? ' · ' + es : ''), href: 'glosario.html#' + Datos.slug(t), donde: 'Glosario', d }));
+    (window.Datos ? Datos.GLOSARIO : []).forEach(([t, es, d]) => items.push({ t: t + (es && es !== t ? ' · ' + es : ''), href: 'glosario.html#' + Datos.slug(t), donde: tr('Glosario'), d }));
     return items;
   }
   function norm(s) { return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, ''); }
@@ -262,8 +281,8 @@
     buscador = document.createElement('div');
     buscador.className = 'buscador';
     buscador.hidden = true;
-    buscador.innerHTML = `<div class="buscador__caja" role="dialog" aria-modal="true" aria-label="Buscar en la referencia">
-      <div class="buscador__entrada">${ICONOS.buscar}<input type="search" placeholder="Busca un término, una tabla o una regla…" aria-label="Buscar" autocomplete="off"><kbd>Esc</kbd></div>
+    buscador.innerHTML = `<div class="buscador__caja" role="dialog" aria-modal="true" aria-label="${tr('Buscar en la referencia')}">
+      <div class="buscador__entrada">${ICONOS.buscar}<input type="search" placeholder="${tr('Busca un término, una tabla o una regla…')}" aria-label="${tr('Buscar')}" autocomplete="off"><kbd>Esc</kbd></div>
       <ul role="listbox"></ul></div>`;
     document.body.append(buscador);
     entrada = buscador.querySelector('input');
@@ -274,10 +293,10 @@
       const nq = norm(q);
       resultados = q ? todos.filter((i) => norm(i.t + ' ' + i.d).includes(nq))
         .sort((a, b) => (norm(a.t).includes(nq) ? 0 : 1) - (norm(b.t).includes(nq) ? 0 : 1)).slice(0, 12)
-        : todos.filter((i) => i.donde !== 'Glosario').slice(0, 10);
+        : todos.filter((i) => i.donde !== tr('Glosario')).slice(0, 10);
       activo = 0;
       lista.innerHTML = resultados.length ? resultados.map((r, i) => `<li><a href="${r.href}" class="${i === 0 ? 'activo' : ''}"><span class="donde">${r.donde}</span><strong>${resaltar(r.t, q)}</strong>${r.d ? `<p>${resaltar(r.d, q)}</p>` : ''}</a></li>`).join('')
-        : '<li class="buscador__vacio">Nada con ese nombre. Prueba con el término en inglés.</li>';
+        : `<li class="buscador__vacio">${tr('Nada con ese nombre. Prueba con el término en inglés.')}</li>`;
     };
     entrada.addEventListener('input', pintar);
     entrada.addEventListener('keydown', (e) => {

@@ -154,5 +154,10 @@
     return t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\(.*?\)/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
   }
 
-  root.Datos = { GLOSARIO, SECCIONES, slug };
+  // En la versión inglesa, las definiciones y el índice vienen de js/en.js
+  const EN = root.I18N && root.I18N.en;
+  const GL = EN && root.GLOSARIO_EN ? GLOSARIO.map(([t, es, d, r]) => [t, '', root.GLOSARIO_EN[t] || d, r]) : GLOSARIO;
+  const SEC = EN && root.SECCIONES_EN ? root.SECCIONES_EN : SECCIONES;
+
+  root.Datos = { GLOSARIO: GL, SECCIONES: SEC, slug };
 })(window);

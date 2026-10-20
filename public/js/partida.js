@@ -3,24 +3,25 @@
 (function () {
   'use strict';
   const esc = Fichas.esc;
+  const tr = I18N.t;
   const CLAVE = 'bcs-partida';
   const $ = (id) => document.getElementById(id);
 
   const ORDENES = {
-    hq: { corto: 'HQ', nombre: 'Mover HQ' },
-    no: { corto: '—', nombre: 'Sin órdenes' },
-    pd: { corto: 'PD', nombre: 'Defensa preparada' },
-    rec: { corto: 'Rec', nombre: 'Recuperación' }
+    hq: { corto: 'HQ', nombre: tr('Mover HQ') },
+    no: { corto: '—', nombre: tr('Sin órdenes') },
+    pd: { corto: 'PD', nombre: tr('Defensa preparada') },
+    rec: { corto: tr('Rec'), nombre: tr('Recuperación') }
   };
   const EJEMPLO = [
-    { nombre: 'EE. UU.', formaciones: ['CCA / 4th Armored', 'CCB / 4th Armored', '35th Infantry'] },
-    { nombre: 'Alemania', formaciones: ['11. Panzer', '21. Panzer', '15. Panzergrenadier', '559. Volksgrenadier'] }
+    { nombre: tr('EE. UU.'), formaciones: ['CCA / 4th Armored', 'CCB / 4th Armored', '35th Infantry'] },
+    { nombre: tr('Alemania'), formaciones: ['11. Panzer', '21. Panzer', '15. Panzergrenadier', '559. Volksgrenadier'] }
   ];
 
   function nueva() {
     return {
       version: 1, turno: 1, sig: 1,
-      bandos: [{ nombre: 'Aliados', formaciones: [] }, { nombre: 'Eje', formaciones: [] }],
+      bandos: [{ nombre: tr('Aliados'), formaciones: [] }, { nombre: tr('Eje'), formaciones: [] }],
       saco: { modo: 'modificada', turno: 1, usadas: [], sacadas: [], fuera: [] },
       ordenes: {},
       verBando: 0,
@@ -35,20 +36,20 @@
   function guardar() {
     Comun.guardar(CLAVE, JSON.stringify(E));
     const g = $('guardado');
-    g.textContent = 'Guardado en este navegador · ' + new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+    g.textContent = tr('Guardado en este navegador') + ' · ' + new Date().toLocaleTimeString(I18N.en ? 'en-GB' : 'es-ES', { hour: '2-digit', minute: '2-digit' });
   }
 
   const todas = () => E.bandos.flatMap((b, i) => b.formaciones.map((f) => ({ ...f, bando: i })));
   const porId = (id) => todas().find((f) => f.id === id);
-  const etiquetaBando = (i) => E.bandos[i].nombre || (i ? 'Bando 2' : 'Bando 1');
+  const etiquetaBando = (i) => E.bandos[i].nombre || tr(i ? 'Bando 2' : 'Bando 1');
 
   // ---------- Bandos y formaciones ----------
   function pintarBandos() {
     $('bandos').innerHTML = E.bandos.map((b, i) => `
       <div class="tarjeta bando bando--${i}">
-        <label class="bando__nombre"><span class="sr">Nombre del bando</span><input type="text" value="${esc(b.nombre)}" data-bando="${i}" maxlength="30" placeholder="Nombre del bando"></label>
-        <ul class="formaciones">${b.formaciones.map((f) => `<li><span>${esc(f.nombre)}</span><button type="button" data-quitar="${f.id}" aria-label="Quitar ${esc(f.nombre)}">×</button></li>`).join('') || '<li class="vacio">Sin formaciones todavía</li>'}</ul>
-        <form class="anadir" data-bando="${i}"><input type="text" placeholder="Nueva formación (p. ej. 11. Panzer)" maxlength="40" aria-label="Nueva formación de ${esc(etiquetaBando(i))}"><button type="submit" class="boton boton--peq">Añadir</button></form>
+        <label class="bando__nombre"><span class="sr">${tr('Nombre del bando')}</span><input type="text" value="${esc(b.nombre)}" data-bando="${i}" maxlength="30" placeholder="${tr('Nombre del bando')}"></label>
+        <ul class="formaciones">${b.formaciones.map((f) => `<li><span>${esc(f.nombre)}</span><button type="button" data-quitar="${f.id}" aria-label="${tr('Quitar {x}', { x: esc(f.nombre) })}">×</button></li>`).join('') || `<li class="vacio">${tr('Sin formaciones todavía')}</li>`}</ul>
+        <form class="anadir" data-bando="${i}"><input type="text" placeholder="${tr('Nueva formación (p. ej. 11. Panzer)')}" maxlength="40" aria-label="${tr('Nueva formación de {x}', { x: esc(etiquetaBando(i)) })}"><button type="submit" class="boton boton--peq">${tr('Añadir')}</button></form>
       </div>`).join('');
   }
   $('bandos').addEventListener('input', (e) => {
@@ -86,7 +87,7 @@
   $('turno-menos').addEventListener('click', () => cambiarTurno(E.turno - 1));
   $('turno-mas').addEventListener('click', () => cambiarTurno(E.turno + 1));
   $('ejemplo').addEventListener('click', () => {
-    if (todas().length && !confirm('¿Sustituir las formaciones actuales por el ejemplo? Se borrarán las órdenes y el saco.')) return;
+    if (todas().length && !confirm(tr('¿Sustituir las formaciones actuales por el ejemplo? Se borrarán las órdenes y el saco.'))) return;
     const n = nueva();
     n.bandos = EJEMPLO.map((b) => ({ nombre: b.nombre, formaciones: b.formaciones.map((f) => ({ id: 'f' + n.sig++, nombre: f })) }));
     E = n;
@@ -94,11 +95,11 @@
     pintar();
   });
   $('borrar').addEventListener('click', () => {
-    if (!confirm('¿Borrar la partida? Se perderán las formaciones, el saco y todas las órdenes guardadas en este navegador.')) return;
+    if (!confirm(tr('¿Borrar la partida? Se perderán las formaciones, el saco y todas las órdenes guardadas en este navegador.'))) return;
     E = nueva();
     try { localStorage.removeItem(CLAVE); } catch (e) { /* sin almacenamiento */ }
     pintar();
-    $('guardado').textContent = 'Partida borrada.';
+    $('guardado').textContent = tr('Partida borrada.');
   });
 
   // ---------- Saco de activaciones ----------
@@ -118,31 +119,31 @@
     document.querySelectorAll('#saco-modo button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.m === E.saco.modo));
     const vaso = enVaso(), fuera = E.saco.fuera.map(porId).filter(Boolean);
     const cuenta = E.bandos.map((b, i) => vaso.filter((f) => f.bando === i).length);
-    $('vaso').innerHTML = `<div class="vaso__cab"><strong>${vaso.length}</strong> chit${vaso.length === 1 ? '' : 's'} en el vaso<span class="muted">${cuenta.map((c, i) => `${esc(etiquetaBando(i))}: ${c}`).join(' · ')}</span></div>
-      <div class="vaso__fichas">${vaso.map((f) => `<button type="button" class="chit-btn" data-apartar="${f.id}" title="Apartar este turno (por ejemplo, si aún no ha llegado)">${chit(f, ' chit--peq')}</button>`).join('') || '<span class="muted">Vacío</span>'}</div>
-      ${fuera.length ? `<div class="vaso__fuera"><span class="muted">Fuera este turno:</span> ${fuera.map((f) => `<button type="button" class="chit-btn" data-volver="${f.id}" title="Devolver al vaso">${chit(f, ' chit--peq chit--fuera')}</button>`).join('')}</div>` : ''}`;
+    $('vaso').innerHTML = `<div class="vaso__cab"><strong>${vaso.length}</strong> ${tr(vaso.length === 1 ? 'chit en el vaso' : 'chits en el vaso')}<span class="muted">${cuenta.map((c, i) => `${esc(etiquetaBando(i))}: ${c}`).join(' · ')}</span></div>
+      <div class="vaso__fichas">${vaso.map((f) => `<button type="button" class="chit-btn" data-apartar="${f.id}" title="${tr('Apartar este turno (por ejemplo, si aún no ha llegado)')}">${chit(f, ' chit--peq')}</button>`).join('') || `<span class="muted">${tr('Vacío')}</span>`}</div>
+      ${fuera.length ? `<div class="vaso__fuera"><span class="muted">${tr('Fuera este turno:')}</span> ${fuera.map((f) => `<button type="button" class="chit-btn" data-volver="${f.id}" title="${tr('Devolver al vaso')}">${chit(f, ' chit--peq chit--fuera')}</button>`).join('')}</div>` : ''}`;
 
     const sac = E.saco.sacadas.map(porId).filter(Boolean);
     let mesa;
-    if (!todas().length) mesa = '<p class="muted mb0">Añade las formaciones de cada bando arriba para llenar el vaso.</p>';
+    if (!todas().length) mesa = `<p class="muted mb0">${tr('Añade las formaciones de cada bando arriba para llenar el vaso.')}</p>`;
     else if (sac.length) {
       const votos = [0, 1].map((i) => sac.filter((f) => f.bando === i).length);
       const may = votos[0] > votos[1] ? 0 : 1;
-      mesa = `<p class="mesa__aviso"><b class="b${may}">${esc(etiquetaBando(may))}</b> tiene mayoría (${votos[may]} de 3) y elige qué formación se activa. Las otras dos vuelven al vaso.</p>
-        <div class="mesa__tres">${sac.map((f) => `<button type="button" class="chit-btn chit-btn--grande" data-activar="${f.id}">${chit(f, f.bando === may ? ' chit--mayoria' : '')}<span class="chit-btn__accion">Activar</span></button>`).join('')}</div>`;
+      mesa = `<p class="mesa__aviso">${tr('<b class="b{c}">{x}</b> tiene mayoría ({n} de 3) y elige qué formación se activa. Las otras dos vuelven al vaso.', { c: may, x: esc(etiquetaBando(may)), n: votos[may] })}</p>
+        <div class="mesa__tres">${sac.map((f) => `<button type="button" class="chit-btn chit-btn--grande" data-activar="${f.id}">${chit(f, f.bando === may ? ' chit--mayoria' : '')}<span class="chit-btn__accion">${tr('Activar')}</span></button>`).join('')}</div>`;
     } else if (E.saco.usadas.length) {
       const u = porId(E.saco.usadas[E.saco.usadas.length - 1]);
-      mesa = u ? `<p class="mesa__aviso">Se activa:</p><div class="mesa__tres">${chit(u, ' chit--grande')}</div>` : '';
-      if (!vaso.length) mesa += `<p class="mesa__aviso" style="margin-top:14px">Todas las formaciones han actuado este turno.</p>`;
-    } else mesa = `<p class="muted mb0">${E.saco.modo === 'modificada' ? 'Saca tres chits: el bando con mayoría elige cuál activa.' : 'Saca un chit: esa formación se activa.'}</p>`;
+      mesa = u ? `<p class="mesa__aviso">${tr('Se activa:')}</p><div class="mesa__tres">${chit(u, ' chit--grande')}</div>` : '';
+      if (!vaso.length) mesa += `<p class="mesa__aviso" style="margin-top:14px">${tr('Todas las formaciones han actuado este turno.')}</p>`;
+    } else mesa = `<p class="muted mb0">${tr(E.saco.modo === 'modificada' ? 'Saca tres chits: el bando con mayoría elige cuál activa.' : 'Saca un chit: esa formación se activa.')}</p>`;
     $('sacadas').innerHTML = mesa;
 
     const sacar = $('sacar');
     const finTurno = todas().length && !vaso.length && !sac.length;
-    sacar.textContent = finTurno ? `Empezar el turno ${E.turno + 1}` : sac.length ? 'Elige una formación' : E.saco.modo === 'modificada' && vaso.length >= 3 ? 'Sacar 3 chits' : 'Sacar 1 chit';
+    sacar.textContent = finTurno ? tr('Empezar el turno {n}', { n: E.turno + 1 }) : tr(sac.length ? 'Elige una formación' : E.saco.modo === 'modificada' && vaso.length >= 3 ? 'Sacar 3 chits' : 'Sacar 1 chit');
     sacar.disabled = !todas().length || sac.length > 0;
     $('deshacer').disabled = !sac.length && !E.saco.usadas.length;
-    $('usadas').innerHTML = E.saco.usadas.map(porId).filter(Boolean).map((f) => `<li>${chit(f, ' chit--peq')}</li>`).join('') || '<li class="muted">Ninguna todavía</li>';
+    $('usadas').innerHTML = E.saco.usadas.map(porId).filter(Boolean).map((f) => `<li>${chit(f, ' chit--peq')}</li>`).join('') || `<li class="muted">${tr('Ninguna todavía')}</li>`;
   }
   $('saco-modo').addEventListener('click', (e) => {
     const b = e.target.closest('button');
@@ -214,39 +215,39 @@
     guardar();
     pintarCuaderno();
   }
-  const textoOrden = (v) => v.o.map((x) => ORDENES[x].nombre).join(' + ') + (v.o.includes('hq') && v.ruta ? ` (ruta: ${v.ruta})` : '');
+  const textoOrden = (v) => v.o.map((x) => ORDENES[x].nombre).join(' + ') + (v.o.includes('hq') && v.ruta ? ` (${tr('ruta')}: ${v.ruta})` : '');
 
   function pintarCuaderno() {
-    $('cuaderno-turno').textContent = 'turno ' + E.turno;
+    $('cuaderno-turno').textContent = tr('turno {n}', { n: E.turno });
     const btn = $('ocultar');
     btn.setAttribute('aria-pressed', E.secreto);
-    btn.textContent = E.secreto ? 'Desactivar el modo secreto' : 'Modo secreto';
+    btn.textContent = tr(E.secreto ? 'Desactivar el modo secreto' : 'Modo secreto');
     $('revelar-todas').hidden = !E.secreto;
     $('cuaderno').classList.toggle('secreto', E.secreto);
     $('cuaderno-bando').innerHTML = E.bandos.map((b, i) => `<button type="button" data-b="${i}" aria-pressed="${E.verBando === i}">${esc(etiquetaBando(i))}</button>`).join('');
     const fs = E.bandos[E.verBando].formaciones;
     $('cuaderno-lista').innerHTML = fs.length ? fs.map((f) => {
       const v = vigente(E.turno, f.id), propia = v.desde === E.turno;
-      const estado = propia ? (v.desde > 1 && JSON.stringify(vigente(E.turno - 1, f.id).o) !== JSON.stringify(v.o) ? '<span class="estado nueva">Cambiada este turno</span>' : '<span class="estado nueva">Anotada este turno</span>')
-        : v.desde ? `<span class="estado">Vigente desde el turno ${v.desde}</span>` : '<span class="estado">Por defecto</span>';
+      const estado = propia ? (v.desde > 1 && JSON.stringify(vigente(E.turno - 1, f.id).o) !== JSON.stringify(v.o) ? `<span class="estado nueva">${tr('Cambiada este turno')}</span>` : `<span class="estado nueva">${tr('Anotada este turno')}</span>`)
+        : v.desde ? `<span class="estado">${tr('Vigente desde el turno {n}', { n: v.desde })}</span>` : `<span class="estado">${tr('Por defecto')}</span>`;
       const tapada = oculta(f.id);
-      const ojo = E.secreto ? `<button type="button" class="ojo" data-revelar="${f.id}" aria-pressed="${!tapada}">${tapada ? 'Revelar' : 'Ocultar'}</button>` : '';
+      const ojo = E.secreto ? `<button type="button" class="ojo" data-revelar="${f.id}" aria-pressed="${!tapada}">${tr(tapada ? 'Revelar' : 'Ocultar')}</button>` : '';
       return `<div class="orden${tapada ? ' orden--oculta' : ''}" data-f="${f.id}">
-        <div class="orden__cab"><strong>${esc(f.nombre)}</strong>${tapada ? '<span class="estado">Orden secreta</span>' : estado}</div>${ojo}
-        <div class="orden__botones" role="group" aria-label="Orden de ${esc(f.nombre)}">${Object.entries(ORDENES).map(([k, o]) => `<button type="button" class="orden-chip ${k}" data-o="${k}" aria-pressed="${v.o.includes(k)}">${o.nombre}</button>`).join('')}</div>
+        <div class="orden__cab"><strong>${esc(f.nombre)}</strong>${tapada ? `<span class="estado">${tr('Orden secreta')}</span>` : estado}</div>${ojo}
+        <div class="orden__botones" role="group" aria-label="${tr('Orden de {x}', { x: esc(f.nombre) })}">${Object.entries(ORDENES).map(([k, o]) => `<button type="button" class="orden-chip ${k}" data-o="${k}" aria-pressed="${v.o.includes(k)}">${o.nombre}</button>`).join('')}</div>
         <div class="orden__campos">
-          ${v.o.includes('hq') ? `<label><span>Ruta del HQ</span><input type="text" data-campo="ruta" value="${esc(v.ruta || '')}" placeholder="Puntos de paso y hex final: por 12.08 y 15.10 hasta 18.12" maxlength="160"></label>` : ''}
-          <label><span>Notas</span><input type="text" data-campo="nota" value="${esc(v.nota || '')}" placeholder="Opcional: intención, objetivos…" maxlength="200"></label>
+          ${v.o.includes('hq') ? `<label><span>${tr('Ruta del HQ')}</span><input type="text" data-campo="ruta" value="${esc(v.ruta || '')}" placeholder="${tr('Puntos de paso y hex final: por 12.08 y 15.10 hasta 18.12')}" maxlength="160"></label>` : ''}
+          <label><span>${tr('Notas')}</span><input type="text" data-campo="nota" value="${esc(v.nota || '')}" placeholder="${tr('Opcional: intención, objetivos…')}" maxlength="200"></label>
         </div>
       </div>`;
-    }).join('') : `<p class="muted mb0">No hay formaciones para ${esc(etiquetaBando(E.verBando))}. Añádelas en «Tu partida».</p>`;
+    }).join('') : `<p class="muted mb0">${tr('No hay formaciones para {x}. Añádelas en «Tu partida».', { x: esc(etiquetaBando(E.verBando)) })}</p>`;
 
     // Historial: una columna por turno, con las órdenes de ese bando
     const ultimo = Math.max(E.turno, ...Object.keys(E.ordenes).map(Number), 1);
     const cols = Array.from({ length: ultimo }, (_, i) => i + 1);
-    $('historial').innerHTML = fs.length ? `<thead><tr><th>Formación</th>${cols.map((t) => `<th class="num">T${t}</th>`).join('')}</tr></thead><tbody>${fs.map((f) => `<tr><td>${esc(f.nombre)}</td>${cols.map((t) => {
+    $('historial').innerHTML = fs.length ? `<thead><tr><th>${tr('Formación')}</th>${cols.map((t) => `<th class="num">T${t}</th>`).join('')}</tr></thead><tbody>${fs.map((f) => `<tr><td>${esc(f.nombre)}</td>${cols.map((t) => {
       const v = vigente(t, f.id), propia = v.desde === t;
-      if (t === E.turno && oculta(f.id)) return '<td class="num heredada" title="Orden secreta">?</td>';
+      if (t === E.turno && oculta(f.id)) return `<td class="num heredada" title="${tr('Orden secreta')}">?</td>`;
       return `<td class="num${propia ? '' : ' heredada'}" title="${esc(textoOrden(v))}">${v.o.map((x) => ORDENES[x].corto).join('+')}</td>`;
     }).join('')}</tr>`).join('')}</tbody>` : '';
   }
@@ -281,7 +282,7 @@
     fijar(e.target.closest('.orden').dataset.f, (n) => { n[c] = e.target.value; });
     const est = e.target.closest('.orden').querySelector('.estado');
     est.className = 'estado nueva';
-    est.textContent = 'Anotada este turno';
+    est.textContent = tr('Anotada este turno');
   });
   $('ocultar').addEventListener('click', () => {
     E.secreto = !E.secreto;
@@ -297,16 +298,16 @@
     pintarCuaderno();
   });
   $('copiar').addEventListener('click', async (e) => {
-    const txt = [`Órdenes · turno ${E.turno}`].concat(E.bandos.flatMap((b, i) => b.formaciones.length ? ['', etiquetaBando(i)].concat(b.formaciones.map((f) => {
+    const txt = [tr('Órdenes · turno {n}', { n: E.turno })].concat(E.bandos.flatMap((b, i) => b.formaciones.length ? ['', etiquetaBando(i)].concat(b.formaciones.map((f) => {
       const v = vigente(E.turno, f.id);
       return `- ${f.nombre}: ${textoOrden(v)}${v.nota ? ' · ' + v.nota : ''}`;
     })) : [])).join('\n');
     const btn = e.currentTarget, antes = btn.textContent;
-    try { await navigator.clipboard.writeText(txt); btn.textContent = 'Copiadas'; } catch (err) { prompt('Copia las órdenes:', txt); }
+    try { await navigator.clipboard.writeText(txt); btn.textContent = tr('Copiadas'); } catch (err) { prompt(tr('Copia las órdenes:'), txt); }
     setTimeout(() => { btn.textContent = antes; }, 1600);
   });
   $('vaciar-ordenes').addEventListener('click', () => {
-    if (!confirm('¿Borrar las órdenes de todos los turnos y de los dos bandos?')) return;
+    if (!confirm(tr('¿Borrar las órdenes de todos los turnos y de los dos bandos?'))) return;
     E.ordenes = {};
     guardar();
     pintarCuaderno();
@@ -319,5 +320,5 @@
     pintarCuaderno();
   }
   pintar();
-  $('guardado').textContent = todas().length ? 'Partida recuperada de este navegador.' : 'Se guardará solo en este navegador.';
+  $('guardado').textContent = tr(todas().length ? 'Partida recuperada de este navegador.' : 'Se guardará solo en este navegador.');
 })();
