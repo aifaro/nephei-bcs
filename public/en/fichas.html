@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Counters and units · BCS Academy</title>
+  <meta name="description" content="How to read a Battalion Combat Series counter: AV, Action Rating, range, infantry, AV and Dual units, the four types of AV, Support and markers.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/fichas">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/fichas">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bcs.css">
+  <style>
+    .volteo { perspective: 700px; width: 128px; height: 128px; cursor: pointer; background: none; border: 0; padding: 0; }
+    .volteo__in { display: block; position: relative; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.3,.7,.3,1); transform-style: preserve-3d; }
+    .volteo.girada .volteo__in { transform: rotateY(180deg); }
+    .volteo__cara { display: block; position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+    .volteo__cara--m { transform: rotateY(180deg); }
+    .volteo__cara .ficha { width: 100%; }
+    .caras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 820px) { .caras { grid-template-columns: 1fr; } }
+    .caras .tarjeta { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
+    .caras .estado { font: 600 0.75rem var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--amber); }
+    .caras p { margin: 0; font-size: 0.92rem; }
+    .av-rejilla { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
+    @media (max-width: 960px) { .av-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 560px) { .av-rejilla { grid-template-columns: 1fr; } }
+    .av-tarjeta { display: flex; flex-direction: column; gap: 10px; }
+    .av-tarjeta .av-muestra { width: 54px; height: 54px; font-size: 2.2rem; }
+    .av-tarjeta p { margin: 0; font-size: 0.92rem; }
+    .av-tarjeta ul { font-size: 0.88rem; margin: 0; }
+    .ejemplos { font-size: 0.82rem; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 8px; margin-top: auto; }
+    .apoyo-diag { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; }
+    @media (max-width: 820px) { .apoyo-diag { grid-template-columns: 1fr; } }
+    .marcadores { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+    .marcadores figure { margin: 0; display: flex; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
+    .marcadores img { width: 56px; height: 56px; flex: none; border-radius: 5px; }
+    .marcadores figcaption { font-size: 0.85rem; line-height: 1.35; }
+    .marcadores figcaption strong { display: block; color: var(--heading); }
+    .selector-cap { margin-bottom: 14px; }
+    .anatomia__visor { padding: 0; }
+    .anatomia__visor .guia { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .anatomia__visor .ficha-centro { position: absolute; left: 16.67%; top: 16.67%; width: 66.67%; height: 66.67%; }
+    .anatomia__visor .ficha-centro .ficha { width: 100%; }
+    .guia line { stroke: var(--muted); stroke-width: .5; opacity: .55; transition: stroke .15s, opacity .15s; }
+    .guia circle { fill: var(--muted); opacity: .6; transition: fill .15s; }
+    .guia .on line { stroke: var(--amber); stroke-width: .9; opacity: 1; }
+    .guia .on circle { fill: var(--amber); opacity: 1; r: 2.2; }
+    .guia .on rect { opacity: 1; }
+    .guia rect { fill: none; stroke: var(--amber); stroke-width: 1; opacity: 0; transition: opacity .15s; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Chapter 1 · Counters and units</span>
+      <h1>How to read a counter</h1>
+      <p class="lead">On a BCS counter every number has its place, and the color and style of each figure matter too. The golden rule: <strong>what a unit can do depends on the side it is showing right now</strong>.</p>
+    </div>
+  </section>
+
+  <section class="seccion" id="anatomia">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Anatomy</span><h2>Touch each number</h2></div>
+        <div class="conmutador" id="anat-tipo" role="group" aria-label="Counter type">
+          <button type="button" data-u="inf" aria-pressed="true">Infantry</button>
+          <button type="button" data-u="panther" aria-pressed="false">AV unit</button>
+          <button type="button" data-u="recon" aria-pressed="false">Dual</button>
+        </div>
+      </div>
+      <div class="anatomia">
+        <div class="anatomia__visor" id="anat-visor"></div>
+        <ol class="anatomia__lista" id="anat-lista"></ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="caras">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Two sides</span><h2>Deployed or on the move</h2></div>
+        <p>The side with the lower MA is the <strong>Deployed-side</strong>; the one with the higher MA is the <strong>Move-side</strong>. Flipping costs no MPs, but it is only done before the unit starts acting, and once per activation. Click a counter to flip it. <span class="regla">1.1c · 4.0b</span></p>
+      </div>
+      <div class="caras" id="caras-lista"></div>
+    </div>
+  </section>
+
+  <section class="seccion" id="tipos">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Unit types</span><h2>Infantry, AV and Dual</h2></div>
+        <p>Two features set the type: whether the side shows the <strong>assault arrow</strong> and whether it has an <strong>AV</strong>. That tells you which tables it fights on. <span class="regla">1.1e</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" data-fichas="inf-us:d,mec-de:m"></div>
+          <div>
+            <h3>Infantry <span class="chip chip--olive">arrow · no AV</span></h3>
+            <p>Any unit with no printed AV counts as "infantry" for terrain. With the assault arrow it is <strong>Attack-Capable</strong>: it takes ground with Regular Attacks, and it is the only kind that can be a <strong>host</strong> for armored Support.</p>
+            <p class="muted mb0">If it also has a Tac MA (mechanized), it can make Shock Attacks.</p>
+          </div>
+        </div>
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" data-fichas="panther:d,td:d"></div>
+          <div>
+            <h3>AV units <span class="chip chip--red">AV · no arrow</span></h3>
+            <p>Tanks, tank destroyers and guns. They cannot be the Attack unit in a Regular Attack, but they can Assist. They fight other AV units on the <strong>Engagement Table</strong> and shoot at infantry with an <strong>Attack by Fire</strong>.</p>
+            <p class="muted mb0">They project an AV ZOC, and an Engagement Zone out to their range.</p>
+          </div>
+        </div>
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" data-fichas="rec-us:d,rec-de:d"></div>
+          <div>
+            <h3>Dual <span class="chip chip--amber">arrow + AV</span></h3>
+            <p>Armored reconnaissance, panzergrenadiers with organic armor… They have it all: they attack on the Combat Table (with +1 for being Dual), engage and make Attacks by Fire. In exchange they <strong>cannot take Support</strong>.</p>
+          </div>
+        </div>
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" data-fichas="inf-de:m,flak:m"></div>
+          <div>
+            <h3>Unprepared <span class="chip">no arrow · no AV</span></h3>
+            <p>A side with no arrow and no AV: infantry on the march or a limbered gun. It has no ZOC, does not attack or Assist, cannot use Support or Prepared Defense and cannot Jump HQs. It can still spot for artillery. <span class="regla">1.1d</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="av">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Armor Value</span><h2>The four colors of armor</h2></div>
+        <p>The large number at the bottom left is the AV. Its style shows the type, and the type changes what the unit can do. <span class="regla">1.1e</span></p>
+      </div>
+      <div class="av-rejilla">
+        <div class="tarjeta av-tarjeta">
+          <span class="av-muestra red">4</span>
+          <h3 class="mb0">Red AV <span class="en">red</span></h3>
+          <p>The offensive armor: tanks. It makes Shock Attacks, Engagements, Attacks by Fire, and Recon if it is a reconnaissance unit.</p>
+          <ul class="rombos"><li>In Support, it gives +1 to its hosts' attack <em>and</em> defense.</li></ul>
+          <div class="ejemplos">Sherman (3, range 2) · long-barrel Panzer IV (4, range 2) · Panther (5, range 3) · T-34/85 (4, range 2)</div>
+        </div>
+        <div class="tarjeta av-tarjeta">
+          <span class="av-muestra limited">3</span>
+          <h3 class="mb0">Limited AV <span class="en">outlined</span></h3>
+          <p>More defensive: tank destroyers and assault guns. It fires at <strong>-1</strong> as the Firer on the Engagement Table and makes no Shock Attacks (unless it is Breakthrough armor).</p>
+          <ul class="rombos"><li>In Support, it only helps the defense.</li></ul>
+          <div class="ejemplos">M10 (3, range 2) · M18 Hellcat (3, range 3) · SU-85 (4, range 2, Hard) · M36 Jackson (4, range 3)</div>
+        </div>
+        <div class="tarjeta av-tarjeta">
+          <span class="av-muestra standoff">5</span>
+          <h3 class="mb0">Stand Off AV <span class="en">black</span></h3>
+          <p>Long-range guns that are easy to hide, like the 88. +1 when they are the target of an Engagement and, when deployed, only a 6 hurts them on the Barrage Table.</p>
+          <ul class="rombos"><li>In Support, they help the defense and force a Stopping Engagement on anyone entering their host's ZOC.</li></ul>
+          <div class="ejemplos">88 mm L/56 (4, range 3) · 88 mm L/70 (5, range 3) · Jagdtiger (8, range 3)</div>
+        </div>
+        <div class="tarjeta av-tarjeta">
+          <span class="av-muestra light">0</span>
+          <h3 class="mb0">Light AV <span class="en">white</span></h3>
+          <p>Vehicle-mounted machine guns: armored cars and tankettes. <strong>They cannot start Engagements</strong>, only be engaged. They do make Shock Attacks and Attacks by Fire.</p>
+          <ul class="rombos"><li>In Support they work just like Limited AV.</li></ul>
+          <div class="ejemplos">L3/35 (0) · Sd.Kfz. 221 (0) · Marmon-Herrington (0) · Flammpanzer III (3, Hard)</div>
+        </div>
+      </div>
+      <div class="rejilla rejilla--2" style="margin-top:16px">
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" data-fichas="panther:d"></div>
+          <div>
+            <h3>Hard <span class="chip chip--amber">yellow symbol</span></h3>
+            <p>Well-protected vehicles. On the Barrage Table only a 6 affects them. If they are Red AV, they defend at +2 in open terrain and add +1 when making a Shock Attack. Open-topped armor and Second World War mechanized infantry are not Hard.</p>
+          </div>
+        </div>
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" data-fichas="tiger:d"></div>
+          <div>
+            <h3>Breakthrough <span class="chip chip--red">breakthrough</span></h3>
+            <p>Very heavy armor for cracking strong defenses: Tiger, King Tiger, IS-2, Brummbär. They can always make Shock Attacks, even if their AV is Limited, and add +2 when they do.</p>
+          </div>
+        </div>
+      </div>
+      <p class="nota">The <strong>Range</strong> is the small figure at the bottom, between the AV and the MA. If there is none, the range is 1 hex. Above it sits the Action Rating, from 0 to 5.</p>
+    </div>
+  </section>
+
+  <section class="seccion" id="apoyo">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Support</span><h2>Support: armor spread out</h2></div>
+        <p>Instead of sitting on the map, an AV unit can be split into platoons among its formation's infantry. It takes no hex and does not stack: it is kept by the HQ with its marker. <span class="regla">1.5</span></p>
+      </div>
+      <div class="apoyo-diag">
+        <div>
+          <h3>Who uses it</h3>
+          <p>The <strong>hosts</strong>: the formation's Attack-Capable infantry (assigned independents included). A single Support serves every host at once, however many there are and however many steps it has left.</p>
+          <p>Dual units, Unprepared units, units in terrain prohibited to Tac MA and units with Dropped Support cannot use it.</p>
+          <h3>What it gives</h3>
+          <ul class="rombos">
+            <li>An <strong>AV ZOC</strong> for the host, which stops enemy tanks.</li>
+            <li><strong>+1 on the Combat Table</strong>: when attacking, only with Red AV Support; when defending, with any type.</li>
+            <li>Its own AV to receive Engagements. The Support takes the losses, never the host.</li>
+            <li>Protection: a hex with Support cannot be hit by Shock Attacks or Attacks by Fire.</li>
+          </ul>
+          <p class="muted">Units enter and leave Support only in the Assignment Phase. Units marked "Support" on the counter are always in Support.</p>
+        </div>
+        <div class="tarjeta centrado" id="apoyo-figura"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="marcadores">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Markers</span><h2>The ones you will see most</h2></div>
+        <p>Markers are not units: they do not fight, do not stack and nothing affects them.</p>
+      </div>
+      <div class="marcadores">
+        <figure><img src="../fichas/m-obj.png" alt=""><figcaption><strong>OBJ</strong>Creates a 2-hex zone for attacks and barrages.</figcaption></figure>
+        <figure><img src="../fichas/m-doble-obj.png" alt=""><figcaption><strong>Double OBJ</strong>Two OBJs in the same hex: +1 against whatever is inside.</figcaption></figure>
+        <figure><img src="../fichas/m-apoyo-rojo.png" alt=""><figcaption><strong>Red Support</strong>The formation has tank Support.</figcaption></figure>
+        <figure><img src="../fichas/m-apoyo-limitado.png" alt=""><figcaption><strong>Limited Support</strong>Limited or Light AV Support.</figcaption></figure>
+        <figure><img src="../fichas/m-apoyo-standoff.png" alt=""><figcaption><strong>Stand Off Support</strong>Stand Off gun Support.</figcaption></figure>
+        <figure><img src="../fichas/m-apoyo-perdido.png" alt=""><figcaption><strong>Dropped Support</strong>The host has lost its Support.</figcaption></figure>
+        <figure><img src="../fichas/m-apoyo-perdido-temp.png" alt=""><figcaption><strong>Temp Dropped</strong>Support lost until the activation ends.</figcaption></figure>
+        <figure><img src="../fichas/m-fatiga.png" alt=""><figcaption><strong>Fatigue</strong>The formation's Fatigue Level, from Fresh to 4.</figcaption></figure>
+        <figure><img src="../fichas/m-msr-bloqueada.png" alt=""><figcaption><strong>MSR Blocked</strong>Level 1 or 2: subtracts from SNAFU and combat.</figcaption></figure>
+        <figure><img src="../fichas/m-pantalla.png" alt=""><figcaption><strong>Screen</strong>A reconnaissance unit acting as a screen.</figcaption></figure>
+        <figure><img src="../fichas/m/trafico.png" alt=""><figcaption><strong>Traffic</strong>Congestion: a STOP for every unit in or entering the hex.</figcaption></figure>
+        <figure><img src="../fichas/m/pd.png" alt=""><figcaption><strong>Prepared Defense</strong>The formation is in Prepared Defense: +1 when defending.</figcaption></figure>
+        <figure><img src="../fichas/m-artilleria.png" alt=""><figcaption><strong>Arty Points</strong>Artillery points that can be assigned to an HQ.</figcaption></figure>
+        <figure><img src="../fichas/m-aviacion.png" alt=""><figcaption><strong>Air Points</strong>The side's air points for the whole turn.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="capacidades">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Unit Capabilities Chart</span><h2>What each type can do</h2></div>
+        <p>Pick a type to highlight it. The first five columns need an OBJ Zone; Shock Attack, Attack by Fire, Engage and Recon each use one of the unit's two Fire Events.</p>
+      </div>
+      <div class="conmutador selector-cap" id="cap-sel" role="group" aria-label="Highlight unit type"></div>
+      <div class="tabla-wrap" id="cap-tabla"></div>
+      <p class="muted" style="font-size:.88rem;margin-top:10px">** If the Limited or Stand Off unit is also Breakthrough armor, it can make Shock Attacks. "Recon" only if the unit is a reconnaissance unit.</p>
+    </div>
+  </section>
+
+  <section class="seccion" id="galeria">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Real counters</span><h2>How they look on the table</h2></div>
+        <p>Counters from <em>Arracourt</em> and <em>Valley of Tears</em>, taken from their VASSAL modules. Deployed-side on the left, Move-side on the right.</p>
+      </div>
+      <div class="galeria">
+        <figure><div class="par"><div><img class="ficha-real" src="../fichas/inf-desplegada.png" alt="3/137 of the 35 Inf, Deployed-side"><div class="lado">deployed</div></div><div><img class="ficha-real" src="../fichas/inf-movimiento.png" alt="3/137, Move-side"><div class="lado">move</div></div></div>
+          <figcaption><strong>Infantry · 3/137, 35 Inf</strong>6 steps. Deployed: assault arrow, AR 3, Leg MA 4. On the move it loses the arrow: AR 2, MA 8, Unprepared.</figcaption></figure>
+        <figure><div class="par"><div><img class="ficha-real" src="../fichas/tanque-desplegado.png" alt="I/15 of the 11 Pz, deployed"><div class="lado">deployed</div></div><div><img class="ficha-real" src="../fichas/tanque-movimiento.png" alt="I/15, Move-side"><div class="lado">move</div></div></div>
+          <figcaption><strong>Panther · I/15, 11 Pz</strong>Yellow symbol: Hard. Red AV 5, AR 4, range 3, Tac MA 4. On the move, AV 4 and range 2 with MA 16.</figcaption></figure>
+        <figure><div class="par"><div><img class="ficha-real" src="../fichas/dual-recon.png" alt="115 of the 15 PG"></div><div><img class="ficha-real" src="../fichas/dual-caballeria.png" alt="106 of the 106 Cav"></div></div>
+          <figcaption><strong>Dual · reconnaissance</strong>An arrow and a red AV 1 at once, with the Recon cavalry bar. White symbol: they are not Hard.</figcaption></figure>
+        <figure><div class="par"><div><img class="ficha-real" src="../fichas/limitada-desplegada.png" alt="602 TD, deployed"><div class="lado">deployed</div></div><div><img class="ficha-real" src="../fichas/limitada-movimiento.png" alt="602 TD, move"><div class="lado">move</div></div></div>
+          <figcaption><strong>Limited AV · 602 TD</strong>The outlined AV: 3 deployed with range 3; 2 on the move with range 2.</figcaption></figure>
+        <figure><div class="par"><div><img class="ficha-real" src="../fichas/standoff-desplegado.png" alt="200 of the 21 Pz, 88 mm guns"><div class="lado">deployed</div></div><div><img class="ficha-real" src="../fichas/standoff-movimiento.png" alt="Limbered 88 mm guns"><div class="lado">move</div></div></div>
+          <figcaption><strong>Stand Off · 88 mm</strong>Black AV 5, range 3, Truck MA 2. Limbered they have no AV: Unprepared with MA 12.</figcaption></figure>
+        <figure><div class="par"><div><img class="ficha-real" src="../fichas/apoyo-tanques.png" alt="737 Tank Bn in Support"></div><div><img class="ficha-real" src="../fichas/apoyo-stug.png" alt="StuG in Support"></div></div>
+          <figcaption><strong>Support only</strong>Units that only exist as Support: a US tank battalion and a StuG company.</figcaption></figure>
+        <figure><div class="par"><div><img class="ficha-real" src="../fichas/duro-centurion.png" alt="Israeli 7/7 Centurion" style="width:94px;height:94px"></div></div>
+          <figcaption><strong>Hard · Centurion (1973)</strong>From <em>Valley of Tears</em>: Red AV 8, AR 5, range 2. The C symbol on a yellow background marks it as Hard.</figcaption></figure>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="../js/en.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/fichas.js"></script>
+<script src="../js/datos.js"></script>
+<script src="../js/comun.js"></script>
+<script>
+(function () {
+  'use strict';
+  const U = Fichas.UNIDADES;
+
+  // ---------- Anatomía ----------
+  const PARTES = {
+    pasos: { t: 'Steps', d: 'How many losses the unit can take. Its values do not change: when it loses the last one, it dies. Losses are shown with a marker under the counter.' },
+    tam: { t: 'Size', d: '|| is a battalion, | a company, III a regiment, X a brigade. It is historical information only.' },
+    simbolo: { t: 'Unit symbol', d: 'The troop type, in NATO symbols. A yellow background means the unit is Hard.' },
+    id: { t: 'Identifier', d: 'The specific battalion (3/137: 3rd Battalion, 137th Regiment).' },
+    form: { t: 'Formation', d: 'The formation it belongs to. With no formation printed, the unit is independent and can be assigned to any.' },
+    asalto: { t: 'Assault arrow', d: 'Attack-Capable: it can be the Attack unit of a Regular Attack and, with no AV of its own, use Support.' },
+    av: { t: 'Armor Value (AV)', d: 'Armor and gun. Its style marks the type: red, outlined, black or white.' },
+    ar: { t: 'Action Rating', d: 'From 0 to 5: leadership, training and morale. It is each side\'s base on the Combat Table.' },
+    alcance: { t: 'Range', d: 'How many hexes its fire reaches in an Engagement. If none is shown, it is 1.' },
+    ma: { t: 'Movement Allowance', d: 'Its movement points. The color is the class: red Tac, black Truck, white Leg.' },
+    barra: { t: 'Color band', d: 'The formation color, to find its units on the map at a glance.' }
+  };
+  // Dónde está cada parte en la ficha real, en % de su lado.
+  const ANATOMIAS = {
+    inf: { u: 'inf-us', partes: { pasos: [40, 16], tam: [53, 21], simbolo: [53, 37], id: [23, 32], form: [81, 34], asalto: [34, 73], ar: [53, 66], ma: [74, 76], barra: [18, 85] } },
+    panther: { u: 'panther', partes: { pasos: [37, 14], simbolo: [50, 37], id: [14, 34], form: [80, 34], av: [21, 78], ar: [50, 64], alcance: [50, 84], ma: [72, 78] } },
+    recon: { u: 'rec-de', partes: { pasos: [36, 17], simbolo: [49, 40], id: [20, 35], form: [80, 37], asalto: [15, 76], av: [31, 76], ar: [49, 65], ma: [75, 76] } }
+  };
+  const visor = document.getElementById('anat-visor');
+  const lista = document.getElementById('anat-lista');
+  let activo = null;
+
+  // Dónde va la etiqueta de cada parte, fuera de la ficha (mismas unidades).
+  const ETIQUETA = {
+    pasos: [14, -12], tam: [40, -12], simbolo: [66, -12], id: [-12, 22], form: [92, 22],
+    asalto: [-12, 64], ar: [-12, 43], av: [10, 93], alcance: [34, 93], ma: [60, 93], barra: [92, 64]
+  };
+
+  function pintarAnatomia(clave) {
+    const a = ANATOMIAS[clave], u = U[a.u];
+    visor.innerHTML = '<div class="ficha-centro">' + Fichas.ficha(u, 'd') + '</div>';
+    const guia = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    guia.setAttribute('class', 'guia'); guia.setAttribute('viewBox', '0 0 120 120'); guia.setAttribute('aria-hidden', 'true');
+    visor.prepend(guia);
+    lista.innerHTML = '';
+    Object.keys(a.partes).forEach((p, i) => {
+      const parte = PARTES[p];
+      const pos = { x: a.partes[p][0] * 0.8, y: a.partes[p][1] * 0.8 };
+      const [ex, ey] = ETIQUETA[p];
+      const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+      g.innerHTML = `<line x1="${ex + 20}" y1="${ey + 20}" x2="${pos.x + 20}" y2="${pos.y + 20}"/><circle cx="${pos.x + 20}" cy="${pos.y + 20}" r="1.6"/><rect x="${pos.x + 14}" y="${pos.y + 14}" width="12" height="12" rx="3"/>`;
+      guia.appendChild(g);
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'punto'; b.textContent = i + 1;
+      b.style.left = ((ex + 20) / 120 * 100) + '%'; b.style.top = ((ey + 20) / 120 * 100) + '%';
+      b.setAttribute('aria-label', parte.t);
+      visor.appendChild(b);
+      const li = document.createElement('li');
+      li.innerHTML = `<button type="button"><span class="n">${i + 1}</span><span><strong>${parte.t}</strong><span class="d">${parte.d}</span></span></button>`;
+      lista.appendChild(li);
+      const marcar = () => {
+        if (activo) activo.forEach((e) => e.classList.remove('activo', 'on'));
+        activo = [b, li.firstChild, g]; b.classList.add('activo'); li.firstChild.classList.add('activo'); g.classList.add('on');
+      };
+      b.addEventListener('click', () => { marcar(); li.firstChild.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); });
+      b.addEventListener('mouseenter', marcar);
+      li.firstChild.addEventListener('mouseenter', marcar);
+      li.firstChild.addEventListener('click', marcar);
+    });
+  }
+  document.querySelectorAll('#anat-tipo button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('#anat-tipo button').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    pintarAnatomia(b.dataset.u);
+  }));
+  pintarAnatomia('inf');
+
+  // ---------- Caras ----------
+  const CARAS = [
+    ['inf-us', 'Infantry', 'Deployed, it attacks and defends (arrow, AR 3). On the move it goes twice as fast, but it is Unprepared: no ZOC and no Prepared Defense.'],
+    ['panther', 'Tank', 'Both sides have an AV; on the move the AV drops from 5 to 4 and the range from 3 to 2, and the MA jumps from 4 to 16.'],
+    ['flak', 'Stand Off guns', 'Deployed, they are AV 5 with range 3. Limbered to move, they lose the AV and become Unprepared.']
+  ];
+  const cont = document.getElementById('caras-lista');
+  CARAS.forEach(([k, t, d]) => {
+    const u = U[k];
+    const card = document.createElement('div');
+    card.className = 'tarjeta';
+    card.innerHTML = `<span class="estado">Deployed</span>
+      <button class="volteo" type="button" aria-label="Flip ${t}"><span class="volteo__in"><span class="volteo__cara">${Fichas.ficha(u, 'd', { tam: 128 })}</span><span class="volteo__cara volteo__cara--m">${Fichas.ficha(u, 'm', { tam: 128 })}</span></span></button>
+      <h3 class="mb0">${t}</h3><p>${d}</p>`;
+    const btn = card.querySelector('.volteo'), est = card.querySelector('.estado');
+    btn.addEventListener('click', () => { const g = btn.classList.toggle('girada'); est.textContent = g ? 'Move' : 'Deployed'; });
+    cont.appendChild(card);
+  });
+
+  // ---------- Fichas en las tarjetas de tipo ----------
+  document.querySelectorAll('[data-fichas]').forEach((c) => {
+    c.innerHTML = c.dataset.fichas.split(',').map((x) => { const [k, l] = x.split(':'); return Fichas.ficha(U[k], l, { tam: 76 }); }).join('');
+  });
+
+  // ---------- Figura del apoyo ----------
+  document.getElementById('apoyo-figura').innerHTML = `
+    <div class="flex" style="justify-content:center;gap:18px">
+      <div>${Fichas.ficha(U['inf-us'], 'd', { tam: 104 })}<div class="lado mono muted" style="font-size:.7rem;margin-top:6px">HOST</div></div>
+      <div style="font:700 1.6rem var(--mono);color:var(--amber)">+</div>
+      <div>${Fichas.marcador('red', { tam: 84 })}<div class="lado mono muted" style="font-size:.7rem;margin-top:6px">RED AV 3 SUPPORT</div></div>
+    </div>
+    <p class="muted" style="margin:16px 0 0;font-size:.9rem">The infantry battalion still attacks with its own AR 3, but adds +1 for the Support, has an AV ZOC and, if engaged, the target is the Support: AV 3 + the host's AR 3.</p>`;
+
+  // ---------- Capacidades ----------
+  const COLS = ['Regular Attack', 'Assist', 'Support Attack', 'Shock Attack', 'Attack by Fire', 'Engage', 'Recon', '2nd unit in defense', 'Support Defense', 'Spot Barrage'];
+  const S = 1, B = 'T', N = 0;
+  const FILAS = [
+    ['Attack-Capable', [S, S, N, S, N, N, S, S, N, S]],
+    ['Red AV', [N, S, N, S, S, S, S, S, N, S]],
+    ['Limited AV **', [N, S, N, N, S, S, N, S, N, S]],
+    ['Stand Off AV **', [N, S, N, N, S, S, N, S, N, S]],
+    ['Dual', [S, S, N, S, S, S, S, S, N, S]],
+    ['Light AV', [N, S, N, S, S, B, S, S, N, S]],
+    ['Support', [N, N, 'R', N, N, B, N, N, S, N]],
+    ['Unprepared', [N, N, N, N, N, N, N, S, N, S]],
+    ['HQ', [N, N, N, N, N, N, N, N, N, S]],
+    ['Combat Trains', [N, N, N, N, N, N, N, N, N, S]]
+  ];
+  const tabla = document.createElement('table');
+  tabla.className = 't capacidades';
+  tabla.innerHTML = '<thead><tr><th>Type (1.1e)</th>' + COLS.map((c, i) => `<th${i < 5 ? ' title="Needs an OBJ Zone"' : ''}>${c}</th>`).join('') + '</tr></thead><tbody>' +
+    FILAS.map(([n, v]) => '<tr><td><strong>' + n + '</strong></td>' + v.map((x) => x === S ? '<td class="cap-si">✓</td>' : x === B ? '<td class="cap-blanco">target only</td>' : x === 'R' ? '<td class="cap-si">✓ Red only</td>' : '<td></td>').join('') + '</tr>').join('') + '</tbody>';
+  document.getElementById('cap-tabla').appendChild(tabla);
+  const sel = document.getElementById('cap-sel');
+  ['All'].concat(FILAS.map((f) => f[0].replace(' **', ''))).forEach((n, i) => {
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = n; b.setAttribute('aria-pressed', i === 0);
+    b.addEventListener('click', () => {
+      sel.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b));
+      tabla.querySelectorAll('tbody tr').forEach((tr, j) => { tr.classList.toggle('resaltada', j === i - 1); tr.style.opacity = i === 0 || j === i - 1 ? 1 : 0.35; });
+    });
+    sel.appendChild(b);
+  });
+})();
+</script>
+</body>
+</html>

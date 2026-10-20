@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glossary · BCS Academy</title>
+  <meta name="description" content="Battalion Combat Series v2.0 glossary, with the rule number for each term.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/glosario">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/glosario">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bcs.css">
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap wrap--estrecho">
+      <span class="antetitulo">Glossary</span>
+      <h1>The terms of the rules</h1>
+      <p class="lead">The BCS has a vocabulary of its own: here is every term with a short explanation. The number is the <em>Series Rules</em> rule where it is defined.</p>
+    </div>
+  </section>
+  <div class="wrap wrap--estrecho">
+    <label class="filtro">
+      <svg width="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input id="filtro" type="search" placeholder="Filter: SNAFU, Support, Retreat…" aria-label="Filter the glossary">
+      <span class="muted mono" id="cuenta" style="font-size:.8rem"></span>
+    </label>
+    <div class="letras" id="letras"></div>
+    <dl class="glosario" id="glosario"></dl>
+  </div>
+</main>
+
+<script src="../js/en.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/fichas.js"></script>
+<script src="../js/datos.js"></script>
+<script src="../js/comun.js"></script>
+<script>
+(function () {
+  'use strict';
+  const esc = Fichas.esc;
+  const items = Datos.GLOSARIO.slice().sort((a, b) => a[0].localeCompare(b[0], 'en'));
+  const dl = document.getElementById('glosario');
+  const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  dl.innerHTML = items.map(([t, es, d, r]) => `<div id="${Datos.slug(t)}" data-txt="${esc(norm(t + ' ' + es + ' ' + d))}"><dt>${esc(t)}${es && es !== t ? `<span class="es">${esc(es)}</span>` : ''} <span class="regla">${esc(r)}</span></dt><dd>${esc(d)}</dd></div>`).join('');
+  const letras = [...new Set(items.map((i) => i[0][0].toUpperCase()))];
+  document.getElementById('letras').innerHTML = letras.map((l) => `<a href="#${Datos.slug(items.find((i) => i[0][0].toUpperCase() === l)[0])}">${l}</a>`).join('');
+  const f = document.getElementById('filtro'), cuenta = document.getElementById('cuenta');
+  const filtrar = () => {
+    const q = norm(f.value.trim());
+    let n = 0;
+    dl.querySelectorAll(':scope > div').forEach((d) => { const v = !q || d.dataset.txt.includes(q); d.hidden = !v; if (v) n++; });
+    cuenta.textContent = n + ' of ' + items.length;
+  };
+  f.addEventListener('input', filtrar);
+  filtrar();
+})();
+</script>
+</body>
+</html>

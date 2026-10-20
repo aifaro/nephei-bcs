@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Command and supply · BCS Academy</title>
+  <meta name="description" content="Command and supply in the Battalion Combat Series v2.0: formations, Command Radius, HQs and Combat Trains, the MSR, OBJs and their zones, Safe Paths, isolation and Jumping HQs.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/mando">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/mando">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bcs.css">
+  <style>
+    .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .msr { width: 100%; height: auto; }
+    .comparte { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .obj-zona { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: center; }
+    @media (max-width: 860px) { .obj-zona { grid-template-columns: 1fr; } }
+    .obj-zona svg { width: 100%; height: auto; display: block; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .necesita { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 12px 0; }
+    .necesita div { display: flex; gap: 8px; align-items: center; padding: 7px 10px; border-radius: 9px; background: var(--surface-2); border: 1px solid var(--border); font-size: .9rem; }
+    .necesita .i { font-weight: 800; width: 18px; text-align: center; }
+    .necesita .si .i { color: var(--ok); }
+    .necesita .no .i { color: var(--bad); }
+    .necesita .no { opacity: .75; }
+    .leyenda { font-size: .85rem; color: var(--muted); margin: 10px 0 0; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Chapter 3 · Command and supply</span>
+      <h1>Command, supply and objectives</h1>
+      <p class="lead">In the BCS nothing moves on its own: every unit belongs to a formation, depends on its HQ and lives off the route that links it to the trains and the rear. Cutting those threads does more damage than many attacks.</p>
+      <div class="indice">
+        <a class="chip" href="#formaciones">Formations</a>
+        <a class="chip" href="#radio">Command Radius</a>
+        <a class="chip" href="#hq">HQs and trains</a>
+        <a class="chip" href="#msr">MSR</a>
+        <a class="chip" href="#obj">OBJ</a>
+        <a class="chip" href="#safe-path">Safe Paths and isolation</a>
+        <a class="chip" href="#saltos">Jumps</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="formaciones">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Formations</span><h2>The piece that activates</h2></div>
+        <p>A formation is a command with its HQ, its Combat Trains and its units: a division in one game, a brigade or a Kampfgruppe in another. The turn revolves around them, one at a time, alternating sides. <span class="regla">1.3</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta">
+          <h3>What they share</h3>
+          <p class="muted mb0">All of the formation's units share:</p>
+          <div class="comparte">
+            <span class="chip">Support</span><span class="chip">Fatigue</span><span class="chip">MSR</span><span class="chip">SNAFU result</span><span class="chip">Arty Points</span><span class="chip">Prepared Defense</span><span class="chip">OBJs</span><span class="chip">Command Radius</span><span class="chip">Orders</span>
+          </div>
+        </div>
+        <div class="tarjeta">
+          <h3>Intrinsic and independent</h3>
+          <p class="muted mb0">Intrinsic units have their formation printed to the right of the symbol and never change command. Independent units and Arty Points are assigned in the Assignment Phase and, while assigned, are just another part of their formation. <span class="regla">1.3b · 2.3</span></p>
+        </div>
+        <div class="tarjeta">
+          <h3>The Blob</h3>
+          <p class="muted mb0">The formation's area: the smooth shape drawn by its outermost units (ignoring trains, Out of Command units and reinforcements). If an active unit of another friendly formation moves inside, both become <em>Mixed</em>: Coordination and -1 to SNAFU. <span class="regla">1.3c · 3.2d</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="radio">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Command Radius</span><h2>How far the HQ reaches</h2></div>
+        <p>The Command Radius is printed on the HQ. Count hexes from the HQ to the unit, ignoring terrain, ZOCs and enemy units. Beyond it, the unit is Out of Command. <span class="regla">1.4</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta">
+          <h3>Out of Command</h3>
+          <ul class="rombos mb0">
+            <li>It suffers isolation each time its formation activates.</li>
+            <li>It can still make Regular and Shock Attacks, and artillery can fire with the proper OBJ Zones and spotters.</li>
+            <li>If it begins the phase Out of Command, it cannot spot for barrages, Jump HQs or trains, or move to cut an enemy MSR that has no alternative.</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>Back to the fold</h3>
+          <p>Units (except trains) must end each activation inside the radius. If they cannot, they must move or attack in a way that brings them closer, or stay put. <span class="regla">1.4e</span></p>
+          <p class="muted mb0">The radius does not limit OBJ placement, Advance after Combat or barrages. Unassigned independents have no radius.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="hq">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">HQs &amp; Combat Trains</span><h2>HQs and Combat Trains</h2></div>
+        <p>Neither fights, and neither can be destroyed, attacked or barraged. But if the enemy enters their hex (Jumps them), they retreat in disorder and the formation pays for it in SNAFU. <span class="regla">4.7</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo"><div class="centrado"><img class="ficha-real" src="../fichas/hq-sin-usar.png" width="94" height="94" alt="11 Pz HQ, unused"><div class="lado mono muted" style="font-size:.66rem">unused</div></div><div class="centrado"><img class="ficha-real" src="../fichas/hq-usado.png" width="94" height="94" alt="11 Pz HQ, used"><div class="lado mono muted" style="font-size:.66rem">used</div></div></div>
+          <div>
+            <h3>HQ</h3>
+            <p>Top left, the <strong>Command Radius</strong> (12). On the unused side, on the right, its own <strong>Arty Points</strong> (2). When it activates it flips to the used side, with the white band: there you find the <strong>activation roll</strong> die (4: the Second Activation succeeds on 4 or more) and its <strong>MA</strong>.</p>
+            <p class="muted mb0" style="font-size:.9rem">It moves like any unit, but it cannot enter terrain prohibited to Truck MA, an EZOC (unless a friendly unit negates it) or an Engagement Zone. It always ends in a Legal road hex.</p>
+          </div>
+        </div>
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo"><div class="centrado"><img class="ficha-real" src="../fichas/trenes.png" width="94" height="94" alt="11 Pz Combat Trains"><div class="lado mono muted" style="font-size:.66rem">normal</div></div><div class="centrado"><img class="ficha-real" src="../fichas/trenes-fantasma.png" width="94" height="94" alt="Ghost Combat Trains"><div class="lado mono muted" style="font-size:.66rem">ghost</div></div></div>
+          <div>
+            <h3>Combat Trains</h3>
+            <p>They "move" by being placed straight into a Legal hex that completes the MSR. If they move, or end up less than 5 or more than 15 hexes from the HQ, they flip to their <strong>Ghost</strong> side (-1 to SNAFU).</p>
+            <p class="muted mb0" style="font-size:.9rem">They recover if they are in a Legal hex of a Complete MSR, at Optimal Distance and did not move in the previous Activities Phase. <span class="regla">4.7b · 4.7c</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="msr">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Main Supply Route</span><h2>The Complete MSR</h2></div>
+        <p>A chain of Legal hexes that runs, in this order, from the HQ to its own trains and from the trains to a supply source. It is checked in every Preparation Phase. <span class="regla">3.1</span></p>
+      </div>
+      <div class="tarjeta">
+        <svg class="msr" viewBox="0 0 900 170" role="img" aria-label="MSR diagram: supply source, trains 5 to 15 hexes from the HQ, and HQ">
+          <defs><marker id="pt" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="currentColor"/></marker></defs>
+          <path d="M70 95 C 230 60, 330 130, 470 95 S 720 70, 830 95" fill="none" stroke="#b9a46a" stroke-width="10" stroke-linecap="round"/>
+          <path d="M70 95 C 230 60, 330 130, 470 95 S 720 70, 830 95" fill="none" stroke="#e8dcae" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 0"/>
+          <g transform="translate(30 60)"><rect width="80" height="70" rx="8" fill="#3d4a22" stroke="#a6ba4f" stroke-width="2"/><text x="40" y="32" text-anchor="middle" fill="#e9eed9" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="14">Supply</text><text x="40" y="50" text-anchor="middle" fill="#c6cfb0" font-family="Inter, sans-serif" font-size="11">source</text></g>
+          <image href="../fichas/trenes.png" x="430" y="55" width="80" height="80"/>
+          <image href="../fichas/hq-sin-usar.png" x="790" y="55" width="80" height="80"/>
+          <g fill="currentColor" style="color: var(--amber)"><path d="M520 30 H 780" stroke="currentColor" stroke-width="2" marker-start="url(#pt)" marker-end="url(#pt)"/><text x="650" y="22" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">5 to 15 hexes → +1 SNAFU</text></g>
+          <text x="470" y="160" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="13">Trains</text>
+          <text x="830" y="160" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="13">HQ</text>
+          <text x="250" y="150" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="12">primary or secondary road</text>
+        </svg>
+      </div>
+      <div class="rejilla rejilla--3" style="margin-top:16px">
+        <div class="tarjeta">
+          <h3>Legal hex <span class="regla">3.1a</span></h3>
+          <ul class="checks mb0">
+            <li>It has a Primary or Secondary Road. A Track only counts between the HQ and the trains (and brings the Track DRM on the SNAFU roll).</li>
+            <li>It is connected to a supply source by Legal hexes, or is one.</li>
+            <li>It does not block an enemy formation's only MSR.</li>
+            <li class="no">It cannot hold enemy units or EZOCs. A friendly unit negates the EZOC, but only so the HQ can be there.</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>If it is cut</h3>
+          <p>With no Complete MSR in the Preparation Phase, the trains go off-map: <strong>-3</strong> to SNAFU. If they were already off-map, the formation gets an <strong>MSR Blocked</strong> marker, which can worsen to level 2.</p>
+          <p class="muted mb0" style="font-size:.9rem">The trains come back to any Legal hex that completes the MSR during the Activities Phase, as Ghost.</p>
+        </div>
+        <div class="tarjeta">
+          <h3>What does not affect it</h3>
+          <p class="muted mb0">Engagement Zones and Screens do not cut the MSR. What cuts it is enemy units and their ZOCs on the road. Once traced, the HQ–trains leg does not change until one of them moves, the enemy cuts it or they are Jumped.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="obj">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Objectives</span><h2>OBJs: where you can attack</h2></div>
+        <p>OBJs mark where the formation will operate this activation. SNAFU says how many: 2 on Full, 1 on Partial and none on Fail. They go in a hex with an enemy unit (not Support) or on a Victory hex, at any distance from the HQ. <span class="regla">3.3</span></p>
+      </div>
+      <div class="obj-zona">
+        <svg id="obj-mapa" role="img" aria-label="An OBJ and its two-hex zone"></svg>
+        <div>
+          <h3>The OBJ Zone <span class="regla">3.3a</span></h3>
+          <p>Each OBJ creates a zone with a 2-hex radius. Inside it you can make:</p>
+          <div class="necesita">
+            <div class="si"><span class="i">✓</span>Regular Attacks</div>
+            <div class="si"><span class="i">✓</span>Shock Attacks</div>
+            <div class="si"><span class="i">✓</span>Attacks by Fire</div>
+            <div class="si"><span class="i">✓</span>Barrages</div>
+            <div class="si"><span class="i">✓</span>Moves into a Victory hex*</div>
+            <div class="no"><span class="i">—</span>Engagements: not needed</div>
+          </div>
+          <p class="muted" style="font-size:.9rem">* To take a Victory hex, the OBJ must be in that very hex.</p>
+          <ul class="rombos mb0">
+            <li><strong>Double OBJ.</strong> Two SNAFU OBJs in the same hex: +1 on the Combat Table and the Engagement Table against whatever is inside.</li>
+            <li><strong>Recon.</strong> A reconnaissance unit can create an extra OBJ by spending a Fire Event and rolling 1d6 ≤ its AR. It cannot be STOPPED or create a Double OBJ. <span class="regla">3.3f</span></li>
+            <li>Once placed they do not move, and they are all removed in the Clean Up Phase. They are not saved for another activation.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="safe-path">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Safe Paths · Isolation</span><h2>The thread to the HQ</h2></div>
+        <p>A Safe Path is a route of contiguous hexes from each unit to its HQ, free of enemy units and of EZOCs that affect its Movement Class, and no longer than Command Radius + 5. In or next to the HQ there always is one. At this scale, losing it is worse than losing the MSR. <span class="regla">1.9</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta">
+          <h3>What it is needed for</h3>
+          <ul class="rombos mb0">
+            <li>Flipping from the Leg side to the Truck or Tac side.</li>
+            <li>Removing a Dropped Support marker.</li>
+            <li>Taking replacements.</li>
+            <li>Avoiding isolation.</li>
+            <li>Retreating successfully (Leg or Truck).</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>What cuts it</h3>
+          <ul class="rombos mb0">
+            <li>Enemy units.</li>
+            <li>For Leg and Truck, any EZOC; for Tac, only Real AV ZOCs.</li>
+            <li>Friendly units negate EZOCs.</li>
+          </ul>
+          <p class="muted mb0" style="font-size:.9rem;margin-top:8px">STOP Terrain, Support, Engagement Zones and Screens do not cut it.</p>
+        </div>
+        <div class="tarjeta">
+          <h3>Which class is needed</h3>
+          <p class="muted mb0">The unit's own, except to flip from Leg to Truck or Tac (the new side's class), to establish Support or take AV replacements (Tac) and non-AV replacements (Leg). Unassigned independents and units on the map edge always have one.</p>
+        </div>
+      </div>
+      <div class="tarjeta" style="margin-top:16px">
+        <h3>Isolation <span class="regla">3.6</span></h3>
+        <p class="muted">On activation, each active stack without a Safe Path or outside Command Radius loses steps according to this table. MSR Blocked makes it worse.</p>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Safe Path</th><th>In Command Radius</th><th>MSR Blocked</th><th class="num">Steps lost per unit</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="3">Yes</td><td>Yes</td><td>Either</td><td class="num">0</td></tr>
+            <tr><td>No</td><td>No</td><td class="num">1</td></tr>
+            <tr><td>No</td><td>Yes</td><td class="num">2</td></tr>
+            <tr><td rowspan="4">No</td><td>Yes</td><td>No</td><td class="num">1</td></tr>
+            <tr><td>Yes</td><td>Yes</td><td class="num">2</td></tr>
+            <tr><td>No</td><td>No</td><td class="num">2</td></tr>
+            <tr><td>No</td><td>Yes</td><td class="num">3</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="saltos">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Jumping HQs &amp; Combat Trains</span><h2>Jumping an HQ</h2></div>
+        <p>Table results do not affect HQs or trains, but if an enemy unit enters their hex (moving or advancing after combat), it Jumps them and they must retreat. <span class="regla">4.7d</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta">
+          <h3>The Jumped HQ <span class="regla">4.7e</span></h3>
+          <ul class="checks mb0">
+            <li>It is placed 3 or more hexes away, in a Legal hex outside any Engagement Zone.</li>
+            <li>Its trains flip to Ghost.</li>
+            <li>It loses its Prepared Defense.</li>
+            <li>It gets a Coordination marker.</li>
+          </ul>
+          <p class="muted mb0" style="font-size:.88rem">It can escape into a pocket: no Complete MSR or minimum distance needed, but it must end in a hex with one of its own units. <span class="regla">4.7f</span></p>
+        </div>
+        <div class="tarjeta">
+          <h3>Jumped trains <span class="regla">4.7h</span></h3>
+          <p>They are placed in a Legal hex that completes the MSR, at least 10 hexes back along their MSR's road, and flip to Ghost. If there is no such hex, they go off-map.</p>
+          <p class="muted mb0" style="font-size:.88rem">Optional rule: on a 1-4 the Jump is soft and the owner relocates them as desired. <span class="regla">4.7i</span></p>
+        </div>
+        <div class="tarjeta">
+          <h3>Who cannot Jump</h3>
+          <ul class="rombos mb0">
+            <li>Unprepared units.</li>
+            <li>Retreating units.</li>
+            <li>Screening units.</li>
+            <li>Units that began the phase Out of Command.</li>
+            <li>Other HQs and trains.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="../js/en.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/fichas.js"></script>
+<script src="../js/datos.js"></script>
+<script src="../js/comun.js"></script>
+<script>
+(function () {
+  'use strict';
+  // La zona de OBJ: dos hexes de radio alrededor del marcador, sobre hexes del mapa de Arracourt
+  const svg = document.getElementById('obj-mapa');
+  const COLS = 7, FILAS = 5, R = 30, W = Math.sqrt(3) * R, CEN = [3, 2];
+  const TER = { '1,1': 'bosque', '5,3': 'pueblo', '0,4': 'bosque', '6,0': 'colina' };
+  const centro = (q, r) => [W / 2 + q * W + (r % 2 ? W / 2 : 0) + 6, R + r * R * 1.5 + 6];
+  const cubo = (q, r) => { const x = q - (r - (r & 1)) / 2; return [x, r, -x - r]; };
+  const dist = (a, b) => { const A = cubo(...a), B = cubo(...b); return Math.max(Math.abs(A[0] - B[0]), Math.abs(A[1] - B[1]), Math.abs(A[2] - B[2])); };
+  const pts = (cx, cy) => Array.from({ length: 6 }, (_, i) => { const a = Math.PI / 180 * (60 * i - 90); return (cx + R * .97 * Math.cos(a)).toFixed(1) + ',' + (cy + R * .97 * Math.sin(a)).toFixed(1); }).join(' ');
+  let fondo = '', capa = '';
+  for (let r = 0; r < FILAS; r++) for (let q = 0; q < COLS; q++) {
+    const [cx, cy] = centro(q, r), hw = W * 1.035, hh = R * 2 * 1.035;
+    fondo += `<image href="../fichas/t/${TER[q + ',' + r] || 'abierto'}.png" x="${(cx - hw / 2).toFixed(1)}" y="${(cy - hh / 2).toFixed(1)}" width="${hw.toFixed(1)}" height="${hh.toFixed(1)}" preserveAspectRatio="none"/>`;
+    const d = dist([q, r], CEN);
+    if (d <= 2) capa += `<polygon points="${pts(cx, cy)}" fill="#f2b33d" fill-opacity="${d === 0 ? .45 : .26}" stroke="#f2b33d" stroke-width="1.6" stroke-opacity=".9"/>`;
+  }
+  const [ux, uy] = centro(...CEN), t = W * .8;
+  svg.setAttribute('viewBox', `0 0 ${(COLS * W + W / 2 + 12).toFixed(0)} ${(FILAS * R * 1.5 + R / 2 + 12).toFixed(0)}`);
+  svg.innerHTML = `<defs><filter id="sm" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".5"/></filter></defs>${fondo}${capa}
+    <g filter="url(#sm)"><image href="${Fichas.UNIDADES['inf-de'].img.d}" x="${(ux - t / 2).toFixed(1)}" y="${(uy - t / 2).toFixed(1)}" width="${t.toFixed(1)}" height="${t.toFixed(1)}"/>
+    <image href="../fichas/m/obj.png" x="${(ux + t * .05).toFixed(1)}" y="${(uy - t * .75).toFixed(1)}" width="${(t * .6).toFixed(1)}" height="${(t * .6).toFixed(1)}"/></g>`;
+})();
+</script>
+</body>
+</html>

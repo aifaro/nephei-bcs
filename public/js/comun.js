@@ -200,6 +200,8 @@
           const r = reglas.find(([x]) => x.test(palabra));
           if (!r || vistos.has(r[1])) continue;
           if (SOLO_MAYUSCULA.test(r[2]) && !/[A-Z]/.test(palabra[0])) continue;
+          // Siglas y palabras en mayúsculas (STOP, FINISHED, ZOC…) solo en mayúsculas
+          if (/^[A-Z]{2}/.test(r[1]) && palabra.slice(0, 2) !== palabra.slice(0, 2).toUpperCase()) continue;
           vistos.add(r[1]);
           frag = frag || document.createDocumentFragment();
           frag.append(txt.slice(ultimo, ini));

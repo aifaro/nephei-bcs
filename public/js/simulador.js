@@ -389,14 +389,14 @@
     c.innerHTML = '';
     const m = S.modo;
     if (m === 'regular' || m === 'shock') {
-      c.appendChild(slot('Atacante', 'a', S.atacante, TODAS, { apoyo: { valor: S.apoyoAtt, al: (v) => { S.apoyoAtt = v; cambio(); } } }));
+      c.appendChild(slot(t('Atacante'), 'a', S.atacante, TODAS, { apoyo: { valor: S.apoyoAtt, al: (v) => { S.apoyoAtt = v; cambio(); } } }));
       if (m === 'regular') {
-        if (S.asistente) c.appendChild(slot('Asistente', 'a', S.asistente, TODAS, { quitar: () => { S.asistente = null; cambio(); } }));
+        if (S.asistente) c.appendChild(slot(t('Asistente'), 'a', S.asistente, TODAS, { quitar: () => { S.asistente = null; cambio(); } }));
         else c.appendChild(botonAnadir(t('+ Añadir asistencia'), () => { S.asistente = nueva('tq-us'); cambio(); }));
       }
     }
     if (m === 'enfrentamiento') {
-      c.appendChild(slot('Tirador', 'a', S.tirador, ROL_AV));
+      c.appendChild(slot(t('Tirador'), 'a', S.tirador, ROL_AV));
       const tipo = document.createElement('div'); tipo.className = 'campo';
       tipo.innerHTML = `<span class="muted">${t('El blanco es')}</span>`;
       const mini = document.createElement('div'); mini.className = 'mini';
@@ -405,9 +405,9 @@
         b.addEventListener('click', () => { S.blancoTipo = v; cambio(); }); mini.appendChild(b);
       });
       tipo.appendChild(mini); c.appendChild(tipo);
-      if (S.blancoTipo === 'real') c.appendChild(slot('Blanco', 'd', S.blanco, ROL_AV));
+      if (S.blancoTipo === 'real') c.appendChild(slot(t('Blanco'), 'd', S.blanco, ROL_AV));
       else {
-        c.appendChild(slot('Host', 'd', S.host, HOSTS));
+        c.appendChild(slot(t('Host'), 'd', S.host, HOSTS));
         const sa = document.createElement('div'); sa.className = 'campo';
         sa.innerHTML = `<span class="muted">${t('Apoyo de la formación del host:')}</span>`;
         const sel = selectorApoyo(S.apoyoBlanco, (v) => { S.apoyoBlanco = v || 'red'; cambio(); });
@@ -415,7 +415,7 @@
         sa.appendChild(sel); c.appendChild(sa);
       }
     }
-    if (m === 'fuego') c.appendChild(slot('Tirador', 'a', S.tirador, ROL_AV));
+    if (m === 'fuego') c.appendChild(slot(t('Tirador'), 'a', S.tirador, ROL_AV));
     if (m !== 'enfrentamiento') {
       const etiqueta = m === 'fuego' || m === 'bombardeo' ? t('Objetivo') : t('Defensor');
       S.defensores.forEach((inst, i) => {
@@ -494,7 +494,7 @@
     }
     if (m === 'enfrentamiento') {
       const d = document.createElement('div'); d.className = 'grupo-op';
-      d.innerHTML = `<h3>Distancia</h3><div class="campo"><input class="rango" type="range" min="1" max="4" value="${S.distancia}" aria-label="${t('Distancia en hexes')}"><strong>${t(S.distancia === 1 ? '{n} hex (adyacente)' : '{n} hexes', { n: S.distancia })}</strong></div>`;
+      d.innerHTML = `<h3>${t('Distancia')}</h3><div class="campo"><input class="rango" type="range" min="1" max="4" value="${S.distancia}" aria-label="${t('Distancia en hexes')}"><strong>${t(S.distancia === 1 ? '{n} hex (adyacente)' : '{n} hexes', { n: S.distancia })}</strong></div>`;
       d.querySelector('input').addEventListener('input', (e) => { S.distancia = +e.target.value; cambio(); });
       c.appendChild(d);
       grupo(c, t('Tirador'), [op(t('Blanco en Double OBJ Zone'), '+1', S.dobleObj, alternar('dobleObj'))]);
@@ -519,7 +519,7 @@
   function claseV(v, base) { return base ? '' : v > 0 ? 'drm--pos' : v < 0 ? 'drm--neg' : ''; }
 
   function ladoDrm(cls, titulo, lista, total) {
-    return `<div class="lado-drm ${cls}"><h3><span>${titulo}</span></h3><ul>${lista.map((m) => `<li class="${m.base ? 'base' : ''}"><span>${esc(m.texto)}</span><span class="v drm ${claseV(m.valor, m.base)}">${m.base ? m.valor : signo(m.valor)}</span></li>`).join('')}</ul><div class="total"><span>Total</span><span class="v">${total}</span></div></div>`;
+    return `<div class="lado-drm ${cls}"><h3><span>${titulo}</span></h3><ul>${lista.map((m) => `<li class="${m.base ? 'base' : ''}"><span>${esc(m.texto)}</span><span class="v drm ${claseV(m.valor, m.base)}">${m.base ? m.valor : signo(m.valor)}</span></li>`).join('')}</ul><div class="total"><span>${t('Total')}</span><span class="v">${total}</span></div></div>`;
   }
 
   let calculo = null;
@@ -535,7 +535,7 @@
       if (S.bombardeo === 'destruccion') avisos.push(t('El bombardeo de destrucción se tira antes del Combat Table y no da modificador. Si destruye a todo el hex, el atacante avanza sin tirar en la tabla.'));
       if (S.pdDef && S.defensores[S.arDef].lado === 'm') avisos.push(t('La unidad que da el AR está en su cara de movimiento: no puede usar la Prepared Defense.'));
       calculo = { tipo: 'combate', ctx, mod, filas: R.TABLA_COMBATE, colores: COL_COMBATE, textos: TXT_COMBATE };
-      $('#balanza').innerHTML = `<div class="balanza">${ladoDrm('a', t('Atacante'), mod.atacante, mod.totalA)}<div class="neto"><small>DRM neto</small><strong>${signo(mod.neto)}</strong><span>${t('atacante − defensor')}</span></div>${ladoDrm('d', t('Defensor'), mod.defensor, mod.totalD)}</div>`;
+      $('#balanza').innerHTML = `<div class="balanza">${ladoDrm('a', t('Atacante'), mod.atacante, mod.totalA)}<div class="neto"><small>${t('DRM neto')}</small><strong>${signo(mod.neto)}</strong><span>${t('atacante − defensor')}</span></div>${ladoDrm('d', t('Defensor'), mod.defensor, mod.totalD)}</div>`;
     } else if (m === 'enfrentamiento') {
       const ctx = ctxEnfrentamiento();
       const mod = R.modificadoresEnfrentamiento(ctx);
@@ -545,7 +545,7 @@
       if (ctx.blancoEsApoyo) avisos.push(t('Contra un apoyo se usa la parte baja del Engagement Table, con el AV del apoyo y el Action Rating del host.'));
       const filas = ctx.blancoEsApoyo ? R.TABLA_ENFRENTAMIENTO_APOYO : R.TABLA_ENFRENTAMIENTO_REAL;
       calculo = { tipo: 'enfrentamiento', ctx, mod, filas, colores: ctx.blancoEsApoyo ? COL_ENF_APOYO : COL_ENF_REAL, textos: filas.map((f) => f.texto) };
-      $('#balanza').innerHTML = `<div class="balanza">${ladoDrm('a', t('Tirador'), mod.tirador, mod.totalF)}<div class="neto"><small>DRM neto</small><strong>${signo(mod.neto)}</strong><span>${t('tirador − blanco')}</span></div>${ladoDrm('d', ctx.blancoEsApoyo ? t('Apoyo') : t('Blanco'), mod.blanco, mod.totalT)}</div>`;
+      $('#balanza').innerHTML = `<div class="balanza">${ladoDrm('a', t('Tirador'), mod.tirador, mod.totalF)}<div class="neto"><small>${t('DRM neto')}</small><strong>${signo(mod.neto)}</strong><span>${t('tirador − blanco')}</span></div>${ladoDrm('d', ctx.blancoEsApoyo ? t('Apoyo') : t('Blanco'), mod.blanco, mod.totalT)}</div>`;
     } else {
       const col = m === 'fuego' ? 'fuego' : 'arty';
       reqs = m === 'fuego' ? requisitosFuego() : requisitosBombardeo();
@@ -556,12 +556,12 @@
         R.TABLA_BOMBARDEO.map((f) => `<tr class="${filasU.some((x) => x.fila === f) ? 'sel-fila' : ''}"><td>${esc(t(f.texto))}</td><td class="num">${f[col] === 6 ? '6' : f[col] + '-6'}</td></tr>`).join('') +
         '</tbody></table></div><p class="muted" style="font-size:.84rem;margin:10px 0 0">' + t(m === 'fuego' ? 'Se tira un dado por cada unidad del hex. Si a una unidad le valen varias filas, se usa la de menos probabilidad de baja.' : 'Se tira un dado por cada punto y por cada unidad del hex. Si a una unidad le valen varias filas, se usa la de menos probabilidad de baja.') + '</p>';
     }
-    $('#requisitos').innerHTML = reqs.map((r) => `<li class="${r.ok ? '' : 'no'}">${esc(t(r.texto))}</li>`).join('');
-    $('#avisos').innerHTML = avisos.map((a) => `<p class="nota" style="margin:8px 0 0;font-size:.86rem">${esc(t(a))}</p>`).join('');
+    $('#requisitos').innerHTML = reqs.map((r) => `<li class="${r.ok ? '' : 'no'}">${esc(r.texto)}</li>`).join('');
+    $('#avisos').innerHTML = avisos.map((a) => `<p class="nota" style="margin:8px 0 0;font-size:.86rem">${esc(a)}</p>`).join('');
     calculo.bloqueado = reqs.filter((r) => !r.ok);
     const btn = $('#btn-tirar');
     btn.disabled = calculo.bloqueado.length > 0 || animando;
-    btn.title = calculo.bloqueado.length ? t('No se cumple: ') + calculo.bloqueado.map((r) => t(r.texto)).join('; ') : '';
+    btn.title = calculo.bloqueado.length ? t('No se cumple: ') + calculo.bloqueado.map((r) => r.texto).join('; ') : '';
     pintarProbs();
   }
 
@@ -824,7 +824,7 @@
     vivos(defs).length === 0 && !retirada && notas.push(t('El defensor ha sido destruido.'));
 
     const titulo = t(TXT_COMBATE[filaIdx]);
-    veredicto(titulo, `${t(fila.rango)} · ${fila.perdida}${fila.retirada ? ' · D: ' + (fila.retirada === 'situacional' ? 'Situational' : 'Retreat') : ''}${fila.trafico ? ' · Traffic' : ''}`, res.notas.map((x) => esc(t(x))).concat(notas.map(esc)));
+    veredicto(titulo, `${t(fila.rango)} · ${fila.perdida}${fila.retirada ? ' · D: ' + (fila.retirada === 'situacional' ? 'Situational' : 'Retreat') : ''}${fila.trafico ? ' · Traffic' : ''}`, res.notas.map(esc).concat(notas.map(esc)));
     registrar(titulo, total + ' → ' + fila.perdida);
   }
 
@@ -874,7 +874,7 @@
     if (tir.pasos <= 0) notas.push(t('El tirador ha perdido su último paso.'));
     if (!ctx.blancoEsApoyo && bla.pasos <= 0) notas.push(t('El blanco ha sido destruido.'));
     notas.push(t('El enfrentamiento ha gastado un Fire Event del tirador. No hay avance tras el combate.'));
-    veredicto(t(fila.texto), `${t(fila.rango)} · ${ctx.blancoEsApoyo ? 'Target is Support' : 'Target is Real AV'}`, res.notas.map((x) => esc(t(x))).concat(notas.map(esc)));
+    veredicto(t(fila.texto), `${t(fila.rango)} · ${ctx.blancoEsApoyo ? 'Target is Support' : 'Target is Real AV'}`, res.notas.map(esc).concat(notas.map(esc)));
     registrar(t(fila.texto), total + ' → ' + t(fila.rango));
   }
 

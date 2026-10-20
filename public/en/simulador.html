@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Attack simulator · BCS Academy</title>
+  <meta name="description" content="A visual combat simulator for the Battalion Combat Series v2.0: Regular and Shock Attacks, Engagements, Attacks by Fire and Barrages, with modifiers and odds.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/simulador">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/simulador">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bcs.css">
+  <link rel="stylesheet" href="../css/simulador.css">
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Simulator</span>
+      <h1>Set up the attack and roll the dice</h1>
+      <p class="lead" id="explica">Pick the kind of combat, place the counters and tick the circumstances. The simulator works out the modifiers as the table does, shows you the odds of each result and applies the outcome to the counters.</p>
+      <div class="modos" id="modos" role="group" aria-label="Kind of combat"></div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sim">
+      <div class="columna fija">
+        <section class="panel" aria-labelledby="t-campo">
+          <div class="panel__cab"><h2 id="t-campo"><span class="paso">1</span> The field and the roll</h2><button class="boton boton--peq" type="button" id="btn-reiniciar">Reset counters</button></div>
+          <div class="panel__cuerpo">
+            <div class="mapa-wrap"><div class="mapa" id="mapa"></div></div>
+            <div class="leyenda-mapa" id="leyenda"></div>
+            <div class="resumen-tirada" id="resumen-tirada"></div>
+            <div class="tirar">
+              <button class="boton boton--primario boton--tirar" type="button" id="btn-tirar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8" cy="8" r="1.3" fill="currentColor"/><circle cx="16" cy="16" r="1.3" fill="currentColor"/><circle cx="12" cy="12" r="1.3" fill="currentColor"/></svg>Roll the dice</button>
+              <div class="dados" id="dados" aria-live="polite"></div>
+            </div>
+            <div id="veredicto" aria-live="polite"></div>
+          </div>
+        </section>
+        <section class="panel panel--hist" aria-labelledby="t-hist">
+          <div class="panel__cab"><h2 id="t-hist">History</h2><button class="boton boton--peq" type="button" id="btn-borrar-hist">Clear</button></div>
+          <div class="panel__cuerpo"><ul class="historial" id="historial"></ul></div>
+        </section>
+      </div>
+
+      <div class="columna">
+        <section class="panel" aria-labelledby="t-unidades">
+          <div class="panel__cab"><h2 id="t-unidades"><span class="paso">2</span> Units</h2><span class="muted" style="font-size:.82rem">Real counters from Arracourt and Danger Forward</span></div>
+          <div class="panel__cuerpo"><div class="slots" id="slots"></div></div>
+        </section>
+        <section class="panel" aria-labelledby="t-circ">
+          <div class="panel__cab"><h2 id="t-circ"><span class="paso">3</span> Circumstances</h2></div>
+          <div class="panel__cuerpo" id="circ"></div>
+        </section>
+        <section class="panel" aria-labelledby="t-mod">
+          <div class="panel__cab"><h2 id="t-mod"><span class="paso">4</span> <span id="t-mod-txt">Modifiers</span></h2><span class="regla" id="regla-tabla"></span></div>
+          <div class="panel__cuerpo">
+            <div id="balanza"></div>
+            <hr class="separa" style="margin:16px 0">
+            <h3 style="font-size:.95rem;margin-bottom:8px">Requirements</h3>
+            <ul class="requisitos" id="requisitos"></ul>
+            <div class="avisos" id="avisos"></div>
+          </div>
+        </section>
+        <section class="panel" aria-labelledby="t-prob">
+          <div class="panel__cab"><h2 id="t-prob"><span class="paso">5</span> Odds</h2></div>
+          <div class="panel__cuerpo" id="probs"></div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="../js/en.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/fichas.js"></script>
+<script src="../js/datos.js"></script>
+<script src="../js/reglas.js"></script>
+<script src="../js/comun.js"></script>
+<script src="../js/simulador.js"></script>
+</body>
+</html>

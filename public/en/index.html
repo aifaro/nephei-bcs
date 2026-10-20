@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BCS Academy · Battalion Combat Series</title>
+  <meta name="description" content="BCS Academy: step-by-step training and a reference for MMP's Battalion Combat Series v2.0, with real counters, charts, an attack simulator, an activation cup and an orders log.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bcs.css">
+  <style>
+    .hero__rejilla { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 40px; align-items: center; }
+    @media (max-width: 900px) { .hero__rejilla { grid-template-columns: 1fr; } }
+    .escena { position: relative; aspect-ratio: 1.08; max-width: 470px; width: 100%; margin: 0 auto; }
+    .escena svg.mapa { width: 100%; height: 100%; }
+    .escena .ficha-flot { position: absolute; width: 21%; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+    .escena .ficha-flot .ficha, .escena .ficha-flot .marcador { width: 100%; }
+    .escena .etq { position: absolute; font: 600 0.72rem var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; }
+    .etq--a { background: var(--amber); color: #1a1405; }
+    .etq--d { background: var(--blue); color: #08121c; }
+    .cifras { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-top: 34px; max-width: 560px; }
+    @media (max-width: 520px) { .cifras { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .cifras strong { display: block; font: 700 1.9rem var(--head); color: var(--heading); }
+    .cifras span { font-size: 0.85rem; color: var(--muted); }
+    .idea { display: flex; flex-direction: column; gap: 8px; }
+    .idea__n { font: 700 0.78rem var(--mono); color: var(--amber); letter-spacing: .1em; }
+    .idea p { margin: 0; font-size: 0.95rem; }
+    .portada-ir .ir--destacada { justify-content: flex-end; min-height: 220px; background: radial-gradient(30rem 16rem at 100% 0%, var(--amber-soft), transparent 70%), var(--surface); }
+    .portada-ir .ir--destacada h3 { font-size: 1.6rem; }
+    @media (max-width: 900px) { .portada-ir .ir--destacada { grid-column: span 2; grid-row: auto; min-height: 0; } }
+    @media (max-width: 640px) { .portada-ir .ir--destacada { grid-column: auto; } }
+    .franja { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 900px) { .franja { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .franja a { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; color: var(--text); display: flex; flex-direction: column; gap: 6px; transition: border-color .15s, transform .15s; }
+    .franja a:hover { text-decoration: none; border-color: var(--amber); transform: translateY(-2px); }
+    .franja strong { color: var(--heading); font-family: var(--head); }
+    .franja span { font-size: 0.85rem; color: var(--muted); }
+    .franja .tabla-uso { font: 600 0.72rem var(--mono); color: var(--amber); text-transform: uppercase; letter-spacing: .06em; }
+    .hero__lema { font: 600 1.3rem/1.35 var(--head); color: var(--amber); margin: -6px 0 14px; }
+    .hoja { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 18px 22px; margin-bottom: 18px; border-radius: var(--radius); border: 1px solid color-mix(in srgb, var(--amber) 40%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 55%), var(--surface); }
+    @media (max-width: 640px) { .hoja { grid-template-columns: auto minmax(0, 1fr); } .hoja .boton { grid-column: 1 / -1; } }
+    .hoja__insignia { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; background: var(--surface-3); border: 1px solid var(--border-strong); color: var(--amber); }
+    .hoja__insignia svg { width: 42px; height: 42px; }
+    .hoja small { font: 600 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .hoja strong { display: block; font: 700 1.5rem var(--head); color: var(--heading); }
+    .hoja .barra { height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; margin-top: 8px; }
+    .hoja .barra i { display: block; height: 100%; background: linear-gradient(90deg, var(--olive), var(--amber)); border-radius: 99px; transition: width .4s; }
+    .lecciones { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 900px) { .lecciones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 600px) { .lecciones { grid-template-columns: minmax(0, 1fr); } }
+    .lecciones a { position: relative; display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 14px; height: 100%; padding: 16px 18px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: border-color .15s, transform .15s, background .15s; }
+    .lecciones a:hover { text-decoration: none; border-color: var(--amber); transform: translateY(-2px); background: var(--surface-2); }
+    .lecciones .n { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 1.1rem var(--mono); }
+    .lecciones .hecha .n { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); }
+    .lecciones .siguiente { border-color: color-mix(in srgb, var(--amber) 55%, var(--border)); box-shadow: 0 0 0 3px var(--amber-soft); }
+    .lecciones strong { display: block; color: var(--heading); font-family: var(--head); font-size: 1.05rem; }
+    .lecciones p { margin: 3px 0 6px; font-size: .88rem; color: var(--muted); }
+    .lecciones .premio { font: 600 .7rem var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .lecciones .hecha .premio { color: var(--ok); }
+    .lecciones .siguiente .premio { color: var(--amber); }
+    .consejos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 900px) { .consejos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 600px) { .consejos { grid-template-columns: minmax(0, 1fr); } }
+    .consejo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 16px 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--olive); }
+    .consejo__n { font: 700 1.3rem var(--head); color: var(--olive); }
+    .consejo p { margin: 0; font-size: .92rem; }
+    .consejo strong { display: block; color: var(--heading); margin-bottom: 2px; }
+    .consejo a:not(.g) { font: 600 .74rem var(--mono); letter-spacing: .04em; white-space: nowrap; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero">
+    <div class="wrap hero__rejilla">
+      <div>
+        <span class="antetitulo">Battalion Combat Series · v2.0</span>
+        <h1>BCS Academy</h1>
+        <p class="hero__lema">Training for recruits. A quick reference for veterans.</p>
+        <p class="lead">Welcome to the ranks. Here you will learn MMP's BCS system counter by counter, from what each number means to when a Shock Attack pays off, with the charts, an attack simulator and the tools you need at the table close at hand.</p>
+        <div class="botones" style="margin-top:26px">
+          <a class="boton boton--primario" href="#instruccion" id="cta-instruccion">Start training</a>
+          <a class="boton" href="#utilidades">Go to the tools</a>
+        </div>
+        <div class="cifras">
+          <div><strong>6</strong><span>training lessons</span></div>
+          <div><strong>5</strong><span>ways to fight</span></div>
+          <div><strong>7</strong><span>tools for the table</span></div>
+          <div><strong id="n-glosario">80+</strong><span>glossary terms</span></div>
+        </div>
+      </div>
+      <div class="escena" id="escena" aria-label="An infantry battalion with tank Support attacks a hex held by a Panther" role="img"></div>
+    </div>
+  </section>
+
+  <section class="seccion" id="instruccion">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Training plan</span><h2>From recruit to major in six lessons</h2></div>
+        <p>Each lesson is a chapter of the rules, in the order of the <em>Series Rules</em>. When you finish one, mark it as passed at the foot of the page and you will be promoted. Your service record is saved in this browser only.</p>
+      </div>
+      <div class="hoja" id="hoja"></div>
+      <ol class="lecciones" id="lecciones"></ol>
+    </div>
+  </section>
+
+  <section class="seccion" id="utilidades">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Quartermaster</span><h2>Tools for the table</h2></div>
+        <p>For when you are already playing: work out the odds before you roll, draw activations or keep each formation's orders without paper.</p>
+      </div>
+      <div class="rejilla rejilla--4 portada-ir">
+        <a class="ir ir--destacada" href="simulador.html">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><circle cx="7" cy="7" r="1"/><circle cx="15.5" cy="15.5" r="1"/><circle cx="18.5" cy="18.5" r="1"/></svg></span>
+          <span class="ir__flecha">→</span>
+          <h3>Attack simulator</h3>
+          <p>Place the counters on the map, tick the circumstances and see the odds of each result. Then roll the dice and watch what happens to the units: losses, retreats, advance and Traffic.</p>
+        </a>
+        <a class="ir" href="combate.html#elegir">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg></span>
+          <span class="ir__flecha">→</span>
+          <h3>Which attack do I use?</h3>
+          <p>Pick your unit and what is in the enemy hex, and it tells you which kinds of combat you can use.</p>
+        </a>
+        <a class="ir" href="secuencia.html#snafu">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><circle cx="7" cy="7" r=".8" fill="currentColor"/><circle cx="15.5" cy="15.5" r=".8" fill="currentColor"/><circle cx="18.5" cy="18.5" r=".8" fill="currentColor"/></svg></span>
+          <span class="ir__flecha">→</span>
+          <h3>SNAFU calculator</h3>
+          <p>Add up the formation's modifiers and see your chances of Full, Partial or Fail.</p>
+        </a>
+        <a class="ir" href="opcionales.html#chits">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 11h-11z"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/><path d="M10 13h4"/></svg></span>
+          <span class="ir__flecha">→</span>
+          <h3>Activation cup</h3>
+          <p>Activation chits drawn three at a time: the side with the majority picks which formation acts (optional rule 2.5m).</p>
+        </a>
+        <a class="ir" href="opcionales.html#ordenes">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h6M9 16h4"/></svg></span>
+          <span class="ir__flecha">→</span>
+          <h3>Orders log</h3>
+          <p>Write down each formation's order every turn, with its route, and hide it before you pass the screen over.</p>
+        </a>
+        <a class="ir" href="tablas.html">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/></svg></span>
+          <span class="ir__flecha">→</span>
+          <h3>Charts</h3>
+          <p>Combat, Engagement, Barrage, SNAFU, fatigue, isolation, capabilities and terrain, ready to print.</p>
+        </a>
+        <a class="ir" href="glosario.html">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 8h6"/></svg></span>
+          <span class="ir__flecha">→</span>
+          <h3>Glossary and search</h3>
+          <p>Every rules term with a short explanation. Press <kbd>Ctrl K</kbd> on any page to search.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="sargento">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">The drill sergeant's tips</span><h2>What nobody tells you on day one</h2></div>
+        <p>Classic recruit mistakes. Learn them before your first game and you will save more than one battalion.</p>
+      </div>
+      <div class="consejos">
+        <div class="consejo"><span class="consejo__n">01</span><p><strong>Look after your MSR!</strong> Combat Trains off the map are -3 to SNAFU, and on a Fail the formation does not activate. <a href="mando.html#msr">Lesson 3</a></p></div>
+        <div class="consejo"><span class="consejo__n">02</span><p><strong>No OBJ, no attack.</strong> Regular and Shock Attacks, Attacks by Fire and Barrages all need an OBJ Zone; only Engagements are fought without one. <a href="mando.html#obj">Lesson 3</a></p></div>
+        <div class="consejo"><span class="consejo__n">03</span><p><strong>Tanks do not shoot their way into villages.</strong> An Engagement takes no ground: to keep the hex you need a Regular or Shock Attack. <a href="combate.html#elegir">Lesson 5</a></p></div>
+        <div class="consejo"><span class="consejo__n">04</span><p><strong>Three is a crowd.</strong> Stacking more than 2 units in one hex is legal, but it gives adverse modifiers and extra rolls to the enemy artillery. <a href="movimiento.html#apilamiento">Lesson 4</a></p></div>
+        <div class="consejo"><span class="consejo__n">05</span><p><strong>Count your Fire Events.</strong> Each unit has two per activation, and spending the last one STOPs it, even with MA left. <a href="fichas.html">Lesson 1</a></p></div>
+        <div class="consejo"><span class="consejo__n">06</span><p><strong>Not every ZOC stops everyone.</strong> Tanks ignore normal ZOCs; trucks stop even in an Engagement Zone. <a href="movimiento.html#zoc">Lesson 4</a></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="que-es">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div>
+          <span class="antetitulo">Briefing · What the BCS is</span>
+          <h2>Mechanized war at battalion scale</h2>
+        </div>
+        <p>Designed by Dean Essig for The Gamers / MMP, the BCS covers the late First World War to the present day. Each counter is usually a battalion, each hex is 1 to 1.6 km across and each turn is a day.</p>
+      </div>
+      <div class="rejilla rejilla--4">
+        <div class="tarjeta idea"><span class="idea__n">01 · FORMATIONS</span><h3>You play by command</h3><p>Nothing moves on its own: every unit belongs to a formation with its HQ, trains and artillery. They share SNAFU, fatigue, Support and Prepared Defense.</p></div>
+        <div class="tarjeta idea"><span class="idea__n">02 · ACTIVATIONS</span><h3>Alternating turns</h3><p>The players take turns activating one formation at a time. With luck, the formation goes again straight away (Second Activation) before the enemy can react.</p></div>
+        <div class="tarjeta idea"><span class="idea__n">03 · SNAFU</span><h3>Logistics rule</h3><p>Every activation starts with 2d6 on the SNAFU Table. A cut supply route or badly placed trains sink the roll, and on a Fail the formation does not activate.</p></div>
+        <div class="tarjeta idea"><span class="idea__n">04 · COMBINED ARMS</span><h3>The right tool for the job</h3><p>Infantry takes ground, armor fights armor, Support is spread among the battalions and artillery suppresses. Choosing well is the key.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="turno">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div>
+          <span class="antetitulo">The turn</span>
+          <h2>A day of operations in six phases</h2>
+        </div>
+        <a class="boton boton--peq" href="secuencia.html">See the full sequence →</a>
+      </div>
+      <div class="linea linea--fases">
+        <div class="fase"><h4>Reinforcements</h4><p>Weather, Air Points, replacements that rebuild steps, and arriving reinforcements.</p></div>
+        <div class="fase"><h4>Assignment</h4><p>Artillery and independents change formation; units enter or leave Support.</p></div>
+        <div class="fase"><h4>Orders</h4><p>Optional: each formation's orders are written down.</p></div>
+        <div class="fase"><h4>First player</h4><p>2d6 per side: the higher roll activates first.</p></div>
+        <div class="fase fase--clave"><h4>Activations</h4><p>Formations alternate until all are Done. Almost everything happens here.</p></div>
+        <div class="fase"><h4>Turn end</h4><p>HQs return to their unused side and the turn marker advances.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div>
+          <span class="antetitulo">Combat</span>
+          <h2>Five ways to do damage</h2>
+        </div>
+        <p>Each has its own table and requirements. Click one to see how it works.</p>
+      </div>
+      <div class="franja">
+        <a href="combate.html#regular"><span class="tabla-uso">Combat Table · 2d6</span><strong>Regular Attack</strong><span>Infantry assaults a hex with artillery and an Assist.</span></a>
+        <a href="combate.html#choque"><span class="tabla-uso">Combat Table · 2d6</span><strong>Shock Attack</strong><span>A mechanized unit overruns a hex with no AV and keeps moving.</span></a>
+        <a href="combate.html#enfrentamiento"><span class="tabla-uso">Engagement Table · 2d6</span><strong>Engagement</strong><span>Armor against armor or against enemy Support.</span></a>
+        <a href="combate.html#fuego"><span class="tabla-uso">Barrage Table · 1d6</span><strong>Attack by Fire</strong><span>An AV unit fires high explosive at an adjacent hex with no AV.</span></a>
+        <a href="combate.html#bombardeo"><span class="tabla-uso">Barrage Table · 1d6</span><strong>Barrage</strong><span>Artillery and air: destruction or suppression.</span></a>
+      </div>
+      <p class="nota nota--olive" style="margin-top:24px"><strong>Series rules only.</strong> This reference summarises the v2.0 <em>Series Rules</em>, common to every game. Each title adds its own rules, terrain charts, weather and SNAFU modifiers; where they clash with the series rules, the game rules win.</p>
+    </div>
+  </section>
+</main>
+
+<script src="../js/en.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/fichas.js"></script>
+<script src="../js/datos.js"></script>
+<script src="../js/comun.js"></script>
+<script>
+  document.getElementById('n-glosario').textContent = Datos.GLOSARIO.length;
+  // Plan de instrucción: una lección por capítulo y un rango por lección superada
+  (function () {
+    const QUE = [
+      'What each number on a counter means, infantry, AV and Dual, the four armor colors and Support.',
+      'A day-long turn, the activation step by step, SNAFU and when to go again with a Second Activation.',
+      'Formations, HQs and trains, the MSR, OBJs and why a unit without a Safe Path ends up isolated.',
+      'What each terrain costs, how many units fit in a hex and which ZOCs stop whom.',
+      'The five kinds of combat: who can use them, against what and what they cost. And retreats.',
+      'Orders, activation chits, Planned Fatigue and the rest of the veterans\' rules.'
+    ];
+    const INSIGNIAS = [
+      '<path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/>',
+      '<path d="M5 10l7-5 7 5"/>',
+      '<path d="M5 9l7-5 7 5M5 15l7-5 7 5"/>',
+      '<path d="M5 7l7-4 7 4M5 12l7-4 7 4M5 17l7-4 7 4"/>',
+      '<path d="M8 6l1 2.2 2.4.3-1.8 1.6.5 2.4L8 11.3 5.9 12.5l.5-2.4L4.6 8.5 7 8.2zM16 12l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z"/>',
+      '<path d="M6 4l.9 2 2.2.3-1.6 1.5.4 2.2L6 8.9 4.1 10l.4-2.2L2.9 6.3l2.2-.3zM18 4l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3zM12 13l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3z"/>',
+      '<path d="M12 3l2 5.5 5.8.4-4.5 3.7 1.5 5.7L12 15.1l-4.8 3.2 1.5-5.7-4.5-3.7 5.8-.4z"/>'
+    ];
+    const ins = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${INSIGNIAS[Math.min(n, 6)]}</svg>`;
+    const C = Comun.CAPITULOS;
+    function pintar() {
+      const hechas = Comun.lecciones().filter((h) => C.some((c) => c[0] === h));
+      const sig = C.findIndex((c) => !hechas.includes(c[0]));
+      const n = hechas.length;
+      document.getElementById('hoja').innerHTML = `<div class="hoja__insignia">${ins(n)}</div>
+        <div><small>Service record</small><strong>${Comun.rango(n)}</strong><span class="muted" style="font-size:.9rem">${n ? `${n} of ${C.length} lessons passed.` : 'You have not passed any lessons yet. We all start here.'} ${n < C.length ? `Next promotion: <b style="color:var(--amber)">${Comun.rango(n + 1)}</b>.` : 'Training complete!'}</span><div class="barra"><i style="width:${(n / C.length * 100).toFixed(0)}%"></i></div></div>
+        ${sig >= 0 ? `<a class="boton boton--primario" href="${C[sig][0]}">${n ? 'Go on to lesson ' + (sig + 1) : 'Start lesson 1'}</a>` : '<a class="boton" href="simulador.html">To the simulator, Major</a>'}`;
+      document.getElementById('lecciones').innerHTML = C.map(([h, t], i) => {
+        const hecha = hechas.includes(h);
+        return `<li><a href="${h}" class="${hecha ? 'hecha' : i === sig ? 'siguiente' : ''}"><span class="n">${hecha ? '✓' : i + 1}</span><span><strong>${t}</strong><p>${QUE[i]}</p><span class="premio">${hecha ? 'Passed' : i === sig ? 'Next lesson' : 'Lesson ' + (i + 1)} · ${Comun.rango(i + 1)}</span></span></a></li>`;
+      }).join('');
+      if (sig >= 0) document.getElementById('cta-instruccion').href = n ? C[sig][0] : '#instruccion';
+      document.getElementById('cta-instruccion').textContent = n ? (sig >= 0 ? 'Continue training' : 'Review the training') : 'Start training';
+    }
+    pintar();
+    addEventListener('pageshow', pintar);
+  })();
+
+  // Escena de la portada: un hex atacante y uno defensor.
+  (function () {
+    const e = document.getElementById('escena');
+    const hex = (cx, cy, r, fill) => {
+      const p = [];
+      for (let i = 0; i < 6; i++) { const a = Math.PI / 180 * (60 * i - 30); p.push((cx + r * Math.cos(a)).toFixed(1) + ',' + (cy + r * Math.sin(a)).toFixed(1)); }
+      return `<polygon points="${p.join(' ')}" fill="${fill}" stroke="#6f6a4f" stroke-width="1.5"/>`;
+    };
+    const R = 74, W = Math.sqrt(3) * R;
+    let s = '<svg class="mapa" viewBox="0 0 470 435" aria-hidden="true">';
+    s += '<defs><pattern id="arb" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="5" cy="6" r="4" fill="#7f9a4d"/><circle cx="14" cy="13" r="3.5" fill="#7f9a4d"/></pattern></defs>';
+    const celdas = [[0, 0, '#e6dcb2'], [1, 0, '#e6dcb2'], [2, 0, '#dfd3a3'], [0.5, 1, '#e6dcb2'], [1.5, 1, 'url(#arb)'], [2.5, 1, '#e6dcb2'], [0, 2, '#dfd3a3'], [1, 2, '#e6dcb2'], [2, 2, '#e6dcb2']];
+    celdas.forEach(([c, r, f]) => {
+      const cx = 60 + c * W, cy = 70 + r * R * 1.5;
+      if (f.startsWith('url')) s += hex(cx, cy, R, '#d6d29a');
+      s += hex(cx, cy, R, f);
+    });
+    s += '<path d="M150 285 Q 230 250 300 225" stroke="#f2b33d" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="2 10"/>';
+    s += '<path d="M300 225 l-16 -2 l7 14z" fill="#f2b33d"/>';
+    s += '</svg>';
+    e.innerHTML = s;
+    const poner = (svg, left, top, giro) => {
+      const d = document.createElement('div');
+      d.className = 'ficha-flot';
+      d.style.left = left + '%'; d.style.top = top + '%';
+      d.style.transform = 'rotate(' + giro + 'deg)';
+      d.innerHTML = svg;
+      e.appendChild(d);
+      return d;
+    };
+    const U = Fichas.UNIDADES;
+    poner(Fichas.ficha(U['inf-us'], 'd'), 18, 56, -3);
+    poner(Fichas.ficha(U['tq-us'], 'd'), 22, 61, 4);
+    poner(Fichas.ficha(U.panther, 'd'), 60, 33, 2);
+    const m1 = poner(Fichas.marcador('obj'), 66, 22, 8); m1.style.width = '13%';
+    const m2 = poner(Fichas.marcador('red'), 5, 70, -6); m2.style.width = '13%';
+    e.insertAdjacentHTML('beforeend', '<span class="etq etq--a" style="left:14%;top:88%">Attacker</span><span class="etq etq--d" style="left:62%;top:57%">Defender</span>');
+  })();
+</script>
+</body>
+</html>

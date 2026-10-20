@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Optional rules · BCS Academy</title>
+  <meta name="description" content="Optional rules of the Battalion Combat Series v2.0: Orders with a log to write them down, activation chits with a cup drawn three at a time, Planned Fatigue, Soft Jumps, Unit Traffic and more.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/opcionales">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/opcionales">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bcs.css">
+  <link rel="stylesheet" href="../css/partida.css">
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Chapter 6 · Optional rules</span>
+      <h1>Optional rules and game tools</h1>
+      <p class="lead">The <em>Series Rules</em> mark several rules as <span class="en">[Optional]</span>: they add detail or fog of war, and players agree on them before starting. Two of them call for pencil and paper, so here you have an <strong>activation cup</strong> and an <strong>orders log</strong> that do it for you.</p>
+      <div class="indice">
+        <a class="chip" href="#partida">Your game</a>
+        <a class="chip" href="#chits">Activation chits</a>
+        <a class="chip" href="#ordenes">Orders</a>
+        <a class="chip" href="#otras">Other optional rules</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="partida">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Before you start</span><h2>Your game</h2></div>
+        <p>Enter each side's formations. The activation cup and the orders log both use them. Everything is saved in this browser only, and you can clear it whenever you like.</p>
+      </div>
+      <div class="partida">
+        <div class="bandos" id="bandos"></div>
+        <div class="tarjeta partida__ctl">
+          <div class="turno">
+            <span class="antetitulo">Game turn</span>
+            <div class="turno__fila">
+              <button type="button" class="boton-icono" id="turno-menos" aria-label="Previous turn">−</button>
+              <strong id="turno">1</strong>
+              <button type="button" class="boton-icono" id="turno-mas" aria-label="Next turn">+</button>
+            </div>
+          </div>
+          <div class="botones">
+            <button type="button" class="boton boton--peq" id="ejemplo">Load an example</button>
+            <button type="button" class="boton boton--peq peligro" id="borrar">Clear the game</button>
+          </div>
+          <p class="muted mb0" style="font-size:.82rem" id="guardado">Saved in this browser.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="chits">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">2.5k–2.5n · Formation Activation markers</span><h2>Activation chits</h2></div>
+        <p>Instead of alternating by choice, formations come out of a cup. Each formation has its chit; when it is Done, its chit is set aside until next turn. <span class="regla">2.5k</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta"><h3>Random <span class="regla">2.5l</span></h3><p class="muted mb0">All available chits go in the cup; draw one and that formation activates. Pure chance: the same side can come up several times in a row.</p></div>
+        <div class="tarjeta destacada"><h3>Modified, three at a time <span class="regla">2.5m</span></h3><p class="muted mb0">Both sides' chits in one cup. Draw <strong>three</strong>: the side owning the majority picks which of them activates, and the other two go back. With only one or two chits left, draw one and that one activates.</p></div>
+        <div class="tarjeta"><h3>Smoothing <span class="regla">2.5n</span></h3><p class="muted mb0">No shared cup. The side with more formations ("Large") draws a numbered chit each time it is its turn: on a 1 it activates one formation; on a 2, two in a row. There are as many chits as the other side has formations, with as many "2"s as the difference between the two.</p></div>
+      </div>
+
+      <div class="herramienta" id="saco">
+        <div class="herramienta__cab">
+          <div><span class="antetitulo">Tool</span><h3>Activation cup</h3></div>
+          <div class="conmutador" id="saco-modo" role="group" aria-label="Draw mode">
+            <button type="button" data-m="modificada" aria-pressed="true">Three at a time (2.5m)</button>
+            <button type="button" data-m="aleatoria" aria-pressed="false">One at a time (2.5l)</button>
+          </div>
+        </div>
+        <div class="saco">
+          <div class="vaso" id="vaso"></div>
+          <div class="mesa">
+            <div class="mesa__fichas" id="sacadas" aria-live="polite"></div>
+            <div class="mesa__ctl">
+              <button type="button" class="boton boton--primario" id="sacar">Draw from the cup</button>
+              <button type="button" class="boton boton--peq" id="deshacer">Undo the last one</button>
+            </div>
+          </div>
+          <div class="usadas">
+            <h4>Activated this turn</h4>
+            <ol id="usadas"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="ordenes">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">2.4 · Orders</span><h2>Orders</h2></div>
+        <p>In the Orders Phase each player secretly writes one order per formation. Orders control the HQ, not the units: they operate normally inside Command Radius. <span class="regla">2.4</span></p>
+      </div>
+      <div class="rejilla rejilla--4 ordenes-tipos">
+        <div class="tarjeta"><span class="orden-chip hq">HQ Move</span><h3>HQ Move</h3><p class="muted mb0">The route the HQ will follow: waypoints and end hex. When the formation activates, a March OBJ goes on the end hex and the HQ heads for it along that route without straying. It can stop short, but it cannot change direction. <span class="regla">2.4b</span></p></div>
+        <div class="tarjeta"><span class="orden-chip no">No Orders</span><h3>No Orders</h3><p class="muted mb0">The HQ does not move, except for a Voluntary Retreat. The units, though, do as they please. It is the default order. <span class="regla">2.4c</span></p></div>
+        <div class="tarjeta"><span class="orden-chip pd">Prepared Defense</span><h3>Prepared Defense</h3><p class="muted mb0">When it activates, the formation must create or keep its PD, and cannot back out. The HQ cannot make a Voluntary Retreat. If it loses the PD, it defaults to No Orders. <span class="regla">2.4d</span></p></div>
+        <div class="tarjeta"><span class="orden-chip rec">Fatigue Recovery</span><h3>Fatigue Recovery</h3><p class="muted mb0">The formation commits to a Recovery Activation. With Orders there is no Failure Flip. It is the only order that can be combined: <strong>PD + Fatigue Recovery</strong>. <span class="regla">2.4e</span></p></div>
+      </div>
+      <div class="rejilla rejilla--3" style="margin-top:16px">
+        <div class="tarjeta"><h3>Changing orders</h3><p class="muted mb0">Only in the Orders Phase, and free: cross it out and write the new one. Orders stay in force for as many turns as you like. Exception: if the MSR is blocked this turn, you can give the HQ a new HQ Move order at that moment. <span class="regla">2.4f</span></p></div>
+        <div class="tarjeta"><h3>March OBJ</h3><p class="muted mb0">It goes in any road hex, even with enemy units in it. It creates no OBJ Zone and triggers no fatigue roll, and Recon units cannot create one. <span class="regla">2.4g</span></p></div>
+        <div class="tarjeta"><h3>March Routing</h3><p class="muted mb0">If the March OBJ lies beyond Command Radius, units can only enter hexes within 2 of the route, unless they are already inside the radius, follow the route to its end, retreat, advance after combat or are reinforcements. <span class="regla">2.4h</span></p></div>
+      </div>
+
+      <div class="herramienta" id="cuaderno">
+        <div class="herramienta__cab">
+          <div><span class="antetitulo">Tool</span><h3>Orders log · <span id="cuaderno-turno">turn 1</span></h3></div>
+          <div class="flex">
+            <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Side"></div>
+            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Secret mode</button>
+            <button type="button" class="boton boton--peq" id="revelar-todas" hidden>Reveal or hide all</button>
+          </div>
+        </div>
+        <p class="muted" style="font-size:.88rem;margin:0 0 14px">If you change nothing, each formation keeps the previous turn's order (shown as <em>in force since turn N</em>). In <strong>secret mode</strong> every order is covered and revealed one at a time: automatically when the formation activates from the activation cup, or by hand with its "Reveal" button. When a new turn starts, they are all covered again.</p>
+        <div id="cuaderno-lista" class="cuaderno"></div>
+        <div class="cuaderno__pie">
+          <button type="button" class="boton boton--peq" id="copiar">Copy this turn's orders</button>
+          <button type="button" class="boton boton--peq peligro" id="vaciar-ordenes">Clear all orders</button>
+        </div>
+        <details class="historial">
+          <summary>Order history by turn</summary>
+          <div class="tabla-wrap"><table class="t" id="historial"></table></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="otras">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">[Optional]</span><h2>Other optional rules</h2></div>
+        <p>The rest of the series' optional rules, for when you have mastered the basics. Some games make one of them mandatory: always check their own rules.</p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta"><h3>Planned Fatigue <span class="regla">6.4</span></h3>
+          <p>A complete package, devised by Jim Stravers: use all of it or none of it. Fatigue is no longer rolled; it becomes a currency you spend to buy things.</p>
+          <div class="tabla-wrap"><table class="t">
+            <thead><tr><th class="num">Fatigue</th><th>Buys</th></tr></thead>
+            <tbody>
+              <tr><td class="num">1</td><td>An extra OBJ (not Recon)</td></tr>
+              <tr><td class="num">1</td><td>An OBJ more than 15 hexes from the HQ (1 in total if it is also an extra one)</td></tr>
+              <tr><td class="num">1</td><td>Removing a Traffic marker (free at the end of the Activities Phase)</td></tr>
+              <tr><td class="num">2</td><td>Forced March: MA ×3, with no combat, OBJs or Second Activation</td></tr>
+              <tr><td class="num">1</td><td>+2 to the Second Activation roll</td></tr>
+            </tbody>
+          </table></div>
+          <p class="muted mb0" style="font-size:.9rem;margin-top:10px">SNAFU only counts Fresh (+1) and Fat-4 (-1). A Full result gives a single free OBJ; Partial and Fail give none. At Fat-4 nothing can be bought and the formation must recover.</p>
+        </div>
+        <div class="rejilla">
+          <div class="tarjeta"><h3>Soft Jumps <span class="regla">4.7i</span></h3><p class="muted mb0">When an HQ or trains are Jumped, roll a die. On 1-4 the Jump is soft: the owner relocates the HQ and trains wherever desired (suitable terrain, no enemy units, EZOCs or Engagement Zones), with no new markers. On 5-6, a normal Jump. It represents the enemy not really knowing where the HQ was.</p></div>
+          <div class="tarjeta"><h3>Unit Traffic <span class="regla">4.0e</span></h3><p class="muted mb0">Any hex with units that are not deployed and active (and always one with an HQ) negates roads for whoever enters: they pay the normal terrain cost. Very realistic and very slow; the designer suggests adding it later.</p></div>
+          <div class="tarjeta"><h3>Realistic Movement <span class="regla">4.9</span></h3><p class="muted mb0">No moving, undoing and trying again: if a counter enters a hex, it really did. Honest mistakes are put right by talking it through with your opponent.</p></div>
+          <div class="tarjeta"><h3>Long-range Engagements <span class="regla">5.2f</span></h3><p class="muted mb0">Beyond one hex, a "Both Loss" result becomes "No Effect".</p></div>
+          <div class="tarjeta"><h3>Stand Off AV vs. Red Support <span class="regla">6.5</span></h3><p class="muted mb0">When a Stand Off AV unit (or a host with Stand Off Support) is attacked by a unit with Red Support, the defender first fires at the attacker's Support, on the "Target is Support" part of the Engagement Table. If it Drops it, the attacker loses its Support DRM for that attack.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="../js/en.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/fichas.js"></script>
+<script src="../js/datos.js"></script>
+<script src="../js/comun.js"></script>
+<script src="../js/partida.js"></script>
+</body>
+</html>

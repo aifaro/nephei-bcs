@@ -1,0 +1,17 @@
+PARES = [
+    ('<title>Simulador de ataques · Academia BCS</title>', '<title>Attack simulator · BCS Academy</title>'),
+    ('content="Simulador visual de combate del Battalion Combat Series v2.0: ataques regulares y de choque, enfrentamientos, ataques por fuego y bombardeos, con modificadores y probabilidades."',
+     'content="A visual combat simulator for the Battalion Combat Series v2.0: Regular and Shock Attacks, Engagements, Attacks by Fire and Barrages, with modifiers and odds."'),
+    ('<span class="antetitulo">Simulador</span>\n      <h1>Prepara el ataque y tira los dados</h1>', '<span class="antetitulo">Simulator</span>\n      <h1>Set up the attack and roll the dice</h1>'),
+    ('<p class="lead" id="explica">Elige el tipo de combate, coloca las fichas y marca las circunstancias. El simulador calcula los modificadores como en la tabla, te enseña la probabilidad de cada resultado y aplica lo que salga sobre las fichas.</p>',
+     '<p class="lead" id="explica">Pick the kind of combat, place the counters and tick the circumstances. The simulator works out the modifiers as the table does, shows you the odds of each result and applies the outcome to the counters.</p>'),
+    ('aria-label="Tipo de combate"', 'aria-label="Kind of combat"'),
+    ('<span class="paso">1</span> El campo y la tirada</h2><button class="boton boton--peq" type="button" id="btn-reiniciar">Recolocar fichas</button>', '<span class="paso">1</span> The field and the roll</h2><button class="boton boton--peq" type="button" id="btn-reiniciar">Reset counters</button>'),
+    ('</svg>Tirar los dados</button>', '</svg>Roll the dice</button>'),
+    ('<h2 id="t-hist">Historial</h2><button class="boton boton--peq" type="button" id="btn-borrar-hist">Borrar</button>', '<h2 id="t-hist">History</h2><button class="boton boton--peq" type="button" id="btn-borrar-hist">Clear</button>'),
+    ('<span class="paso">2</span> Unidades</h2><span class="muted" style="font-size:.82rem">Fichas reales de Arracourt y Danger Forward</span>', '<span class="paso">2</span> Units</h2><span class="muted" style="font-size:.82rem">Real counters from Arracourt and Danger Forward</span>'),
+    ('<span class="paso">3</span> Circunstancias</h2>', '<span class="paso">3</span> Circumstances</h2>'),
+    ('<span id="t-mod-txt">Modificadores</span>', '<span id="t-mod-txt">Modifiers</span>'),
+    ('<h3 style="font-size:.95rem;margin-bottom:8px">Requisitos</h3>', '<h3 style="font-size:.95rem;margin-bottom:8px">Requirements</h3>'),
+    ('<span class="paso">5</span> Probabilidades</h2>', '<span class="paso">5</span> Odds</h2>'),
+]

@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sequence and SNAFU · BCS Academy</title>
+  <meta name="description" content="The game-turn and formation activation sequences of the Battalion Combat Series v2.0, with a SNAFU calculator, Second Activation and fatigue.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/secuencia">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/secuencia">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bcs.css">
+  <link rel="stylesheet" href="../css/simulador.css">
+  <style>
+    .fases-turno { display: grid; gap: 10px; }
+    .ft { display: grid; grid-template-columns: 48px 220px minmax(0, 1fr); gap: 16px; align-items: start; padding: 16px 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); }
+    @media (max-width: 760px) { .ft { grid-template-columns: 40px 1fr; } .ft > div:last-child { grid-column: 1 / -1; } }
+    .ft .letra { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 1.05rem var(--mono); }
+    .ft h3 { margin: 6px 0 0; }
+    .ft ul { margin: 0; }
+    .ft.clave { border-color: color-mix(in srgb, var(--amber) 45%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 45%), var(--surface); }
+    .detalle h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .snafu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+    @media (max-width: 960px) { .snafu { grid-template-columns: 1fr; } }
+    .snafu-res { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .sr-caja { border-radius: 12px; padding: 14px; border: 1px solid var(--border); background: var(--surface-2); text-align: center; transition: box-shadow .2s, transform .2s; }
+    .sr-caja strong { display: block; font: 700 1.8rem var(--head); }
+    .sr-caja span { font-size: .8rem; color: var(--muted); }
+    .sr-caja small { display: block; font: 700 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .sr-caja.salio { box-shadow: 0 0 0 3px var(--amber); transform: translateY(-2px); }
+    .sr-fail small, .sr-fail strong { color: var(--bad); }
+    .sr-partial small, .sr-partial strong { color: var(--amber); }
+    .sr-full small, .sr-full strong { color: var(--ok); }
+    .total-drm { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 4px; }
+    .total-drm strong { font: 700 2.2rem var(--head); color: var(--heading); }
+    .seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    @media (max-width: 860px) { .seg { grid-template-columns: 1fr; } }
+    .dial { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
+    .barra-prob { height: 12px; border-radius: 6px; background: var(--surface-3); overflow: hidden; margin: 8px 0 4px; }
+    .barra-prob div { height: 100%; background: var(--ok); transition: width .3s; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Chapter 2 · Sequence and SNAFU</span>
+      <h1>The turn, the activation and SNAFU</h1>
+      <p class="lead">A turn is a day. The sides take turns activating formations, and every activation starts with the same old question: how well is the logistics working today?</p>
+    </div>
+  </section>
+
+  <section class="seccion" id="turno">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Game-Turn Sequence</span><h2>The phases of the turn</h2></div>
+        <p>On the first turn of each scenario there is no Assignment Phase and no replacements, and the scenario sets the first player. <span class="regla">2.0 · 1.0g</span></p>
+      </div>
+      <div class="fases-turno">
+        <div class="ft"><span class="letra">a</span><h3>Reinforcement</h3><div><ul class="rombos"><li>One player rolls for the weather.</li><li>Each side rolls for its Air Points, for the whole turn.</li><li>Each side rolls for its <a href="#refuerzos">replacements</a> and applies them at once: each rebuilds one step.</li><li>The <a href="#refuerzos">reinforcements</a> on the Order of Arrival are placed.</li></ul></div></div>
+        <div class="ft"><span class="letra">b</span><h3>Assignment</h3><div><ul class="rombos"><li>Assign or unassign Arty Points and Independent units. Whatever is unassigned one turn can be assigned the next.</li><li>It is the only time units can enter or leave Support.</li></ul></div></div>
+        <div class="ft"><span class="letra">c</span><h3>Orders <span class="en">optional</span></h3><div><p class="mb0">Each formation is given one written order: HQ Move (with its route), Prepared Defense, Fatigue Recovery or No Orders.</p></div></div>
+        <div class="ft"><span class="letra">d</span><h3>First player</h3><div><p class="mb0">Each side rolls 2d6; the higher roll <strong>must</strong> go first. Ties are rerolled.</p></div></div>
+        <div class="ft clave"><span class="letra">e</span><h3>Activations</h3><div><ul class="rombos"><li>Taking turns, each player picks a formation that is not Done and activates it (this is required; you cannot pass).</li><li>If one side runs out of formations, the other keeps activating its own until it finishes.</li><li>Optional: draw activation chits from a cup, or use Activation Smoothing.</li></ul></div></div>
+        <div class="ft"><span class="letra">f</span><h3>Turn end</h3><div><p class="mb0">All HQs return to their unused side and the turn marker advances.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="refuerzos">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Reinforcements · Replacements</span><h2>Reinforcements and replacements</h2></div>
+        <p>Both arrive in the first phase of the turn. Reinforcements are new units entering the map; replacements are points that rebuild lost steps. <span class="regla">2.1 · 2.2</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta">
+          <h3>Reinforcements <span class="regla">2.1</span></h3>
+          <ul class="rombos mb0">
+            <li>Each scenario's Order of Arrival (OOA) says what enters each turn and where.</li>
+            <li><strong>Through an Entry Area:</strong> the HQ and trains are placed on the entry hex in this phase. The other units can wait off-map and move on during their formation's activation, even turns later; while they wait off-map they cannot be attacked.</li>
+            <li><strong>At a specific hex or at their HQ:</strong> they are placed now or at the start of their formation's activation. To arrive at the HQ, the formation needs a Complete MSR.</li>
+            <li>They can arrive showing either side, and in Support if eligible. Combat Trains always arrive on their regular side, in any Legal hex that completes the MSR.</li>
+            <li>If the enemy holds the entry hex, enter through another hex of the same area, attack from off-map or wait. EZOCs do not prevent the use of the area.</li>
+            <li>Units that left the map in a retreat come back automatically in this phase, at or next to their HQ.</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>Replacements (Repls) <span class="regla">2.2</span></h3>
+          <ul class="rombos">
+            <li>There are two kinds: <strong>AV</strong>, for units with an AV on either side, and <strong>non-AV</strong>, for the rest.</li>
+            <li>Each Repl rebuilds one step on one unit. They are used as soon as they arrive: any left unused are lost.</li>
+            <li>A unit takes at most one per phase and never goes above its printed steps.</li>
+            <li>There are no replacements on the first turn of any scenario.</li>
+          </ul>
+          <div class="tabla-wrap"><table class="t">
+            <thead><tr><th>To rebuild…</th><th>You need</th></tr></thead>
+            <tbody>
+              <tr><td>A unit on the map</td><td>A Complete MSR, a unit that accepts replacements (no yellow dot) and a Safe Path for Leg (non-AV) or Tac MA (AV).</td></tr>
+              <tr><td>A destroyed unit</td><td>It returns at or next to its HQ if the formation has a Complete MSR; otherwise it is rebuilt but waits off-map until it has one.</td></tr>
+            </tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="activacion">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Formation Activation Sequence</span><h2>An activation, step by step</h2></div>
+        <p>Click each step. They happen in this strict order and, with luck, repeat straight away in a Second Activation. <span class="regla">3.0</span></p>
+      </div>
+      <div class="pasos-act">
+        <ol id="pasos"></ol>
+        <div class="tarjeta detalle" id="paso-detalle" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="snafu">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">SNAFU Table</span><h2>SNAFU calculator</h2></div>
+        <p>Tick the formation's situation. Each game's rules usually add their own modifiers (weather, campaign…). <span class="regla">3.2</span></p>
+      </div>
+      <div class="snafu">
+        <div class="tarjeta" id="snafu-mods"></div>
+        <div class="tarjeta">
+          <h3>Result</h3>
+          <div class="total-drm"><strong id="snafu-drm">+0</strong><span class="muted">total DRM on 2d6</span></div>
+          <div class="snafu-res" id="snafu-res"></div>
+          <div class="tirar" style="margin-top:18px">
+            <button class="boton boton--primario" type="button" id="snafu-tirar">Roll SNAFU</button>
+            <div class="dados" id="snafu-dados"></div>
+          </div>
+          <div id="snafu-efectos" style="margin-top:16px"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="segunda">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Second Activation · Fatigue</span><h2>Go again or rest</h2></div>
+        <p>After its Initial Activation, the formation can try another one at once. Doing more in a day is tiring: mind the fatigue. <span class="regla">2.5h · 1.8</span></p>
+      </div>
+      <div class="seg">
+        <div class="tarjeta">
+          <h3>Second Activation</h3>
+          <p>Roll 1d6, +1 if the formation is Fresh. You must equal or beat the HQ's activation roll (the die on its used side).</p>
+          <div class="campo">HQ activation roll:</div>
+          <div class="dial" id="seg-act"></div>
+          <div class="opciones" id="seg-fresh"></div>
+          <div class="barra-prob"><div id="seg-barra"></div></div>
+          <p id="seg-txt" class="mb0"></p>
+          <p class="muted" style="font-size:.88rem;margin-top:10px">Formations at Fat-4 or that have just done a Fatigue Recovery cannot try. If you pass or fail, the HQ is Done. A Second Activation with a Partial or Full result always rolls for fatigue.</p>
+        </div>
+        <div class="tarjeta">
+          <h3>Fatigue Increase Table</h3>
+          <p>At the end of the activation, roll 1d6 for the <strong>most likely</strong> cause that occurred. If the die falls in the range, fatigue rises one level (at most one per activation).</p>
+          <div class="tabla-wrap"><table class="t">
+            <thead><tr><th>Cause</th><th class="num">Rises on</th><th class="num">Odds</th></tr></thead>
+            <tbody>
+              <tr><td>A combat OBJ was placed</td><td class="num">1</td><td class="num">17%</td></tr>
+              <tr><td>Engagements, Attacks by Fire or a Second Activation</td><td class="num">1-2</td><td class="num">33%</td></tr>
+              <tr><td>The attack sequence was carried out</td><td class="num">1-3</td><td class="num">50%</td></tr>
+              <tr><td>The HQ made a Voluntary Retreat</td><td class="num">auto.</td><td class="num">100%</td></tr>
+            </tbody>
+          </table></div>
+          <p class="muted" style="font-size:.88rem;margin-top:10px">There is no roll if the activation got a Fail. Fresh gives +1 to SNAFU and to the Second Activation; each Fatigue Level takes 1 off SNAFU. To drop a level you must spend an Initial Activation on a Recovery, with a Complete MSR.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="../js/en.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/fichas.js"></script>
+<script src="../js/datos.js"></script>
+<script src="../js/reglas.js"></script>
+<script src="../js/comun.js"></script>
+<script>
+(function () {
+  'use strict';
+  const R = Reglas;
+  const $ = (s) => document.querySelector(s);
+
+  // ---------- Pasos de la activación ----------
+  const PASOS = [
+    ['a', 'HQ initialization', 'Pick the formation and flip its HQ to the used side (with the white band). If it began the turn used, skip to the Second Activation.', []],
+    ['b', 'Preparation', 'In this strict order:', ['If the trains are off-map: add or raise the MSR Blocked marker.', 'If the MSR is not complete: the trains go off-map.', 'If the MSR is complete: remove MSR Blocked.', 'Create, keep or remove Prepared Defense (creating it only in the Initial Activation).', 'If the formation is Mixed, place the Coordination markers.', 'A Recovery Activation can be declared here instead of everything else.']],
+    ['c', 'SNAFU', 'Roll 2d6 with the modifiers: Fail, Partial or Full. If the formation is not Mixed, its Coordination is then removed. On a Fail in the Initial Activation you can make a Failure Flip: turn it into a Recovery.', ['Prepared Defense: the result is never better than Partial.']],
+    ['d', 'Objectives', 'Place the OBJs the SNAFU allows (2 on Full, 1 on Partial, 0 on Fail) on enemy units or Victory hexes, at any distance from the HQ.', ['Recon units can create more during the Activities Phase.', 'OBJs are not saved: they are removed at the end.']],
+    ['e', 'Activities', 'The heart of the activation: move, fight, engage and barrage.', ['One unit at a time: once you start moving another, the previous one can only attack, assist or spot.', 'Barrages can happen before, during or after any movement.', 'Trains at Optimal Distance that did not move recover from Ghost; trains that moved become Ghost.', 'Off-map trains can come back if that completes the MSR.']],
+    ['f', 'Clean up', 'Remove all OBJs, Traffic markers and temporary Dropped Support markers. Trains outside Optimal Distance become Ghost.', []],
+    ['g', 'Fatigue', 'If any cause occurred (OBJs, Engagements, attacks…) and the SNAFU was not a Fail, roll on the Fatigue Increase Table.', []],
+    ['h', 'Isolation', 'Units without a Safe Path or outside Command Radius lose steps according to the Isolation Chart. It is worse if the MSR is also blocked.', []],
+    ['i', 'Second Activation', 'The HQ is turned to Done. If you try and the roll (1d6, +1 Fresh) equals or beats the HQ\'s, everything repeats from Preparation (b).', ['Not at Fat-4 or after a Recovery.', 'You must decide on the spot: it cannot be saved for later.']],
+    ['j', 'Opponent\'s turn', 'The other player activates one of their formations with this same sequence.', []]
+  ];
+  const lista = $('#pasos'), det = $('#paso-detalle');
+  let actual = 0;
+  function pintarPaso() {
+    lista.querySelectorAll('button').forEach((b, i) => { if (i === actual) b.setAttribute('aria-current', 'step'); else b.removeAttribute('aria-current'); });
+    const [l, t, d, extra] = PASOS[actual];
+    det.innerHTML = `<span class="antetitulo">Step ${l}</span><h3>${t}</h3><p>${d}</p>${extra.length ? '<ul class="rombos">' + extra.map((e) => '<li>' + e + '</li>').join('') + '</ul>' : ''}
+      <div class="botones" style="margin-top:18px"><button class="boton boton--peq" type="button" data-d="-1" ${actual === 0 ? 'disabled' : ''}>← Previous</button><button class="boton boton--peq" type="button" data-d="1" ${actual === PASOS.length - 1 ? 'disabled' : ''}>Next →</button></div>`;
+    det.querySelectorAll('[data-d]').forEach((b) => b.addEventListener('click', () => { actual += +b.dataset.d; pintarPaso(); }));
+  }
+  PASOS.forEach(([l, t], i) => {
+    const li = document.createElement('li');
+    li.innerHTML = `<button type="button"><span class="l">${l}</span>${t}</button>`;
+    li.firstChild.addEventListener('click', () => { actual = i; pintarPaso(); });
+    lista.appendChild(li);
+  });
+  pintarPaso();
+
+  // ---------- SNAFU ----------
+  const S = { fatiga: 0, coord: false, mixta: false, msr: 'completa', optima: true, ghost: false, cruce: false, pistas: 'no', bloqueo: 0, pd: false, juego: 0 };
+  function op(t, v, act, al, opc) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'op' + (opc && opc.def ? ' def' : '');
+    b.setAttribute('aria-pressed', !!act);
+    b.innerHTML = t + (v !== '' ? ` <span class="v">${v}</span>` : '');
+    b.addEventListener('click', al);
+    return b;
+  }
+  function grupo(c, titulo, bs) {
+    const g = document.createElement('div'); g.className = 'grupo-op';
+    g.innerHTML = `<h3>${titulo}</h3>`;
+    const o = document.createElement('div'); o.className = 'opciones';
+    bs.forEach((b) => o.appendChild(b)); g.appendChild(o); c.appendChild(g);
+  }
+  function mods() {
+    const m = [];
+    if (S.fatiga === -1) m.push(['Fresh', 1]); else if (S.fatiga > 0) m.push(['Fatigue ' + S.fatiga, -S.fatiga]);
+    if (S.coord) m.push(['Coordination', -1]);
+    if (S.mixta) m.push(['Mixed formations', -1]);
+    if (S.juego) m.push(['Game-specific', S.juego]);
+    if (S.msr === 'completa') {
+      if (S.optima) m.push(['Optimal Distance', 1]);
+      if (S.ghost) m.push(['Ghost trains', -1]);
+      if (S.cruce) m.push(['Crossing the Streams', -1]);
+      if (S.pistas === 'buena') m.push(['MSR uses Tracks (good weather)', -1]);
+      if (S.pistas === 'mala') m.push(['MSR uses Tracks (bad weather)', -2]);
+    } else {
+      m.push(['Trains off-map', -3]);
+      if (S.bloqueo) m.push(['MSR Blocked ' + S.bloqueo, -S.bloqueo]);
+    }
+    return m;
+  }
+  function pintarSnafu(salio) {
+    const c = $('#snafu-mods'); c.innerHTML = '';
+    const set = (k, v) => () => { S[k] = v; pintarSnafu(); };
+    grupo(c, 'Fatigue', [['Fresh', -1, '+1'], ['0', 0, '±0'], ['1', 1, '−1'], ['2', 2, '−2'], ['3', 3, '−3'], ['4', 4, '−4']].map(([t, v, d]) => op(t, d, S.fatiga === v, set('fatiga', v))));
+    grupo(c, 'Always', [op('Coordination', '−1', S.coord, set('coord', !S.coord)), op('Mixed formations', '−1', S.mixta, set('mixta', !S.mixta)), op('Prepared Defense', 'max. Partial', S.pd, set('pd', !S.pd))]);
+    grupo(c, 'The MSR', [op('Complete', '', S.msr === 'completa', set('msr', 'completa')), op('Not complete', '', S.msr === 'rota', set('msr', 'rota'))]);
+    if (S.msr === 'completa') {
+      grupo(c, 'With a Complete MSR', [op('Trains 5-15 hexes from the HQ', '+1', S.optima, set('optima', !S.optima)), op('Ghost trains', '−1', S.ghost, set('ghost', !S.ghost)), op('Crossing the Streams', '−1', S.cruce, set('cruce', !S.cruce))]);
+      grupo(c, 'Tracks on the MSR', [op('No', '', S.pistas === 'no', set('pistas', 'no')), op('In good weather', '−1', S.pistas === 'buena', set('pistas', 'buena')), op('In bad weather', '−2', S.pistas === 'mala', set('pistas', 'mala'))]);
+    } else {
+      grupo(c, 'With a broken MSR (trains off-map: −3)', [op('No marker', '', S.bloqueo === 0, set('bloqueo', 0)), op('MSR Blocked 1', '−1', S.bloqueo === 1, set('bloqueo', 1)), op('MSR Blocked 2', '−2', S.bloqueo === 2, set('bloqueo', 2))]);
+    }
+    grupo(c, 'Game modifier', [-2, -1, 0, 1, 2].map((v) => op(v > 0 ? '+' + v : String(v), '', S.juego === v, set('juego', v))));
+    const drm = mods().reduce((s, x) => s + x[1], 0);
+    $('#snafu-drm').textContent = (drm >= 0 ? '+' : '−') + Math.abs(drm);
+    const dist = R.distribucion(R.TABLA_SNAFU, drm);
+    if (S.pd) { dist[1] += dist[2]; dist[2] = 0; }
+    const claves = ['fail', 'partial', 'full'];
+    $('#snafu-res').innerHTML = R.TABLA_SNAFU.map((f, i) => `<div class="sr-caja sr-${claves[i]}${salio === i ? ' salio' : ''}"><small>${f.texto}</small><strong>${(dist[i] * 100).toFixed(0)}%</strong><span>${I18N.t(f.rango)}</span></div>`).join('');
+    if (salio === undefined) pintarEfectos(null);
+    return drm;
+  }
+  const EFECTOS = {
+    fail: ['No OBJs or Recon: no Regular or Shock Attacks, Attacks by Fire or Barrages.', 'Nothing moves, except the HQ in a Voluntary Retreat.', 'Allowed: flipping counters, moving trains, Prepared Defense, recovering Support and entering Screen.', 'No Fire Events. No fatigue roll.'],
+    partial: ['1 OBJ, and Recon can create OBJs.', 'Half MA (no rounding) and half Arty Points (rounded down).', 'Air and combat as normal. Two Fire Events per unit.'],
+    full: ['2 OBJs (two in the same hex make a Double OBJ).', 'Full MA and artillery. Everything allowed.']
+  };
+  function pintarEfectos(clave) {
+    const e = $('#snafu-efectos');
+    if (!clave) { e.innerHTML = '<p class="muted mb0" style="font-size:.9rem">Roll to see what the result allows. <a href="tablas.html#efectos-snafu">See the full chart</a>.</p>'; return; }
+    e.innerHTML = `<div class="veredicto"><span class="codigo">SNAFU ${clave.toUpperCase()}</span><ul>${EFECTOS[clave].map((x) => '<li>' + x + '</li>').join('')}</ul></div>`;
+  }
+  const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+  const dado = (v, cls) => `<div class="dado ${cls || ''}">${Array.from({ length: 9 }, (_, i) => `<i style="visibility:${PIPS[v].includes(i) ? 'visible' : 'hidden'}"></i>`).join('')}</div>`;
+  $('#snafu-tirar').addEventListener('click', () => {
+    const drm = pintarSnafu();
+    const cont = $('#snafu-dados');
+    let n = 0;
+    const t = setInterval(() => {
+      cont.innerHTML = dado(1 + Math.floor(Math.random() * 6), 'rodando') + dado(1 + Math.floor(Math.random() * 6), 'rodando');
+      if (++n > 9) {
+        clearInterval(t);
+        const [a, b] = R.tirar(2), tot = a + b + drm;
+        const r = R.resultadoSnafu(tot, S.pd);
+        const i = R.TABLA_SNAFU.indexOf(r.fila);
+        cont.innerHTML = dado(a) + dado(b) + `<span class="suma">${a + b} ${drm >= 0 ? '+' : '−'}${Math.abs(drm)} = <strong>${tot}</strong></span>`;
+        pintarSnafu(i);
+        pintarEfectos(r.fila.clave);
+        if (r.rebajado) $('#snafu-efectos .veredicto ul').insertAdjacentHTML('afterbegin', '<li><strong>It would have been Full, but Prepared Defense caps it at Partial.</strong></li>');
+      }
+    }, 80);
+  });
+  pintarSnafu();
+
+  // ---------- Segunda Activación ----------
+  let act = 4, fresca = false;
+  function pintarSeg() {
+    const c = $('#seg-act'); c.innerHTML = '';
+    [1, 2, 3, 4, 5, 6].forEach((v) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'op'; b.setAttribute('aria-pressed', v === act);
+      b.innerHTML = dado(v).replace('class="dado ', 'style="width:26px;height:26px;padding:3px;border-radius:6px" class="dado ').replace(/width:8px;height:8px/g, '');
+      b.addEventListener('click', () => { act = v; pintarSeg(); });
+      c.appendChild(b);
+    });
+    c.querySelectorAll('.dado i').forEach((i) => { i.style.width = '4px'; i.style.height = '4px'; });
+    const f = $('#seg-fresh'); f.innerHTML = '';
+    f.appendChild(op('Fresh formation', '+1', fresca, () => { fresca = !fresca; pintarSeg(); }));
+    const exitos = [1, 2, 3, 4, 5, 6].filter((d) => d + (fresca ? 1 : 0) >= act).length;
+    $('#seg-barra').style.width = (exitos / 6 * 100) + '%';
+    $('#seg-txt').innerHTML = `It succeeds on <strong>${Math.max(1, act - (fresca ? 1 : 0))}${act - (fresca ? 1 : 0) < 6 ? ' or more' : ''}</strong> on the die: a <strong>${(exitos / 6 * 100).toFixed(0)}%</strong> chance.`;
+  }
+  pintarSeg();
+})();
+</script>
+</body>
+</html>

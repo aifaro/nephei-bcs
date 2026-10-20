@@ -16,7 +16,12 @@ Además:
 - **Simulador.** Se colocan las fichas en un mapa de hexes, se marcan las circunstancias y calcula los modificadores, los requisitos y la probabilidad de cada resultado. Al tirar, aplica el resultado sobre las fichas: bajas, retiradas, avance y tráfico.
 - **Tablas y glosario.** Las tablas de la serie para consultar o imprimir, y más de setenta términos en inglés y castellano. Los términos del texto enlazan al glosario y muestran su definición al pasar por encima.
 
-Sitio estático, sin dependencias ni paso de compilación.
+Sitio estático, sin dependencias ni paso de compilación. En castellano en la raíz y en inglés en `/en/`, con un conmutador ES/EN en la cabecera que lleva a la misma página en el otro idioma.
+
+## Versión inglesa
+
+- **Páginas.** `public/en/*.html` se generan desde las castellanas con `python tools/traducir.py public <página.html>`, que aplica los pares de `tools/tr/<página>.py` (texto en castellano → inglés), ajusta las rutas y avisa de lo que no encuentre o parezca seguir en castellano. Si cambias una página castellana, actualiza sus pares y vuelve a generarla; lo que se edite a mano en `public/en/` se pierde al regenerar.
+- **Scripts.** Los textos de los JS compartidos pasan por `I18N.t()` (`public/js/i18n.js`); en las páginas inglesas, `public/js/en.js` da la traducción de cada uno, el glosario en inglés y el índice del buscador. Un texto sin traducir sale en castellano y avisa en la consola con `[i18n] sin traducir`.
 
 ## Estructura
 
@@ -30,6 +35,8 @@ Sitio estático, sin dependencias ni paso de compilación.
 | `public/js/simulador.js` | El simulador. |
 | `public/js/partida.js`, `public/css/partida.css` | Saco de activaciones y cuaderno de órdenes. |
 | `public/js/datos.js` | El glosario y el índice del buscador (Ctrl+K). |
+| `public/js/i18n.js`, `public/js/en.js` | Idioma de la página y textos en inglés. |
+| `public/en/` | La versión inglesa, generada con `tools/traducir.py`. |
 | `public/js/comun.js` | Cabecera con el menú del reglamento, capítulos, pie, tema, buscador y enlaces al glosario. |
 | `public/fichas/` | Fichas reales: `u/` las unidades por cara (`-d` desplegada, `-m` movimiento), `m/` los marcadores, `t/` los hexes de terreno del mapa de *Arracourt* y en la raíz las de la galería. |
 | `tests/reglas.test.js` | Pruebas del motor. |
