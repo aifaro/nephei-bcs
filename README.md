@@ -18,11 +18,11 @@ Sitio estático, sin dependencias ni paso de compilación.
 | `public/css/bcs.css` | Estilos comunes, temas claro y oscuro, e impresión. |
 | `public/css/simulador.css` | Estilos del simulador y de la calculadora de SNAFU. |
 | `public/js/reglas.js` | El motor: tablas transcritas y cálculo de modificadores. No toca el DOM. |
-| `public/js/fichas.js` | Las fichas en SVG y las unidades de ejemplo (valores genéricos de la serie). |
+| `public/js/fichas.js` | Las unidades de ejemplo con los valores impresos en sus fichas reales, y cómo se pintan. |
 | `public/js/simulador.js` | El simulador. |
 | `public/js/datos.js` | El glosario y el índice del buscador (Ctrl+K). |
 | `public/js/comun.js` | Cabecera, pie, tema y buscador. |
-| `public/fichas/` | Fichas reales de ejemplo. |
+| `public/fichas/` | Fichas reales: `u/` las unidades por cara (`-d` desplegada, `-m` movimiento), `m/` los marcadores y en la raíz las de la galería. |
 | `tests/reglas.test.js` | Pruebas del motor. |
 
 ## Pruebas
@@ -40,5 +40,5 @@ Worker `nephei-bcs` en Cloudflare, conectado a este repositorio con Workers Buil
 ## Fuentes y derechos
 
 - Reglas y tablas: *BCS v2.0 Series Rules*, *Charts & Tables* y *Support Book* (© 2021 Multi-Man Publishing). Las reglas completas y vigentes están en [multimanpublishing.com](https://www.multimanpublishing.com/).
-- Las fichas de `public/fichas/` vienen de los módulos de VASSAL de *Arracourt* y *Valley of Tears*. Su arte es © Multi-Man Publishing; se muestran como ejemplo en una ayuda de juego gratuita y sin ánimo de lucro.
-- Las fichas en SVG del simulador están dibujadas desde cero imitando el esquema de las de la serie.
+- Las fichas de `public/fichas/` vienen de los módulos de VASSAL de *Arracourt*, *Danger Forward* (el Tiger y el marcador de Prepared Defense) y *Valley of Tears*. Su arte es © Multi-Man Publishing; se muestran como ejemplo en una ayuda de juego gratuita y sin ánimo de lucro.
+- Las parejas de caras salen del `buildFile.xml` de cada módulo. Cuando a una unidad le quedan menos pasos que los impresos, la web tapa la casilla con los que le quedan.

@@ -18,7 +18,7 @@
     .elegir h3 { font-size: .78rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
     .opciones-lista { display: grid; gap: 6px; }
     .opciones-lista button { display: flex; align-items: center; gap: 12px; text-align: left; padding: 8px 10px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-size: .9rem; cursor: pointer; }
-    .opciones-lista button svg { width: 40px; height: 40px; flex: none; }
+    .opciones-lista button .ficha { width: 40px; }
     .opciones-lista button[aria-pressed="true"] { border-color: var(--amber); background: var(--amber-soft); color: var(--heading); }
     .veredictos { display: grid; gap: 8px; }
     .vd { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 10px 12px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); }
@@ -334,31 +334,31 @@
   'use strict';
   const U = Fichas.UNIDADES;
   const MIAS = [
-    ['inf', 'Infantería a pie', { ac: true, tac: false }],
-    ['mec', 'Infantería mecanizada', { ac: true, tac: true }],
-    ['sherman', 'Tanque (Red AV)', { av: 'red', tac: true }],
-    ['tiger', 'Tanque de ruptura', { av: 'red', tac: true, ruptura: true }],
-    ['td', 'Cazacarros (Limited)', { av: 'limited', tac: true }],
-    ['flak', 'Cañón Stand Off', { av: 'standoff', tac: false }],
-    ['autoam', 'Autoametralladoras (Light)', { av: 'light', tac: true }],
-    ['recon', 'Reconocimiento (Dual)', { ac: true, av: 'red', tac: true, dual: true }]
+    ['inf', 'Infantería a pie', { ac: true, tac: false }, 'inf-us'],
+    ['mec', 'Infantería mecanizada en marcha', { ac: true, tac: true }, 'mec-us', 'm'],
+    ['tq', 'Tanque (Red AV)', { av: 'red', tac: true }, 'tq-us'],
+    ['tiger', 'Tanque de ruptura', { av: 'red', tac: true, ruptura: true }, 'tiger'],
+    ['td', 'Cazacarros (Limited)', { av: 'limited', tac: true }, 'td'],
+    ['flak', 'Cañón Stand Off', { av: 'standoff', tac: false }, 'flak'],
+    ['light', 'Light AV (cifra blanca)', { av: 'light', tac: true }, null],
+    ['recon', 'Reconocimiento (Dual)', { ac: true, av: 'red', tac: true, dual: true }, 'rec-us']
   ];
   const BLANCOS = [
-    ['sinav', 'Infantería sin apoyo', 'inf'],
-    ['apoyo', 'Infantería con apoyo AV', 'inf'],
-    ['av', 'Una unidad AV real', 'panther']
+    ['sinav', 'Infantería sin apoyo', null, 'inf-de'],
+    ['apoyo', 'Infantería con apoyo AV', null, 'inf-de'],
+    ['av', 'Una unidad AV real', null, 'panther']
   ];
   let mia = 'inf', blanco = 'sinav';
 
-  function lista(id, items, sel, al, bando) {
+  function lista(id, items, sel, al) {
     const c = document.getElementById(id);
     c.innerHTML = '';
-    items.forEach(([k, t, x]) => {
+    items.forEach(([k, t, x, f, lado]) => {
       const b = document.createElement('button');
       b.type = 'button';
       b.setAttribute('aria-pressed', k === sel);
-      const u = U[typeof x === 'string' ? x : k];
-      b.innerHTML = Fichas.svgFicha(u, 'd', { tam: 40, bando }) + '<span>' + t + (k === 'apoyo' ? ' <span class="muted">(marcador de apoyo)</span>' : '') + '</span>';
+      const img = f ? Fichas.ficha(U[f], lado || 'd', { tam: 40 }) : '<span class="av-muestra light" style="width:40px;height:40px">0</span>';
+      b.innerHTML = img + (k === 'apoyo' ? Fichas.marcador('red', { tam: 28 }) : '') + '<span>' + t + '</span>';
       b.addEventListener('click', () => al(k));
       c.appendChild(b);
     });
@@ -379,8 +379,8 @@
     document.getElementById('el-res').innerHTML = rs.map((r) => `<div class="vd ${r.ok ? 'si' : 'no'}"><span class="i">${r.ok ? '✓' : '✕'}</span><div><strong><a href="${r.href}" style="color:inherit">${r.t}</a></strong><p>${r.d}</p></div></div>`).join('');
   }
   function pintar() {
-    lista('el-unidad', MIAS, mia, (k) => { mia = k; pintar(); }, 'aliado');
-    lista('el-blanco', BLANCOS, blanco, (k) => { blanco = k; pintar(); }, 'eje');
+    lista('el-unidad', MIAS, mia, (k) => { mia = k; pintar(); });
+    lista('el-blanco', BLANCOS, blanco, (k) => { blanco = k; pintar(); });
     evaluar();
   }
   pintar();

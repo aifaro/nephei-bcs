@@ -17,9 +17,7 @@
     .volteo.girada .volteo__in { transform: rotateY(180deg); }
     .volteo__cara { display: block; position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
     .volteo__cara--m { transform: rotateY(180deg); }
-    .volteo__cara svg { width: 100%; height: 100%; }
-    .volteo .ficha { filter: none; }
-    .volteo__cara { border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,.35); }
+    .volteo__cara .ficha { width: 100%; }
     .caras { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
     @media (max-width: 820px) { .caras { grid-template-columns: 1fr; } }
     .caras .tarjeta { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
@@ -50,7 +48,7 @@
     .anatomia__visor { padding: 0; }
     .anatomia__visor .guia { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
     .anatomia__visor .ficha-centro { position: absolute; left: 16.67%; top: 16.67%; width: 66.67%; height: 66.67%; }
-    .anatomia__visor .ficha-centro svg { width: 100%; height: 100%; }
+    .anatomia__visor .ficha-centro .ficha { width: 100%; }
     .guia line { stroke: var(--muted); stroke-width: .5; opacity: .55; transition: stroke .15s, opacity .15s; }
     .guia circle { fill: var(--muted); opacity: .6; transition: fill .15s; }
     .guia .on line { stroke: var(--amber); stroke-width: .9; opacity: 1; }
@@ -118,7 +116,7 @@
       </div>
       <div class="rejilla rejilla--2">
         <div class="tarjeta tipo">
-          <div class="fichas-tipo" data-fichas="inf:d,mec:d"></div>
+          <div class="fichas-tipo" data-fichas="inf-us:d,mec-de:m"></div>
           <div>
             <h3>Infantería <span class="chip chip--olive">flecha · sin AV</span></h3>
             <p>Cualquier unidad sin AV impreso es «infantería» a efectos de terreno. Con la flecha de asalto tiene capacidad de ataque (<span class="en">Attack-Capable</span>): es la que conquista terreno con ataques regulares, y la única que puede ser <strong>host</strong> del apoyo blindado.</p>
@@ -134,14 +132,14 @@
           </div>
         </div>
         <div class="tarjeta tipo">
-          <div class="fichas-tipo" data-fichas="recon:d"></div>
+          <div class="fichas-tipo" data-fichas="rec-us:d,rec-de:d"></div>
           <div>
             <h3>Dual <span class="chip chip--amber">flecha + AV</span></h3>
             <p>Reconocimiento acorazado, panzergrenadiers con blindados orgánicos… Lo tienen todo: atacan en el Combat Table (con +1 por ser Dual), se enfrentan y hacen ataques por fuego. A cambio <strong>no pueden recibir apoyo</strong>.</p>
           </div>
         </div>
         <div class="tarjeta tipo">
-          <div class="fichas-tipo" data-fichas="inf:m,flak:m"></div>
+          <div class="fichas-tipo" data-fichas="inf-de:m,flak:m"></div>
           <div>
             <h3>Desprevenida <span class="chip">sin flecha · sin AV</span></h3>
             <p>Una cara sin flecha ni AV: la infantería en marcha o un cañón enganchado. No tiene ZOC, no ataca ni asiste, no usa apoyo ni defensa preparada y no puede saltar HQs. Aun así observa para la artillería. <span class="regla">1.1d</span></p>
@@ -343,26 +341,25 @@
   const U = Fichas.UNIDADES;
 
   // ---------- Anatomía ----------
-  // Posiciones en el viewBox de 80 de la ficha.
   const PARTES = {
-    pasos: { x: 30.5, y: 11, t: 'Pasos disponibles', d: 'Cuántas bajas aguanta la unidad. No cambian sus valores: al perder el último, muere. Se llevan con un marcador debajo de la ficha.' },
-    tam: { x: 44, y: 10, t: 'Tamaño', d: '|| es batallón, | compañía, III regimiento, X brigada. Es solo información histórica.' },
-    simbolo: { x: 40, y: 26, t: 'Símbolo de unidad', d: 'El tipo de tropa, con símbolos OTAN. Si el fondo es amarillo, la unidad es Hard.' },
-    id: { x: 13, y: 27, t: 'Identificador', d: 'El batallón concreto (2/137: 2.º batallón del 137.º regimiento).' },
-    form: { x: 68, y: 27, t: 'Formación', d: 'A qué formación pertenece. Sin formación impresa, la unidad es independiente y se puede asignar a cualquiera.' },
-    asalto: { x: 9, y: 64, t: 'Flecha de asalto', d: 'Capacidad de ataque: puede ser la unidad atacante de un ataque regular y, sin AV propio, usar apoyo.' },
-    av: { x: 23, y: 64, t: 'Armor Value (AV)', d: 'El blindaje y el cañón. Su estilo marca el tipo: rojo, contorno, negro o blanco.' },
-    ar: { x: 37, y: 56, t: 'Action Rating', d: 'De 0 a 5: liderazgo, instrucción y moral. Es la base de cada bando en el Combat Table.' },
-    alcance: { x: 37, y: 71, t: 'Alcance', d: 'Hasta cuántos hexes llega su fuego en un enfrentamiento. Si no aparece, es 1.' },
-    ma: { x: 58, y: 66, t: 'Movement Allowance', d: 'Los puntos de movimiento. El color es la clase: rojo táctico, negro camión, blanco a pie.' },
-    barra: { x: 74, y: 70, t: 'Barra de color', d: 'El color de la formación, para encontrar sus unidades de un vistazo en el mapa.' }
+    pasos: { t: 'Pasos disponibles', d: 'Cuántas bajas aguanta la unidad. No cambian sus valores: al perder el último, muere. Las pérdidas se marcan con un marcador debajo de la ficha.' },
+    tam: { t: 'Tamaño', d: '|| es batallón, | compañía, III regimiento, X brigada. Es solo información histórica.' },
+    simbolo: { t: 'Símbolo de unidad', d: 'El tipo de tropa, con símbolos OTAN. Si el fondo es amarillo, la unidad es Hard.' },
+    id: { t: 'Identificador', d: 'El batallón concreto (3/137: 3.er batallón del 137.º regimiento).' },
+    form: { t: 'Formación', d: 'A qué formación pertenece. Sin formación impresa, la unidad es independiente y se puede asignar a cualquiera.' },
+    asalto: { t: 'Flecha de asalto', d: 'Capacidad de ataque: puede ser la unidad atacante de un ataque regular y, sin AV propio, usar apoyo.' },
+    av: { t: 'Armor Value (AV)', d: 'El blindaje y el cañón. Su estilo marca el tipo: rojo, contorno, negro o blanco.' },
+    ar: { t: 'Action Rating', d: 'De 0 a 5: liderazgo, instrucción y moral. Es la base de cada bando en el Combat Table.' },
+    alcance: { t: 'Alcance', d: 'Hasta cuántos hexes llega su fuego en un enfrentamiento. Si no aparece, es 1.' },
+    ma: { t: 'Movement Allowance', d: 'Los puntos de movimiento. El color es la clase: rojo táctico, negro camión, blanco a pie.' },
+    barra: { t: 'Barra de color', d: 'El color de la formación, para encontrar sus unidades de un vistazo en el mapa.' }
   };
-  const PARTES_POR = {
-    inf: ['pasos', 'tam', 'simbolo', 'id', 'form', 'asalto', 'ar', 'ma', 'barra'],
-    panther: ['pasos', 'simbolo', 'id', 'form', 'av', 'ar', 'alcance', 'ma'],
-    recon: ['pasos', 'simbolo', 'asalto', 'av', 'ar', 'ma', 'form']
+  // Dónde está cada parte en la ficha real, en % de su lado.
+  const ANATOMIAS = {
+    inf: { u: 'inf-us', partes: { pasos: [40, 16], tam: [53, 21], simbolo: [53, 37], id: [23, 32], form: [81, 34], asalto: [34, 73], ar: [53, 66], ma: [74, 76], barra: [18, 85] } },
+    panther: { u: 'panther', partes: { pasos: [37, 14], simbolo: [50, 37], id: [14, 34], form: [80, 34], av: [21, 78], ar: [50, 64], alcance: [50, 84], ma: [72, 78] } },
+    recon: { u: 'rec-de', partes: { pasos: [36, 17], simbolo: [49, 40], id: [20, 35], form: [80, 37], asalto: [15, 76], av: [31, 76], ar: [49, 65], ma: [75, 76] } }
   };
-  const AJUSTE_AR = { inf: { x: 34, y: 61 } };
   const visor = document.getElementById('anat-visor');
   const lista = document.getElementById('anat-lista');
   let activo = null;
@@ -374,15 +371,15 @@
   };
 
   function pintarAnatomia(clave) {
-    const u = U[clave];
-    visor.innerHTML = '<div class="ficha-centro">' + Fichas.svgFicha(u, 'd', { tam: 300, bando: clave === 'inf' ? 'aliado' : 'eje' }) + '</div>';
+    const a = ANATOMIAS[clave], u = U[a.u];
+    visor.innerHTML = '<div class="ficha-centro">' + Fichas.ficha(u, 'd') + '</div>';
     const guia = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     guia.setAttribute('class', 'guia'); guia.setAttribute('viewBox', '0 0 120 120'); guia.setAttribute('aria-hidden', 'true');
     visor.prepend(guia);
     lista.innerHTML = '';
-    PARTES_POR[clave].forEach((p, i) => {
+    Object.keys(a.partes).forEach((p, i) => {
       const parte = PARTES[p];
-      const pos = (p === 'ar' && AJUSTE_AR[clave]) || parte;
+      const pos = { x: a.partes[p][0] * 0.8, y: a.partes[p][1] * 0.8 };
       const [ex, ey] = ETIQUETA[p];
       const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
       g.innerHTML = `<line x1="${ex + 20}" y1="${ey + 20}" x2="${pos.x + 20}" y2="${pos.y + 20}"/><circle cx="${pos.x + 20}" cy="${pos.y + 20}" r="1.6"/><rect x="${pos.x + 14}" y="${pos.y + 14}" width="12" height="12" rx="3"/>`;
@@ -413,9 +410,9 @@
 
   // ---------- Caras ----------
   const CARAS = [
-    ['inf', 'Infantería', 'Desplegada ataca y defiende (flecha, AR 3). En marcha corre el doble, pero está desprevenida: sin ZOC ni defensa preparada.'],
-    ['panther', 'Tanque', 'Ambas caras tienen AV; en marcha baja el AV y el alcance, y el MA salta de 4 a 16.'],
-    ['flak', 'Cañón Stand Off', 'Desplegado es un AV 5 de alcance 3. Enganchado para moverse pierde el AV y queda desprevenido.']
+    ['inf-us', 'Infantería', 'Desplegada ataca y defiende (flecha, AR 3). En marcha corre el doble, pero está desprevenida: sin ZOC ni defensa preparada.'],
+    ['panther', 'Tanque', 'Ambas caras tienen AV; en marcha baja el AV de 5 a 4 y el alcance de 3 a 2, y el MA salta de 4 a 16.'],
+    ['flak', 'Cañones Stand Off', 'Desplegados son un AV 5 de alcance 3. Enganchados para moverse pierden el AV y quedan desprevenidos.']
   ];
   const cont = document.getElementById('caras-lista');
   CARAS.forEach(([k, t, d]) => {
@@ -423,7 +420,7 @@
     const card = document.createElement('div');
     card.className = 'tarjeta';
     card.innerHTML = `<span class="estado">Desplegada</span>
-      <button class="volteo" type="button" aria-label="Voltear ${t}"><span class="volteo__in"><span class="volteo__cara">${Fichas.svgFicha(u, 'd', { tam: 128 })}</span><span class="volteo__cara volteo__cara--m">${Fichas.svgFicha(u, 'm', { tam: 128 })}</span></span></button>
+      <button class="volteo" type="button" aria-label="Voltear ${t}"><span class="volteo__in"><span class="volteo__cara">${Fichas.ficha(u, 'd', { tam: 128 })}</span><span class="volteo__cara volteo__cara--m">${Fichas.ficha(u, 'm', { tam: 128 })}</span></span></button>
       <h3 class="mb0">${t}</h3><p>${d}</p>`;
     const btn = card.querySelector('.volteo'), est = card.querySelector('.estado');
     btn.addEventListener('click', () => { const g = btn.classList.toggle('girada'); est.textContent = g ? 'Movimiento' : 'Desplegada'; });
@@ -432,15 +429,15 @@
 
   // ---------- Fichas en las tarjetas de tipo ----------
   document.querySelectorAll('[data-fichas]').forEach((c) => {
-    c.innerHTML = c.dataset.fichas.split(',').map((x) => { const [k, l] = x.split(':'); return Fichas.svgFicha(U[k], l, { tam: 76, bando: k === 'panther' || k === 'tiger' || k === 'flak' ? 'eje' : 'aliado' }); }).join('');
+    c.innerHTML = c.dataset.fichas.split(',').map((x) => { const [k, l] = x.split(':'); return Fichas.ficha(U[k], l, { tam: 76 }); }).join('');
   });
 
   // ---------- Figura del apoyo ----------
   document.getElementById('apoyo-figura').innerHTML = `
     <div class="flex" style="justify-content:center;gap:18px">
-      <div>${Fichas.svgFicha(U.inf, 'd', { tam: 104 })}<div class="lado mono muted" style="font-size:.7rem;margin-top:6px">HOST</div></div>
+      <div>${Fichas.ficha(U['inf-us'], 'd', { tam: 104 })}<div class="lado mono muted" style="font-size:.7rem;margin-top:6px">HOST</div></div>
       <div style="font:700 1.6rem var(--mono);color:var(--amber)">+</div>
-      <div>${Fichas.svgMarcador('red', { tam: 84 })}<div class="lado mono muted" style="font-size:.7rem;margin-top:6px">APOYO RED AV 3</div></div>
+      <div>${Fichas.marcador('red', { tam: 84 })}<div class="lado mono muted" style="font-size:.7rem;margin-top:6px">APOYO RED AV 3</div></div>
     </div>
     <p class="muted" style="margin:16px 0 0;font-size:.9rem">El batallón de infantería sigue usando su AR 3 para atacar, pero suma +1 por el apoyo, tiene ZOC blindada y, si lo enfrentan, el blanco es el apoyo: AV 3 + AR 3 del host.</p>`;
 

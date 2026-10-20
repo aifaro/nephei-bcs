@@ -74,7 +74,7 @@
     f.innerHTML = `<div class="wrap pie__fila">
       <div>
         <p><strong>BCS · Referencia</strong> es una ayuda de juego no oficial, hecha por un aficionado. Resume las reglas de la serie (v2.0) sin entrar en las reglas propias de cada juego.</p>
-        <p><em>Battalion Combat Series</em>, sus reglas, tablas y fichas son © Multi-Man Publishing / The Gamers. Las reglas completas y vigentes están en <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. Las fichas reales que se muestran vienen de los módulos de VASSAL de <em>Arracourt</em> y <em>Valley of Tears</em>.</p>
+        <p><em>Battalion Combat Series</em>, sus reglas, tablas y fichas son © Multi-Man Publishing / The Gamers. Las reglas completas y vigentes están en <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. Las fichas que se muestran vienen de los módulos de VASSAL de <em>Arracourt</em>, <em>Danger Forward</em> y <em>Valley of Tears</em>.</p>
       </div>
       <div><p><a href="https://nephei.org">nephei.org</a> · <a href="https://rpg.nephei.org">rpg.nephei.org</a></p></div>
     </div>`;

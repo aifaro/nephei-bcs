@@ -295,7 +295,15 @@ table.t.capacidades td:first-child, table.t.capacidades th:first-child { text-al
 table.t.capacidades tr.resaltada td { outline: 2px solid var(--amber); outline-offset: -2px; }
 
 /* ---------- Fichas ---------- */
-.ficha { display: block; filter: drop-shadow(0 3px 5px rgba(0,0,0,0.35)); }
+.ficha, .marcador { display: inline-block; position: relative; line-height: 0; vertical-align: middle; container-type: inline-size; flex: none; }
+.ficha img, .marcador img { display: block; width: 100%; height: auto; border-radius: 7%; box-shadow: 0 3px 7px rgba(0, 0, 0, 0.38); user-select: none; -webkit-user-drag: none; }
+.ficha__pasos {
+  position: absolute; left: 31%; top: 6.5%; width: 17%; height: 17.5%;
+  display: grid; place-items: center; border-radius: 6%;
+  background: #fff; border: max(1px, 2.2cqw) solid #c8221d; color: #c8221d;
+  font: 800 13cqw/1 'Roboto Condensed', 'Arial Narrow', sans-serif;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .35);
+}
 .ficha-real { image-rendering: auto; border-radius: 6px; box-shadow: 0 3px 8px rgba(0,0,0,0.35); }
 .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
 .galeria figure { margin: 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 12px; }

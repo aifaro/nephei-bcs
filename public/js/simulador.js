@@ -21,7 +21,8 @@
       explica: 'Artillería o aviación contra un hex en una OBJ Zone, con un observador. Bombardeo de destrucción: un dado por cada punto y por cada unidad del hex.' }
   };
 
-  const ROL_AV = ['sherman', 'panther', 'tiger', 'td', 'flak', 'recon', 'autoam'];
+  const ROL_AV = ['tq-us', 'tq-de', 'panther', 'tiger', 'td', 'flak', 'rec-us', 'rec-de'];
+  const HOSTS = ['inf-us', 'inf-de', 'mec-us', 'mec-de'];
   const TODAS = Object.keys(U);
 
   function nueva(k, lado) { return { k, lado: lado || 'd', pasos: U[k].pasos }; }
@@ -31,11 +32,11 @@
       dobleObj: false, bombardeo: 'ninguno', puntos: 1, desdeFuera: false, fuegoPrevio: false, costeMp: true, arDef: 0,
       apoyoAtt: null, apoyoDef: null, asistente: null };
     switch (modo) {
-      case 'regular': return Object.assign(base, { atacante: nueva('inf'), apoyoAtt: 'red', asistente: nueva('sherman'), defensores: [nueva('inf')], apoyoDef: null, bombardeo: 'supresion' });
-      case 'shock': return Object.assign(base, { atacante: nueva('mec'), apoyoAtt: 'red', defensores: [nueva('inf', 'm')] });
-      case 'enfrentamiento': return Object.assign(base, { tirador: nueva('sherman'), blancoTipo: 'real', blanco: nueva('panther'), host: nueva('inf'), apoyoBlanco: 'standoff', distancia: 2, variosApoyos: false, pantalla: false, opcionalLejos: false });
-      case 'fuego': return Object.assign(base, { tirador: nueva('sherman'), defensores: [nueva('inf'), nueva('inf', 'm')] });
-      case 'bombardeo': return Object.assign(base, { defensores: [nueva('inf'), nueva('flak')], puntos: 1, enAtaque: false });
+      case 'regular': return Object.assign(base, { atacante: nueva('inf-us'), apoyoAtt: 'red', asistente: nueva('tq-us'), defensores: [nueva('inf-de')], apoyoDef: null, bombardeo: 'supresion' });
+      case 'shock': return Object.assign(base, { atacante: nueva('mec-us', 'm'), apoyoAtt: 'red', defensores: [nueva('inf-de', 'm')] });
+      case 'enfrentamiento': return Object.assign(base, { tirador: nueva('tq-us'), blancoTipo: 'real', blanco: nueva('panther'), host: nueva('inf-de'), apoyoBlanco: 'standoff', distancia: 2, variosApoyos: false, pantalla: false, opcionalLejos: false });
+      case 'fuego': return Object.assign(base, { tirador: nueva('tq-us'), defensores: [nueva('inf-de'), nueva('inf-de', 'm')] });
+      case 'bombardeo': return Object.assign(base, { defensores: [nueva('inf-de'), nueva('flak')], puntos: 1, enAtaque: false });
     }
   }
 
@@ -49,7 +50,8 @@
   function cargar() {
     try {
       const s = JSON.parse(Comun.leer('bcs-sim'));
-      if (s && MODOS[s.modo]) return s;
+      const insts = [s.atacante, s.asistente, s.tirador, s.blanco, s.host].concat(s.defensores || []).filter(Boolean);
+      if (s && MODOS[s.modo] && insts.every((i) => U[i.k])) return s;
     } catch (e) { /* estado ilegible */ }
     return null;
   }
@@ -211,7 +213,7 @@
       if (S.pdDef) e.marcas.push({ tipo: 'pd', c: 2, r: 1, dx: 0.45, dy: 0.42 });
     } else {
       e.terrenos['4,1'] = tdef;
-      e.pilas.push({ id: 'obs', c: 1, r: 1, unidades: [nueva('inf')], bando: 'aliado' });
+      e.pilas.push({ id: 'obs', c: 1, r: 1, unidades: [nueva('inf-us')], bando: 'aliado' });
       e.pilas.push({ id: 'def', c: 4, r: 1, unidades: S.defensores, bando: 'eje' });
       e.marcas.push({ tipo: 'arty', n: S.puntos, c: 0, r: 0, dx: 0, dy: 0, grande: true });
       e.marcas.push({ tipo: 'obj', c: 4, r: 1, dx: 0.42, dy: -0.5 });
@@ -270,7 +272,7 @@
         div.className = 'unidad' + (u.pasos <= 0 ? ' muerta' : '');
         div.style.transform = `translate(${-off}%, ${-off}%)`;
         div.style.zIndex = 10 + (n - i);
-        div.innerHTML = F.svgFicha(U[u.k], u.lado, { bando: p.bando, pasos: Math.max(0, u.pasos), tam: 80 });
+        div.innerHTML = F.ficha(U[u.k], u.lado, { pasos: Math.max(0, u.pasos) });
         d.appendChild(div);
       });
       m.appendChild(d);
@@ -297,7 +299,7 @@
     el.className = 'marca-hex' + (nueva ? ' nueva' : '');
     el.dataset.tipo = k.tipo;
     el.style.cssText = pct(x, y).join(';') + `;width:${(HW * (k.grande ? 0.5 : 0.32) / VBW * 100)}%`;
-    el.innerHTML = F.svgMarcador(k.tipo, { tam: 80, n: k.n });
+    el.innerHTML = F.marcador(k.tipo, { n: k.n });
     m.appendChild(el);
     return el;
   }
@@ -327,7 +329,7 @@
   // ---------- Editor de unidades ----------
   function selectorUnidad(valor, opciones, al) {
     const sel = document.createElement('select');
-    sel.innerHTML = opciones.map((k) => `<option value="${k}"${k === valor ? ' selected' : ''}>${esc(U[k].nombre)}</option>`).join('');
+    sel.innerHTML = opciones.map((k) => `<option value="${k}"${k === valor ? ' selected' : ''}>${esc(F.etiqueta(U[k]))}</option>`).join('');
     sel.addEventListener('change', () => al(sel.value));
     return sel;
   }
@@ -344,7 +346,7 @@
     const d = document.createElement('div');
     d.className = 'slot';
     const u = U[inst.k];
-    d.innerHTML = `<div class="slot__ficha">${F.svgFicha(u, inst.lado, { bando: cls === 'a' ? 'aliado' : 'eje', pasos: inst.pasos, tam: 54 })}</div><div><div class="slot__cab"><span class="slot__rol ${cls}">${rol}</span></div><div class="slot__controles"></div></div>`;
+    d.innerHTML = `<div class="slot__ficha">${F.ficha(u, inst.lado, { pasos: inst.pasos, tam: 54 })}</div><div><div class="slot__cab"><span class="slot__rol ${cls}">${rol}</span></div><div class="slot__controles"></div></div>`;
     const cab = d.querySelector('.slot__cab'), ctl = d.querySelector('.slot__controles');
     cab.appendChild(selectorUnidad(inst.k, opciones, (k) => { inst.k = k; inst.lado = 'd'; inst.pasos = U[k].pasos; cambio(); }));
     if (extra.quitar) {
@@ -389,7 +391,7 @@
       c.appendChild(slot('Atacante', 'a', S.atacante, TODAS, { apoyo: { valor: S.apoyoAtt, al: (v) => { S.apoyoAtt = v; cambio(); } } }));
       if (m === 'regular') {
         if (S.asistente) c.appendChild(slot('Asistente', 'a', S.asistente, TODAS, { quitar: () => { S.asistente = null; cambio(); } }));
-        else c.appendChild(botonAnadir('+ Añadir asistencia', () => { S.asistente = nueva('sherman'); cambio(); }));
+        else c.appendChild(botonAnadir('+ Añadir asistencia', () => { S.asistente = nueva('tq-us'); cambio(); }));
       }
     }
     if (m === 'enfrentamiento') {
@@ -404,7 +406,7 @@
       tipo.appendChild(mini); c.appendChild(tipo);
       if (S.blancoTipo === 'real') c.appendChild(slot('Blanco', 'd', S.blanco, ROL_AV));
       else {
-        c.appendChild(slot('Host', 'd', S.host, ['inf', 'mec']));
+        c.appendChild(slot('Host', 'd', S.host, HOSTS));
         const sa = document.createElement('div'); sa.className = 'campo';
         sa.innerHTML = '<span class="muted">Apoyo de la formación del host:</span>';
         const sel = selectorApoyo(S.apoyoBlanco, (v) => { S.apoyoBlanco = v || 'red'; cambio(); });
@@ -423,7 +425,7 @@
         }
         c.appendChild(slot(etiqueta + (S.defensores.length > 1 ? ' ' + (i + 1) : ''), 'd', inst, TODAS, extra));
       });
-      if (S.defensores.length < 3) c.appendChild(botonAnadir('+ Añadir otra unidad al hex' + (S.defensores.length === 2 ? ' (sobreapilar)' : ''), () => { S.defensores.push(nueva('inf')); cambio(); }));
+      if (S.defensores.length < 3) c.appendChild(botonAnadir('+ Añadir otra unidad al hex' + (S.defensores.length === 2 ? ' (sobreapilar)' : ''), () => { S.defensores.push(nueva('inf-de')); cambio(); }));
     }
   }
   function botonAnadir(t, al) {
@@ -600,7 +602,7 @@
       const minimo = fila[calculo.col];
       const p = (7 - minimo) / 6;
       const b = R.binomial(n, p);
-      h += `<div class="du" data-idx="${idx}">${F.svgFicha(U[i.k], i.lado, { bando: 'eje', pasos: i.pasos, tam: 46 })}<div><strong style="color:var(--heading);font-size:.9rem">${esc(U[i.k].nombre)}${i.lado === 'm' ? ' · en marcha' : ''}</strong><div class="fila-tabla">Fila: ${esc(fila.texto)} · baja con ${minimo === 6 ? '6' : minimo + '-6'} (${(p * 100).toFixed(0)}% por dado)</div><div class="barras">${b.map((q, k) => q > 0.0005 ? `<div style="width:${(q * 100).toFixed(2)}%;background:${colores[Math.min(k, 3)]}" title="${k} ${k === 1 ? 'baja' : 'bajas'}: ${(q * 100).toFixed(1)}%">${q > 0.09 ? k + (k === 1 ? ' baja ' : ' bajas ') + Math.round(q * 100) + '%' : ''}</div>` : '').join('')}</div></div></div>`;
+      h += `<div class="du" data-idx="${idx}">${F.ficha(U[i.k], i.lado, { pasos: i.pasos, tam: 46 })}<div><strong style="color:var(--heading);font-size:.9rem">${esc(U[i.k].nombre)}${i.lado === 'm' ? ' · en marcha' : ''}</strong><div class="fila-tabla">Fila: ${esc(fila.texto)} · baja con ${minimo === 6 ? '6' : minimo + '-6'} (${(p * 100).toFixed(0)}% por dado)</div><div class="barras">${b.map((q, k) => q > 0.0005 ? `<div style="width:${(q * 100).toFixed(2)}%;background:${colores[Math.min(k, 3)]}" title="${k} ${k === 1 ? 'baja' : 'bajas'}: ${(q * 100).toFixed(1)}%">${q > 0.09 ? k + (k === 1 ? ' baja ' : ' bajas ') + Math.round(q * 100) + '%' : ''}</div>` : '').join('')}</div></div></div>`;
     });
     c.innerHTML = h + '</div>';
     const esperadas = calculo.filasU.reduce((s, x) => s + n * (7 - x.fila[calculo.col]) / 6, 0);
@@ -661,7 +663,7 @@
     const p = pila(id); if (!p) return;
     p.querySelectorAll('.unidad').forEach((div, i) => {
       const u = unidades[i]; if (!u) return;
-      div.innerHTML = F.svgFicha(U[u.k], u.lado, { bando, pasos: Math.max(0, u.pasos), tam: 80 });
+      div.innerHTML = F.ficha(U[u.k], u.lado, { pasos: Math.max(0, u.pasos) });
       if (u.pasos <= 0) div.classList.add('muerta');
     });
   }
