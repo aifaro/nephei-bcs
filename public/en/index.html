@@ -53,6 +53,8 @@
     .lecciones { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     @media (max-width: 900px) { .lecciones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 600px) { .lecciones { grid-template-columns: minmax(0, 1fr); } }
+    .lecciones li:first-child { grid-column: 1 / -1; }
+    .lecciones li:first-child a { background: linear-gradient(120deg, var(--olive-soft), transparent 60%), var(--surface); border-color: color-mix(in srgb, var(--olive) 45%, var(--border)); }
     .lecciones a { position: relative; display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 14px; height: 100%; padding: 16px 18px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: border-color .15s, transform .15s, background .15s; }
     .lecciones a:hover { text-decoration: none; border-color: var(--amber); transform: translateY(-2px); background: var(--surface-2); }
     .lecciones .n { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 1.1rem var(--mono); }
@@ -87,7 +89,7 @@
           <a class="boton" href="#utilidades">Go to the tools</a>
         </div>
         <div class="cifras">
-          <div><strong>6</strong><span>training lessons</span></div>
+          <div><strong>7</strong><span>training lessons</span></div>
           <div><strong>5</strong><span>ways to fight</span></div>
           <div><strong>7</strong><span>tools for the table</span></div>
           <div><strong id="n-glosario">80+</strong><span>glossary terms</span></div>
@@ -100,8 +102,8 @@
   <section class="seccion" id="instruccion">
     <div class="wrap">
       <div class="seccion__cab">
-        <div><span class="antetitulo">Training plan</span><h2>From recruit to major in six lessons</h2></div>
-        <p>Each lesson is a chapter of the rules, in the order of the <em>Series Rules</em>. When you finish one, mark it as passed at the foot of the page and you will be promoted. Your service record is saved in this browser only.</p>
+        <div><span class="antetitulo">Training plan</span><h2>From recruit to major in seven lessons</h2></div>
+        <p>Start with lesson 0, which sets the scene; the others are the chapters of the rules, in the order of the <em>Series Rules</em>. When you finish one, mark it as passed at the foot of the page and you will be promoted. Your service record is saved in this browser only.</p>
       </div>
       <div class="hoja" id="hoja"></div>
       <ol class="lecciones" id="lecciones"></ol>
@@ -178,63 +180,6 @@
     </div>
   </section>
 
-  <section class="seccion" id="que-es">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div>
-          <span class="antetitulo">Briefing · What the BCS is</span>
-          <h2>Mechanized war at battalion scale</h2>
-        </div>
-        <p>Designed by Dean Essig for The Gamers / MMP, the BCS covers the late First World War to the present day. Each counter is usually a battalion, each hex is 1 to 1.6 km across and each turn is a day.</p>
-      </div>
-      <div class="rejilla rejilla--4">
-        <div class="tarjeta idea"><span class="idea__n">01 · FORMATIONS</span><h3>You play by command</h3><p>Nothing moves on its own: every unit belongs to a formation with its HQ, trains and artillery. They share SNAFU, fatigue, Support and Prepared Defense.</p></div>
-        <div class="tarjeta idea"><span class="idea__n">02 · ACTIVATIONS</span><h3>Alternating turns</h3><p>The players take turns activating one formation at a time. With luck, the formation goes again straight away (Second Activation) before the enemy can react.</p></div>
-        <div class="tarjeta idea"><span class="idea__n">03 · SNAFU</span><h3>Logistics rule</h3><p>Every activation starts with 2d6 on the SNAFU Table. A cut supply route or badly placed trains sink the roll, and on a Fail the formation does not activate.</p></div>
-        <div class="tarjeta idea"><span class="idea__n">04 · COMBINED ARMS</span><h3>The right tool for the job</h3><p>Infantry takes ground, armor fights armor, Support is spread among the battalions and artillery suppresses. Choosing well is the key.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion" id="turno">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div>
-          <span class="antetitulo">The turn</span>
-          <h2>A day of operations in six phases</h2>
-        </div>
-        <a class="boton boton--peq" href="secuencia.html">See the full sequence →</a>
-      </div>
-      <div class="linea linea--fases">
-        <div class="fase"><h4>Reinforcements</h4><p>Weather, Air Points, replacements that rebuild steps, and arriving reinforcements.</p></div>
-        <div class="fase"><h4>Assignment</h4><p>Artillery and independents change formation; units enter or leave Support.</p></div>
-        <div class="fase"><h4>Orders</h4><p>Optional: each formation's orders are written down.</p></div>
-        <div class="fase"><h4>First player</h4><p>2d6 per side: the higher roll activates first.</p></div>
-        <div class="fase fase--clave"><h4>Activations</h4><p>Formations alternate until all are Done. Almost everything happens here.</p></div>
-        <div class="fase"><h4>Turn end</h4><p>HQs return to their unused side and the turn marker advances.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div>
-          <span class="antetitulo">Combat</span>
-          <h2>Five ways to do damage</h2>
-        </div>
-        <p>Each has its own table and requirements. Click one to see how it works.</p>
-      </div>
-      <div class="franja">
-        <a href="combate.html#regular"><span class="tabla-uso">Combat Table · 2d6</span><strong>Regular Attack</strong><span>Infantry assaults a hex with artillery and an Assist.</span></a>
-        <a href="combate.html#choque"><span class="tabla-uso">Combat Table · 2d6</span><strong>Shock Attack</strong><span>A mechanized unit overruns a hex with no AV and keeps moving.</span></a>
-        <a href="combate.html#enfrentamiento"><span class="tabla-uso">Engagement Table · 2d6</span><strong>Engagement</strong><span>Armor against armor or against enemy Support.</span></a>
-        <a href="combate.html#fuego"><span class="tabla-uso">Barrage Table · 1d6</span><strong>Attack by Fire</strong><span>An AV unit fires high explosive at an adjacent hex with no AV.</span></a>
-        <a href="combate.html#bombardeo"><span class="tabla-uso">Barrage Table · 1d6</span><strong>Barrage</strong><span>Artillery and air: destruction or suppression.</span></a>
-      </div>
-      <p class="nota nota--olive" style="margin-top:24px"><strong>Series rules only.</strong> This reference summarises the v2.0 <em>Series Rules</em>, common to every game. Each title adds its own rules, terrain charts, weather and SNAFU modifiers; where they clash with the series rules, the game rules win.</p>
-    </div>
-  </section>
 </main>
 
 <script src="../js/en.js"></script>
@@ -247,9 +192,10 @@
   // Plan de instrucción: una lección por capítulo y un rango por lección superada
   (function () {
     const QUE = [
+      'What the BCS is, its scale, how a turn works, the five ways to fight and the twelve words you will hear in every lesson. Start here.',
       'What each number on a counter means, infantry, AV and Dual, the four armor colors and Support.',
-      'A day-long turn, the activation step by step, SNAFU and when to go again with a Second Activation.',
-      'Formations, HQs and trains, the MSR, OBJs and why a unit without a Safe Path ends up isolated.',
+      'A day-long turn, the activation step by step, SNAFU, Fire Events, STOP and FINISHED, and when to go again with a Second Activation.',
+      'Formations, Command Radius, Prepared Defense, HQs and trains, the MSR, OBJs and why a unit without a Safe Path ends up isolated.',
       'What each terrain costs, how many units fit in a hex and which ZOCs stop whom.',
       'The five kinds of combat: who can use them, against what and what they cost. And retreats.',
       'Orders, activation chits, Planned Fatigue and the rest of the veterans\' rules.'
@@ -259,11 +205,12 @@
       '<path d="M5 10l7-5 7 5"/>',
       '<path d="M5 9l7-5 7 5M5 15l7-5 7 5"/>',
       '<path d="M5 7l7-4 7 4M5 12l7-4 7 4M5 17l7-4 7 4"/>',
+      '<path d="M12 4v16M8 8l4-4 4 4"/><circle cx="12" cy="19" r="1.5"/>',
       '<path d="M8 6l1 2.2 2.4.3-1.8 1.6.5 2.4L8 11.3 5.9 12.5l.5-2.4L4.6 8.5 7 8.2zM16 12l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z"/>',
       '<path d="M6 4l.9 2 2.2.3-1.6 1.5.4 2.2L6 8.9 4.1 10l.4-2.2L2.9 6.3l2.2-.3zM18 4l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3zM12 13l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3z"/>',
       '<path d="M12 3l2 5.5 5.8.4-4.5 3.7 1.5 5.7L12 15.1l-4.8 3.2 1.5-5.7-4.5-3.7 5.8-.4z"/>'
     ];
-    const ins = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${INSIGNIAS[Math.min(n, 6)]}</svg>`;
+    const ins = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${INSIGNIAS[Math.min(n, INSIGNIAS.length - 1)]}</svg>`;
     const C = Comun.CAPITULOS;
     function pintar() {
       const hechas = Comun.lecciones().filter((h) => C.some((c) => c[0] === h));
@@ -271,12 +218,12 @@
       const n = hechas.length;
       document.getElementById('hoja').innerHTML = `<div class="hoja__insignia">${ins(n)}</div>
         <div><small>Service record</small><strong>${Comun.rango(n)}</strong><span class="muted" style="font-size:.9rem">${n ? `${n} of ${C.length} lessons passed.` : 'You have not passed any lessons yet. We all start here.'} ${n < C.length ? `Next promotion: <b style="color:var(--amber)">${Comun.rango(n + 1)}</b>.` : 'Training complete!'}</span><div class="barra"><i style="width:${(n / C.length * 100).toFixed(0)}%"></i></div></div>
-        ${sig >= 0 ? `<a class="boton boton--primario" href="${C[sig][0]}">${n ? 'Go on to lesson ' + (sig + 1) : 'Start lesson 1'}</a>` : '<a class="boton" href="simulador.html">To the simulator, Major</a>'}`;
+        ${sig >= 0 ? `<a class="boton boton--primario" href="${C[sig][0]}">${n ? 'Go on to lesson ' + sig : 'Start with lesson 0'}</a>` : '<a class="boton" href="simulador.html">To the simulator, Major</a>'}`;
       document.getElementById('lecciones').innerHTML = C.map(([h, t], i) => {
         const hecha = hechas.includes(h);
-        return `<li><a href="${h}" class="${hecha ? 'hecha' : i === sig ? 'siguiente' : ''}"><span class="n">${hecha ? '✓' : i + 1}</span><span><strong>${t}</strong><p>${QUE[i]}</p><span class="premio">${hecha ? 'Passed' : i === sig ? 'Next lesson' : 'Lesson ' + (i + 1)} · ${Comun.rango(i + 1)}</span></span></a></li>`;
+        return `<li><a href="${h}" class="${hecha ? 'hecha' : i === sig ? 'siguiente' : ''}"><span class="n">${hecha ? '✓' : i}</span><span><strong>${t}</strong><p>${QUE[i]}</p><span class="premio">${hecha ? 'Passed' : i === sig ? 'Next lesson' : 'Lesson ' + i} · ${Comun.rango(i + 1)}</span></span></a></li>`;
       }).join('');
-      if (sig >= 0) document.getElementById('cta-instruccion').href = n ? C[sig][0] : '#instruccion';
+      if (sig >= 0) document.getElementById('cta-instruccion').href = C[sig][0];
       document.getElementById('cta-instruccion').textContent = n ? (sig >= 0 ? 'Continue training' : 'Review the training') : 'Start training';
     }
     pintar();

@@ -46,7 +46,14 @@
   const items = Datos.GLOSARIO.slice().sort((a, b) => a[0].localeCompare(b[0], 'en'));
   const dl = document.getElementById('glosario');
   const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
-  dl.innerHTML = items.map(([t, es, d, r]) => `<div id="${Datos.slug(t)}" data-txt="${esc(norm(t + ' ' + es + ' ' + d))}"><dt>${esc(t)}${es && es !== t ? `<span class="es">${esc(es)}</span>` : ''} <span class="regla">${esc(r)}</span></dt><dd>${esc(d)}</dd></div>`).join('');
+  const tr = I18N.t, CAP = Comun.CAPITULOS;
+  const leccion = (h) => { const i = CAP.findIndex((c) => c[0] === h.split('#')[0]); return i < 0 ? '' : tr('Lección {n}', { n: i }) + ' · ' + CAP[i][1]; };
+  const mas = (t) => {
+    const h = Datos.DONDE[t], v = (Datos.VER[t] || []).filter((x) => items.some((i) => i[0] === x));
+    if (!h && !v.length) return '';
+    return `<div class="g-mas">${h ? `<a class="g-donde" href="${h}">${tr('Dónde se explica:')} ${esc(leccion(h))} →</a>` : ''}${v.length ? `<span class="g-ver">${tr('Ver también')}: ${v.map((x) => `<a href="#${Datos.slug(x)}">${esc(x)}</a>`).join(' · ')}</span>` : ''}</div>`;
+  };
+  dl.innerHTML = items.map(([t, es, d, r]) => `<div id="${Datos.slug(t)}" data-termino="${esc(t)}" data-txt="${esc(norm(t + ' ' + es + ' ' + d))}"><dt>${esc(t)}${es && es !== t ? `<span class="es">${esc(es)}</span>` : ''} <span class="regla">${esc(r)}</span></dt><dd>${esc(d)}</dd>${mas(t)}</div>`).join('');
   const letras = [...new Set(items.map((i) => i[0][0].toUpperCase()))];
   document.getElementById('letras').innerHTML = letras.map((l) => `<a href="#${Datos.slug(items.find((i) => i[0][0].toUpperCase() === l)[0])}">${l}</a>`).join('');
   const f = document.getElementById('filtro'), cuenta = document.getElementById('cuenta');
@@ -56,6 +63,7 @@
     dl.querySelectorAll(':scope > div').forEach((d) => { const v = !q || d.dataset.txt.includes(q); d.hidden = !v; if (v) n++; });
     cuenta.textContent = n + ' of ' + items.length;
   };
+  Comun.enlazar(dl.querySelectorAll('dd'));
   f.addEventListener('input', filtrar);
   filtrar();
 })();

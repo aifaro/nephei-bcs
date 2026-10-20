@@ -2,6 +2,7 @@
 # uso (desde la raíz del repo): python tools/traducir.py public <página.html>
 # Reescribe public/en/<página>: los cambios hechos a mano en la versión inglesa se pierden.
 import sys, re, os, runpy
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 pub, pag = sys.argv[1], sys.argv[2]
 aqui = os.path.dirname(os.path.abspath(__file__))
 s = open(os.path.join(pub, pag), encoding='utf8').read()

@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Antes de empezar · Academia BCS</title>
+  <meta name="description" content="Lección 0 de la Academia BCS: qué es el Battalion Combat Series, su escala, cómo se juega un turno, las cinco formas de combatir y el vocabulario básico antes de entrar en las reglas.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/intro">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/intro">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bcs.css">
+  <style>
+    .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .escala { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 800px) { .escala { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .escala div { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; }
+    .escala strong { display: block; font: 700 1.7rem var(--head); color: var(--heading); }
+    .escala span { font-size: .88rem; color: var(--muted); }
+    .idea { display: flex; flex-direction: column; gap: 8px; }
+    .idea__n { font: 700 0.78rem var(--mono); color: var(--amber); letter-spacing: .1em; }
+    .idea p { margin: 0; font-size: 0.95rem; }
+    .franja { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 900px) { .franja { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .franja a { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; color: var(--text); display: flex; flex-direction: column; gap: 6px; transition: border-color .15s, transform .15s; }
+    .franja a:hover { text-decoration: none; border-color: var(--amber); transform: translateY(-2px); }
+    .franja strong { color: var(--heading); font-family: var(--head); }
+    .franja span { font-size: 0.85rem; color: var(--muted); }
+    .franja .tabla-uso { font: 600 0.72rem var(--mono); color: var(--amber); text-transform: uppercase; letter-spacing: .06em; }
+    .activacion { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
+    .activacion span { padding: 8px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); font-size: .9rem; color: var(--heading); }
+    .activacion b { color: var(--amber); font-family: var(--mono); }
+    .vocab { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 960px) { .vocab { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 600px) { .vocab { grid-template-columns: minmax(0, 1fr); } }
+    .palabra { display: grid; grid-template-columns: 52px minmax(0, 1fr); gap: 14px; align-items: start; padding: 14px 16px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); }
+    .palabra .icono { width: 52px; min-height: 52px; display: grid; place-items: center; }
+    .palabra .icono .ficha, .palabra .icono .marcador { width: 52px; }
+    .palabra .icono img.ficha-real { width: 52px; height: 52px; }
+    .palabra .icono .ma-muestra { width: 44px; height: 44px; font-size: 1.5rem; }
+    .palabra .icono .sigla { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--amber-soft); color: var(--amber); font: 700 .82rem var(--mono); text-align: center; line-height: 1.05; }
+    .palabra h3 { margin: 0; font-size: 1rem; display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
+    .palabra p { margin: 4px 0 6px; font-size: .88rem; color: var(--text); }
+    .palabra .ir-leccion { font: 600 .72rem var(--mono); letter-spacing: .04em; }
+    .camino { display: grid; gap: 8px; counter-reset: c; }
+    .camino a { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+    .camino a:hover { text-decoration: none; border-color: var(--amber); }
+    .camino .n { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 .85rem var(--mono); }
+    .camino strong { color: var(--heading); font-family: var(--head); }
+    .camino small { display: block; color: var(--muted); font-size: .84rem; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Lección 0 · Antes de empezar</span>
+      <h1>Sesión informativa</h1>
+      <p class="lead">Antes de mirar una sola ficha, recluta, conviene saber qué tienes delante: a qué escala se juega, cómo se reparte un día de combate y las pocas palabras que vas a oír en todas las lecciones. Con esto, el resto encaja solo.</p>
+      <div class="indice">
+        <a class="chip" href="#que-es">Qué es el BCS</a>
+        <a class="chip" href="#ideas">Las cuatro ideas</a>
+        <a class="chip" href="#turno">El turno</a>
+        <a class="chip" href="#combate">Cómo se combate</a>
+        <a class="chip" href="#vocabulario">Vocabulario básico</a>
+        <a class="chip" href="#camino">Cómo seguir</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="que-es">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Qué es el BCS</span><h2>Guerra mecanizada a escala de batallón</h2></div>
+        <p>El <em>Battalion Combat Series</em>, diseñado por Dean Essig para The Gamers / MMP, cubre desde finales de la Primera Guerra Mundial hasta hoy: Normandía, Sicilia, los Altos del Golán… Cada juego de la serie es una batalla distinta con las mismas reglas de base. <span class="regla">1.0</span></p>
+      </div>
+      <div class="escala">
+        <div><strong>1 ficha</strong><span>suele ser un batallón (a veces una compañía)</span></div>
+        <div><strong>1 hex</strong><span>de 1 a 1,6 km, según el juego</span></div>
+        <div><strong>1 turno</strong><span>es un día de operaciones</span></div>
+        <div><strong>2 bandos</strong><span>que se turnan formación a formación</span></div>
+      </div>
+      <div class="rejilla rejilla--3" style="margin-top:16px">
+        <div class="tarjeta"><h3>Reglas de serie</h3><p class="muted mb0">Las <em>Series Rules</em> son comunes a todos los juegos. Son lo que enseña esta academia: unidades, secuencia, mando, movimiento y combate.</p></div>
+        <div class="tarjeta"><h3>Reglas del juego</h3><p class="muted mb0">Cada título trae las suyas: escenarios, despliegue, clima, tabla de efectos del terreno y modificadores propios. <strong>Si chocan con las de serie, mandan las del juego.</strong></p></div>
+        <div class="tarjeta"><h3>Tablas y ayudas</h3><p class="muted mb0">Las tablas (<em>Charts &amp; Tables</em>) y el cuadernillo de apoyo con ejemplos. Aquí las tienes en <a href="tablas.html">Tablas</a>, listas para imprimir.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="ideas">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Las cuatro ideas</span><h2>Lo que hace distinto al BCS</h2></div>
+        <p>Si te quedas con estas cuatro ideas, cada regla que leas después tendrá un porqué.</p>
+      </div>
+      <div class="rejilla rejilla--4">
+        <div class="tarjeta idea"><span class="idea__n">01 · FORMACIONES</span><h3>Se juega por mandos</h3><p>Nada se mueve suelto: cada unidad pertenece a una formación con su HQ, sus trenes y su artillería. Comparten SNAFU, fatiga, apoyo y defensa preparada.</p></div>
+        <div class="tarjeta idea"><span class="idea__n">02 · ACTIVACIONES</span><h3>Turnos alternos</h3><p>Los jugadores se turnan activando una formación cada vez. Con suerte, la formación repite enseguida (Segunda Activación) y el enemigo no llega a reaccionar.</p></div>
+        <div class="tarjeta idea"><span class="idea__n">03 · SNAFU</span><h3>La logística manda</h3><p>Cada activación empieza con 2d6 en la tabla de SNAFU. Una ruta de suministro cortada o un tren mal colocado hunden la tirada, y con un Fail la formación no se activa.</p></div>
+        <div class="tarjeta idea"><span class="idea__n">04 · ARMAS COMBINADAS</span><h3>Cada herramienta, su uso</h3><p>La infantería conquista terreno, los blindados se baten entre sí, el apoyo se reparte entre batallones y la artillería suprime. Elegir bien es la clave.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="turno">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">El turno</span><h2>Un día de operaciones en seis fases</h2></div>
+        <p>Las cuatro primeras preparan el día; casi todo ocurre en la quinta, las activaciones. Lo verás con detalle en la <a href="secuencia.html">lección 2</a>. <span class="regla">1.2a · 2.0</span></p>
+      </div>
+      <div class="linea linea--fases">
+        <div class="fase"><h4>Refuerzos y reemplazos</h4><p>Clima, puntos aéreos, reemplazos que reconstruyen pasos y llegada de refuerzos.</p></div>
+        <div class="fase"><h4>Asignación</h4><p>Artillería e independientes cambian de formación; entrar y salir del apoyo.</p></div>
+        <div class="fase"><h4>Órdenes</h4><p>Opcional: se anotan las órdenes de cada formación.</p></div>
+        <div class="fase"><h4>Primer jugador</h4><p>2d6 por bando: quien saque más empieza a activar.</p></div>
+        <div class="fase fase--clave"><h4>Activaciones</h4><p>Se alternan las formaciones hasta que todas están Done. Aquí ocurre casi todo.</p></div>
+        <div class="fase"><h4>Fin de turno</h4><p>Los HQ vuelven a su cara sin usar y avanza el marcador de turno.</p></div>
+      </div>
+      <div class="tarjeta" style="margin-top:16px">
+        <h3>Una activación, en una línea</h3>
+        <p class="muted mb0">Cuando te toca, eliges una de tus formaciones y haces esto, siempre en este orden:</p>
+        <div class="activacion">
+          <span><b>1</b> SNAFU</span><span><b>2</b> Colocar OBJ</span><span><b>3</b> Mover y combatir</span><span><b>4</b> ¿Sube la fatiga?</span><span><b>5</b> ¿Segunda Activación?</span>
+        </div>
+        <p class="muted mb0" style="margin-top:12px;font-size:.92rem">El SNAFU dice cómo de bien funciona hoy la formación; los OBJ, dónde puede atacar; y la Segunda Activación, si repite antes de que el enemigo reaccione. Luego le toca al rival.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="combate">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Cómo se combate</span><h2>Cinco maneras de hacer daño</h2></div>
+        <p>No hay una sola tabla de combate: cada herramienta tiene la suya, sus requisitos y su coste. Las verás todas en la <a href="combate.html">lección 5</a>; de momento basta con saber que existen.</p>
+      </div>
+      <div class="franja">
+        <a href="combate.html#regular"><span class="tabla-uso">Combat Table · 2d6</span><strong>Ataque regular</strong><span>La infantería asalta un hex con artillería y asistencia.</span></a>
+        <a href="combate.html#choque"><span class="tabla-uso">Combat Table · 2d6</span><strong>Ataque de choque</strong><span>Un mecanizado arrolla un hex sin AV y sigue moviendo.</span></a>
+        <a href="combate.html#enfrentamiento"><span class="tabla-uso">Engagement Table · 2d6</span><strong>Enfrentamiento</strong><span>Blindado contra blindado o contra el apoyo enemigo.</span></a>
+        <a href="combate.html#fuego"><span class="tabla-uso">Barrage Table · 1d6</span><strong>Ataque por fuego</strong><span>Un AV dispara explosivo a un hex adyacente sin AV.</span></a>
+        <a href="combate.html#bombardeo"><span class="tabla-uso">Barrage Table · 1d6</span><strong>Bombardeo</strong><span>Artillería y aviación: destrucción o supresión.</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="vocabulario">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Vocabulario básico</span><h2>Las doce palabras que vas a oír</h2></div>
+        <p>El BCS se juega con su vocabulario en inglés. Estas doce salen en todas las lecciones; aquí tienes una idea rápida de cada una y dónde se explica a fondo.</p>
+      </div>
+      <div class="vocab" id="vocab"></div>
+    </div>
+  </section>
+
+  <section class="seccion" id="camino">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Cómo seguir</span><h2>El orden de la instrucción</h2></div>
+        <p>Las lecciones siguen el orden de las <em>Series Rules</em>, y cada una se apoya en las anteriores. Si te pierdes, cualquier término subrayado te enseña su definición, y el glosario te dice dónde se explica.</p>
+      </div>
+      <div class="camino" id="camino-lista"></div>
+    </div>
+  </section>
+</main>
+
+<script src="js/i18n.js"></script>
+<script src="js/fichas.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/comun.js"></script>
+<script>
+(function () {
+  'use strict';
+  const U = Fichas.UNIDADES, esc = Fichas.esc;
+  const sigla = (t) => `<span class="sigla">${t}</span>`;
+  const ma = (c, n) => `<span class="ma-muestra ${c}">${n}</span>`;
+  // [icono, término, castellano, explicación, lección, enlace]
+  const VOCAB = [
+    [sigla('FORM'), 'Formation', 'Formación', 'Un mando con su HQ, sus trenes y sus unidades. Es la pieza que se activa: todo se hace formación a formación.', 3, 'mando.html#formaciones'],
+    ['<img class="ficha-real" src="fichas/hq-sin-usar.png" alt="">', 'HQ', 'Cuartel general', 'El centro de la formación: su radio de mando limita hasta dónde operan sus unidades, y su tirada decide la Segunda Activación.', 3, 'mando.html#hq'],
+    [sigla('2d6'), 'SNAFU', 'SNAFU', 'La tirada al empezar cada activación: Full, Partial o Fail. Decide cuántos OBJ tienes, cuánto mueves y si puedes combatir.', 2, 'secuencia.html#snafu'],
+    [Fichas.marcador('obj'), 'OBJ', 'Objetivo', 'Marcadores que dicen dónde puede atacar y bombardear la formación en esta activación: una zona de 2 hexes alrededor.', 3, 'mando.html#obj'],
+    [Fichas.ficha(U['inf-us'], 'd'), 'Steps', 'Pasos', 'La resistencia de una unidad: cuántas bajas aguanta antes de desaparecer. Perder pasos no cambia sus valores.', 1, 'fichas.html#anatomia'],
+    [sigla('AR<br>AV'), 'AR · AV', 'Action Rating · Armor Value', 'El AR mide la calidad de la tropa (0 a 5); el AV, el blindaje y el cañón. Son los números con los que se combate.', 1, 'fichas.html#av'],
+    [ma('tac', '16'), 'MA', 'Movement Allowance', 'Los puntos de movimiento. Su color es la clase de movimiento: táctico, camión o a pie, y cambia todo lo demás.', 4, 'movimiento.html#clases'],
+    [Fichas.marcador('red'), 'Support', 'Apoyo', 'Blindados repartidos entre la infantería en lugar de estar en el mapa. Dan modificadores y protección a sus hosts.', 1, 'fichas.html#apoyo'],
+    [sigla('ZOC'), 'ZOC', 'Zona de control', 'Los hexes junto a una unidad de combate. Las ZOC enemigas detienen el movimiento, pero no todas a todos.', 4, 'movimiento.html#zoc'],
+    [sigla('FE<br>×2'), 'Fire Event', 'Evento de fuego', 'Cada unidad tiene dos por activación para enfrentarse, atacar por fuego, hacer choques o Recon. Al gastar el último queda STOPPED.', 2, 'secuencia.html#actividades'],
+    [sigla('STOP'), 'STOP · FINISHED', 'Detenida · Terminada', 'STOPPED: ya no puede mover, pero aún puede combatir. FINISHED: ha terminado su activación y solo puede observar para la artillería.', 2, 'secuencia.html#actividades'],
+    [sigla('PD'), 'Prepared Defense', 'Defensa preparada', 'Una postura de toda la formación: defiende mejor y aguanta sin retirarse, a cambio de un SNAFU que nunca pasa de Partial.', 3, 'mando.html#pd']
+  ];
+  document.getElementById('vocab').innerHTML = VOCAB.map(([ic, t, es, d, l, h]) => `<div class="palabra"><div class="icono">${ic}</div><div>
+    <h3>${t}${es !== t ? ` <span class="en">${es}</span>` : ''}</h3><p>${d}</p><a class="ir-leccion" href="${h}">Lección ${l} →</a></div></div>`).join('');
+
+  const QUE = [
+    'Esta sesión: escala, turno, formas de combatir y vocabulario.',
+    'Cómo se lee una ficha: tipos de unidad, blindaje, apoyo y marcadores.',
+    'El turno, la activación paso a paso, el SNAFU, las actividades y la fatiga.',
+    'Formaciones, radio de mando, Prepared Defense, HQ y trenes, MSR, OBJ y Safe Path.',
+    'Terreno, apilamiento, ZOC, zonas de enfrentamiento y pantallas.',
+    'Los cinco tipos de combate, sus requisitos, sus resultados y las retiradas.',
+    'Órdenes, chits de activación y el resto de reglas opcionales.'
+  ];
+  document.getElementById('camino-lista').innerHTML = Comun.CAPITULOS.map(([h, t], i) => `<a href="${h}"><span class="n">${i}</span><span><strong>${esc(t)}</strong><small>${QUE[i]}</small></span><span class="muted">→</span></a>`).join('');
+})();
+</script>
+</body>
+</html>

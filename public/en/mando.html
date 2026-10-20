@@ -35,10 +35,11 @@
     <div class="wrap">
       <span class="antetitulo">Chapter 3 · Command and supply</span>
       <h1>Command, supply and objectives</h1>
-      <p class="lead">In the BCS nothing moves on its own: every unit belongs to a formation, depends on its HQ and lives off the route that links it to the trains and the rear. Cutting those threads does more damage than many attacks.</p>
+      <p class="lead">In <a href="secuencia.html">lesson 2</a> you saw that everything happens formation by formation and that SNAFU decides how well each one works. Here you will see what it depends on. In the BCS nothing moves on its own: every unit belongs to a formation, depends on its HQ and lives off the route that links it to the trains and the rear. Cutting those threads does more damage than many attacks.</p>
       <div class="indice">
         <a class="chip" href="#formaciones">Formations</a>
         <a class="chip" href="#radio">Command Radius</a>
+        <a class="chip" href="#pd">Prepared Defense</a>
         <a class="chip" href="#hq">HQs and trains</a>
         <a class="chip" href="#msr">MSR</a>
         <a class="chip" href="#obj">OBJ</a>
@@ -94,6 +95,28 @@
           <p>Units (except trains) must end each activation inside the radius. If they cannot, they must move or attack in a way that brings them closer, or stay put. <span class="regla">1.4e</span></p>
           <p class="muted mb0">The radius does not limit OBJ placement, Advance after Combat or barrages. Unassigned independents have no radius.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="pd">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Prepared Defense</span><h2>The formation's posture</h2></div>
+        <p>Prepared Defense is not just digging holes: it is planned protective fires and firing positions. It is a status of the whole formation, trading freedom of action for a better but positional defense. <span class="regla">1.7</span></p>
+      </div>
+      <div class="rejilla rejilla--4">
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" id="ficha-pd"></div>
+          <div><h3>To enter it <span class="regla">1.7a</span></h3>
+          <ul class="checks mb0" style="font-size:.9rem"><li>At least one Arty Point (before SNAFU is applied).</li><li>No MSR Blocked marker.</li><li>In the Initial Activation, not the Second.</li></ul></div>
+        </div>
+        <div class="tarjeta"><h3>What it gives <span class="regla">1.7c</span></h3>
+          <ul class="rombos mb0" style="font-size:.9rem"><li>+1 when defending on the Combat Table and the Engagement Table.</li><li>Only adjacent Firers can engage it.</li><li>A better row on the Barrage Table.</li><li>Against a Situational Retreat it holds the hex (each unit loses a step).</li></ul></div>
+        <div class="tarjeta"><h3>What it costs</h3>
+          <ul class="rombos mb0" style="font-size:.9rem"><li>SNAFU is <strong>never better than Partial</strong>, whatever you roll.</li><li>Otherwise the formation moves, fights, recovers and goes for a Second Activation normally.</li></ul></div>
+        <div class="tarjeta"><h3>Who uses it and when it is lost <span class="regla">1.7b · 1.7d</span></h3>
+          <p class="mb0" style="font-size:.9rem">Units on their <strong>Deployed-side</strong> and inside Command Radius use it. It is lost if the HQ moves or is Jumped, if an MSR Blocked marker arrives, if the formation runs out of artillery or if the player removes it.</p></div>
       </div>
     </div>
   </section>
@@ -179,7 +202,7 @@
         <div>
           <h3>The OBJ Zone <span class="regla">3.3a</span></h3>
           <p>Each OBJ creates a zone with a 2-hex radius. Inside it you can make:</p>
-          <div class="necesita">
+          <div class="necesita no-glosario">
             <div class="si"><span class="i">✓</span>Regular Attacks</div>
             <div class="si"><span class="i">✓</span>Shock Attacks</div>
             <div class="si"><span class="i">✓</span>Attacks by Fire</div>
@@ -294,6 +317,7 @@
 (function () {
   'use strict';
   // La zona de OBJ: dos hexes de radio alrededor del marcador, sobre hexes del mapa de Arracourt
+  document.getElementById('ficha-pd').innerHTML = Fichas.marcador('pd', { tam: 64 });
   const svg = document.getElementById('obj-mapa');
   const COLS = 7, FILAS = 5, R = 30, W = Math.sqrt(3) * R, CEN = [3, 2];
   const TER = { '1,1': 'bosque', '5,3': 'pueblo', '0,4': 'bosque', '6,0': 'colina' };

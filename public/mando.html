@@ -35,10 +35,11 @@
     <div class="wrap">
       <span class="antetitulo">Capítulo 3 · Mando y suministro</span>
       <h1>Mando, suministro y objetivos</h1>
-      <p class="lead">En el BCS nada se mueve suelto: cada unidad pertenece a una formación, depende de su HQ y vive de la ruta que lo une con los trenes y con la retaguardia. Cortar esos hilos hace más daño que muchos ataques.</p>
+      <p class="lead">En la <a href="secuencia.html">lección 2</a> viste que todo se hace formación a formación y que el SNAFU decide cómo de bien funciona cada una. Aquí verás de qué depende. En el BCS nada se mueve suelto: cada unidad pertenece a una formación, depende de su HQ y vive de la ruta que lo une con los trenes y con la retaguardia. Cortar esos hilos hace más daño que muchos ataques.</p>
       <div class="indice">
         <a class="chip" href="#formaciones">Formaciones</a>
         <a class="chip" href="#radio">Radio de mando</a>
+        <a class="chip" href="#pd">Prepared Defense</a>
         <a class="chip" href="#hq">HQ y trenes</a>
         <a class="chip" href="#msr">MSR</a>
         <a class="chip" href="#obj">OBJ</a>
@@ -94,6 +95,28 @@
           <p>Las unidades (salvo los trenes) deben acabar cada activación dentro del radio. Si no pueden, tienen que mover o atacar de forma que se acerquen, o quedarse quietas. <span class="regla">1.4e</span></p>
           <p class="muted mb0">El radio no limita la colocación de OBJ, el avance tras el combate ni los bombardeos. Las independientes sin asignar no tienen radio.</p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="pd">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Prepared Defense</span><h2>La postura de la formación</h2></div>
+        <p>La defensa preparada no es cavar trincheras: son fuegos de protección planificados y posiciones de tiro. Es un estado de toda la formación, que cambia libertad de acción por una defensa mejor pero estática. <span class="regla">1.7</span></p>
+      </div>
+      <div class="rejilla rejilla--4">
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" id="ficha-pd"></div>
+          <div><h3>Para entrar <span class="regla">1.7a</span></h3>
+          <ul class="checks mb0" style="font-size:.9rem"><li>Al menos un punto de artillería (antes de aplicar el SNAFU).</li><li>Sin marcador de MSR Blocked.</li><li>En la activación inicial, no en la segunda.</li></ul></div>
+        </div>
+        <div class="tarjeta"><h3>Lo que da <span class="regla">1.7c</span></h3>
+          <ul class="rombos mb0" style="font-size:.9rem"><li>+1 al defender en el Combat Table y en el Engagement Table.</li><li>Solo la pueden enfrentar tiradores adyacentes.</li><li>Una fila mejor en el Barrage Table.</li><li>Ante una retirada situacional, aguanta en el hex (cada unidad pierde un paso).</li></ul></div>
+        <div class="tarjeta"><h3>Lo que cuesta</h3>
+          <ul class="rombos mb0" style="font-size:.9rem"><li>El SNAFU <strong>nunca pasa de Partial</strong>, saques lo que saques.</li><li>Por lo demás, la formación mueve, combate, se recupera y repite activación con normalidad.</li></ul></div>
+        <div class="tarjeta"><h3>Quién la usa y cuándo se pierde <span class="regla">1.7b · 1.7d</span></h3>
+          <p class="mb0" style="font-size:.9rem">La usan las unidades en su <strong>cara desplegada</strong> y dentro del radio de mando. Se pierde si el HQ se mueve o lo saltan, si llega un MSR Blocked, si se queda sin artillería o si el jugador la quita.</p></div>
       </div>
     </div>
   </section>
@@ -179,7 +202,7 @@
         <div>
           <h3>La zona de OBJ <span class="regla">3.3a</span></h3>
           <p>Cada OBJ crea una zona de 2 hexes de radio. Dentro de ella se puede:</p>
-          <div class="necesita">
+          <div class="necesita no-glosario">
             <div class="si"><span class="i">✓</span>Ataque regular</div>
             <div class="si"><span class="i">✓</span>Ataque de choque</div>
             <div class="si"><span class="i">✓</span>Ataque por fuego</div>
@@ -293,6 +316,7 @@
 (function () {
   'use strict';
   // La zona de OBJ: dos hexes de radio alrededor del marcador, sobre hexes del mapa de Arracourt
+  document.getElementById('ficha-pd').innerHTML = Fichas.marcador('pd', { tam: 64 });
   const svg = document.getElementById('obj-mapa');
   const COLS = 7, FILAS = 5, R = 30, W = Math.sqrt(3) * R, CEN = [3, 2];
   const TER = { '1,1': 'bosque', '5,3': 'pueblo', '0,4': 'bosque', '6,0': 'colina' };

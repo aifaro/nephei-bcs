@@ -5,6 +5,7 @@
 
   // El reglamento, en el orden de las Series Rules
   const CAPITULOS = [
+    ['intro.html', tr('Antes de empezar'), tr('Qué es el BCS, cómo es un turno y el vocabulario básico')],
     ['fichas.html', tr('Fichas y unidades'), tr('Cómo leer una ficha, tipos de unidad, AV, apoyo y marcadores')],
     ['secuencia.html', tr('Secuencia y SNAFU'), tr('El turno, la activación, el SNAFU y la Segunda Activación')],
     ['mando.html', tr('Mando y suministro'), tr('Formaciones, HQ, trenes, MSR, OBJ, Safe Path y aislamiento')],
@@ -13,7 +14,7 @@
     ['opcionales.html', tr('Reglas opcionales'), tr('Órdenes, chits de activación, Planned Fatigue y otras')]
   ];
   // Rango que se gana al superar cada lección
-  const RANGOS = [tr('Recluta'), tr('Soldado'), tr('Cabo'), tr('Sargento'), tr('Teniente'), tr('Capitán'), tr('Comandante')];
+  const RANGOS = [tr('Recluta'), tr('Soldado'), tr('Cabo'), tr('Sargento'), tr('Alférez'), tr('Teniente'), tr('Capitán'), tr('Comandante')];
   // Herramientas para la mesa
   const UTILIDADES = [
     ['simulador.html', tr('Simulador de ataques'), tr('Fichas en el mapa, probabilidades y tiradas animadas')],
@@ -67,7 +68,7 @@
   function cabecera() {
     const grupo = (txt, items, marca, actualGrupo) => `<div class="nav__grupo"><button type="button" class="nav__btn${actualGrupo ? ' actual' : ''}" aria-expanded="false">${txt} ${ICONOS.flecha}</button><div class="nav__menu" data-titulo="${txt}">${items.map(([h, t, d], i) => `<a href="${h}"${esActual(h) ? ' aria-current="page"' : ''}><span class="nav__n">${marca(i)}</span><span><strong>${t}</strong><small>${d}</small></span></a>`).join('')}</div></div>`;
     const enlaces = PAGINAS.map(([href, txt]) => {
-      if (href === 'reglamento') return grupo(txt, CAPITULOS, (i) => i + 1, capActual >= 0);
+      if (href === 'reglamento') return grupo(txt, CAPITULOS, (i) => i, capActual >= 0);
       if (href === 'utilidades') return grupo(txt, UTILIDADES, () => '›', utilActual);
       return `<a href="${href}"${esActual(href) ? ' aria-current="page"' : ''}>${txt}</a>`;
     }).join('');
@@ -130,7 +131,7 @@
     const tira = document.createElement('nav');
     tira.className = 'capitulos';
     tira.setAttribute('aria-label', tr('Capítulos del reglamento'));
-    tira.innerHTML = `<div class="wrap"><ol>${CAPITULOS.map(([h, t], i) => `<li><a href="${h}"${i === capActual ? ' aria-current="page"' : ''}><span class="nav__n">${i + 1}</span>${t}</a></li>`).join('')}</ol></div>`;
+    tira.innerHTML = `<div class="wrap"><ol>${CAPITULOS.map(([h, t], i) => `<li><a href="${h}"${i === capActual ? ' aria-current="page"' : ''}><span class="nav__n">${i}</span>${t}</a></li>`).join('')}</ol></div>`;
     if (hero) hero.after(tira);
     const ol = tira.querySelector('ol'), sel = ol.querySelector('[aria-current]').parentElement;
     ol.scrollLeft = sel.offsetLeft - (ol.clientWidth - sel.offsetWidth) / 2;
@@ -138,14 +139,14 @@
     const pasar = document.createElement('nav');
     pasar.className = 'wrap pasar';
     pasar.setAttribute('aria-label', tr('Capítulo anterior y siguiente'));
-    pasar.innerHTML = (ant ? `<a class="pasar__ant" href="${ant[0]}"><small>← ${tr('Capítulo {n}', { n: capActual })}</small><strong>${ant[1]}</strong></a>` : '<span></span>')
-      + (sig ? `<a class="pasar__sig" href="${sig[0]}"><small>${tr('Capítulo {n}', { n: capActual + 2 })} →</small><strong>${sig[1]}</strong></a>` : `<a class="pasar__sig" href="simulador.html"><small>${tr('Para practicar')} →</small><strong>${tr('Simulador de ataques')}</strong></a>`);
+    pasar.innerHTML = (ant ? `<a class="pasar__ant" href="${ant[0]}"><small>← ${tr('Lección {n}', { n: capActual - 1 })}</small><strong>${ant[1]}</strong></a>` : '<span></span>')
+      + (sig ? `<a class="pasar__sig" href="${sig[0]}"><small>${tr('Lección {n}', { n: capActual + 1 })} →</small><strong>${sig[1]}</strong></a>` : `<a class="pasar__sig" href="simulador.html"><small>${tr('Para practicar')} →</small><strong>${tr('Simulador de ataques')}</strong></a>`);
     const href = CAPITULOS[capActual][0];
     const sello = document.createElement('div');
     sello.className = 'wrap sello';
     const pintarSello = () => {
       const l = lecciones(), hecha = l.includes(href);
-      sello.innerHTML = `<div class="sello__caja${hecha ? ' hecha' : ''}"><div><span class="antetitulo">${tr('Lección {a} de {b}', { a: capActual + 1, b: CAPITULOS.length })}</span><strong>${hecha ? tr('Lección superada') : tr('¿Lo tienes claro, recluta?')}</strong><p>${hecha ? tr('Rango actual: <b>{r}</b>. Sigue con la siguiente lección o repasa esta cuando quieras.', { r: rango(l.length) }) : tr('Márcala como superada y asciende a <b>{r}</b>. Se guarda solo en este navegador.', { r: rango(l.length + 1) })}</p></div>
+      sello.innerHTML = `<div class="sello__caja${hecha ? ' hecha' : ''}"><div><span class="antetitulo">${tr('Lección {a} de {b}', { a: capActual, b: CAPITULOS.length - 1 })}</span><strong>${hecha ? tr('Lección superada') : tr('¿Lo tienes claro, recluta?')}</strong><p>${hecha ? tr('Rango actual: <b>{r}</b>. Sigue con la siguiente lección o repasa esta cuando quieras.', { r: rango(l.length) }) : tr('Márcala como superada y asciende a <b>{r}</b>. Se guarda solo en este navegador.', { r: rango(l.length + 1) })}</p></div>
         <button type="button" class="boton${hecha ? '' : ' boton--primario'}">${hecha ? tr('Desmarcar') : tr('✓ Lección superada')}</button></div>`;
       sello.querySelector('button').addEventListener('click', () => { marcarLeccion(href, !hecha); pintarSello(); });
     };
@@ -157,6 +158,9 @@
   // Enlaza la primera aparición de cada término en cada sección y muestra su definición al pasar por encima.
   // [expresión, término del glosario]
   const TERMINOS = [
+    ['enfrentamientos?', 'Engagement'], ['Engagements?', 'Engagement'], ['ataques? por fuego', 'Attack by Fire'], ['Attacks? by Fire', 'Attack by Fire'],
+    ['ataques? de choque', 'Shock Attack'], ['ataques? regular(?:es)?', 'Regular Attack'], ['Regular Attacks?', 'Regular Attack'], ['bombardeos?', 'Barrage'], ['Barrages?', 'Barrage'],
+    ['retiradas? voluntarias?', 'Voluntary Retreat'], ['Voluntary Retreats?', 'Voluntary Retreat'], ['Segundas? Activaci(?:ón|ones)', 'Second Activation'], ['Second Activations?', 'Second Activation'], ['Recon', 'Recon'],
     ['Command Radius', 'Command Radius (CR)'], ['Reinforcements?', 'Reinforcements'], ['Replacements?', 'Replacements (Repls)'], ['Formations?', 'Formation'], ['Out of Command', 'Out of Command'],
     ['March OBJs?', 'March OBJ'], ['Planned Fatigue', 'Planned Fatigue'], ['Soft Jumps?', 'Soft Jump'], ['Unit Traffic', 'Unit Traffic'],
     ['Non-AV ZOC', 'Non-AV ZOC'], ['Real AV ZOC', 'Real AV ZOC'], ['Support AV ZOC', 'Support AV ZOC'],
@@ -177,15 +181,18 @@
   ];
   // Términos en inglés que solo se enlazan escritos con mayúscula (Hard, Screen, Dual…)
   const SOLO_MAYUSCULA = /^[A-Z][a-z]/;
+  let enlazar = () => {};
   function enlazarGlosario() {
-    if (!window.Datos || /^(glosario|simulador)$/.test(actual)) return;
+    if (!window.Datos || actual === 'simulador') return;
     const defs = {};
     Datos.GLOSARIO.forEach((g) => { defs[g[0]] = g; });
     const reglas = TERMINOS.filter(([, t]) => defs[t]).map(([p, t]) => [new RegExp('^(?:' + p + ')$', 'i'), t, p]);
     const re = new RegExp('(^|[^\\wÀ-ÿ-])(' + reglas.map((r) => r[2]).join('|') + ')(?![\\wÀ-ÿ-])', 'gi');
     const PROHIBIDO = 'a, button, h1, h2, h3, h4, .regla, .en, svg, label, select, option, .chip, kbd, code, .antetitulo, script, style, .no-glosario, table.capacidades, figcaption strong, .orden-chip, .chit, .herramienta';
-    document.querySelectorAll('main .seccion, main .bloque').forEach((sec) => {
+    // Enlaza los términos de cada contenedor; en el glosario, a su entrada y sin enlazar el propio término
+    enlazar = (contenedores, enGlosario) => contenedores.forEach((sec) => {
       const vistos = new Set();
+      if (enGlosario) { const yo = sec.closest('[data-termino]'); if (yo) vistos.add(yo.dataset.termino); }
       const andar = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT, {
         acceptNode: (n) => n.parentElement.closest(PROHIBIDO) || !n.nodeValue.trim() ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
       });
@@ -207,7 +214,7 @@
           frag.append(txt.slice(ultimo, ini));
           const a = document.createElement('a');
           a.className = 'g';
-          a.href = 'glosario.html#' + Datos.slug(r[1]);
+          a.href = (enGlosario ? '#' : 'glosario.html#') + Datos.slug(r[1]);
           a.dataset.g = r[1];
           a.textContent = palabra;
           frag.append(a);
@@ -216,6 +223,7 @@
         if (frag) { frag.append(txt.slice(ultimo)); n.replaceWith(frag); }
       });
     });
+    if (actual !== 'glosario') enlazar(document.querySelectorAll('main .seccion, main .bloque'));
     // Definición emergente
     const pop = document.createElement('div');
     pop.className = 'g-pop';
@@ -228,7 +236,7 @@
       const g = defs[a.dataset.g];
       if (!g) return;
       clearTimeout(quitar);
-      pop.innerHTML = `<strong>${Fichas.esc(g[0])}</strong>${g[1] && g[1] !== g[0] ? ` <span class="es">${Fichas.esc(g[1])}</span>` : ''} <span class="regla">${Fichas.esc(g[3])}</span><p>${Fichas.esc(g[2])}</p>`;
+      pop.innerHTML = `<strong>${Fichas.esc(g[0])}</strong>${g[1] && g[1] !== g[0] ? ` <span class="es">${Fichas.esc(g[1])}</span>` : ''} <span class="regla">${Fichas.esc(g[3])}</span><p>${Fichas.esc(g[2])}</p>${Datos.DONDE && Datos.DONDE[g[0]] ? (() => { const i = CAPITULOS.findIndex((c) => c[0] === Datos.DONDE[g[0]].split('#')[0]); return i < 0 ? '' : `<span class="g-lec">${tr('Lección {n}', { n: i })} · ${Fichas.esc(CAPITULOS[i][1])}</span>`; })() : ''}`;
       pop.hidden = false;
       const r = a.getBoundingClientRect(), w = pop.offsetWidth, h = pop.offsetHeight;
       const x = Math.max(8, Math.min(innerWidth - w - 8, r.left + r.width / 2 - w / 2));
@@ -336,5 +344,5 @@
   capitulos();
   pie();
   enlazarGlosario();
-  window.Comun = { guardar, leer, CAPITULOS, RANGOS, lecciones, marcarLeccion, rango };
+  window.Comun = { guardar, leer, CAPITULOS, RANGOS, lecciones, marcarLeccion, rango, enlazar: (c) => enlazar(c, true) };
 })();

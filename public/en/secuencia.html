@@ -36,6 +36,18 @@
     .sr-full small, .sr-full strong { color: var(--ok); }
     .total-drm { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 4px; }
     .total-drm strong { font: 700 2.2rem var(--head); color: var(--heading); }
+    .comparte { display: flex; flex-wrap: wrap; gap: 6px; }
+    table.estados td.num { font-size: .9rem; }
+    table.estados td.si { color: var(--ok); font-weight: 700; }
+    table.estados td.no { color: var(--bad); }
+    .ejemplo-act { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+    .ejemplo-act li { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 11px; background: var(--surface-2); border: 1px solid var(--border); font-size: .92rem; }
+    .ejemplo-act li .ficha { width: 46px; }
+    .ejemplo-act .estado-u { font: 700 .7rem var(--mono); letter-spacing: .06em; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+    .ejemplo-act .e-act { background: var(--olive-soft); color: var(--olive); }
+    .ejemplo-act .e-stop { background: var(--amber-soft); color: var(--amber); }
+    .ejemplo-act .e-fin { background: var(--red-soft); color: var(--red); }
+    @media (max-width: 560px) { .ejemplo-act li { grid-template-columns: 40px minmax(0, 1fr); } .ejemplo-act .estado-u { grid-column: 2; justify-self: start; } }
     .seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     @media (max-width: 860px) { .seg { grid-template-columns: 1fr; } }
     .dial { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
@@ -49,7 +61,7 @@
     <div class="wrap">
       <span class="antetitulo">Chapter 2 · Sequence and SNAFU</span>
       <h1>The turn, the activation and SNAFU</h1>
-      <p class="lead">A turn is a day. The sides take turns activating formations, and every activation starts with the same old question: how well is the logistics working today?</p>
+      <p class="lead">You can read the counters; now it is time to move them. A turn is a day. The sides take turns activating formations, and every activation starts with the same old question: how well is the logistics working today? And within each activation, every unit has a limit on what it can do.</p>
     </div>
   </section>
 
@@ -143,6 +155,56 @@
     </div>
   </section>
 
+  <section class="seccion" id="actividades">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Activities · Fire Events · STOPPED / FINISHED</span><h2>During the Activities Phase</h2></div>
+        <p>After SNAFU and the OBJs comes the main event: moving and fighting. Three things control what each unit can do at any moment: the <strong>Fire Events</strong> it has left, whether it is <strong>STOPPED</strong> and whether it is <strong>FINISHED</strong>. <span class="regla">1.6 · 3.4</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta">
+          <h3>One unit at a time <span class="regla">3.4b</span></h3>
+          <p>The active formation's units act one at a time, in any order you like. You must finish with one (moving it and using its Fire Events) before starting the next.</p>
+          <p class="muted mb0" style="font-size:.9rem">Once you start moving another, the previous one loses any MPs and Fire Events it had left, but it can still attack, Assist or spot for artillery. Barrages can be fired at any time.</p>
+        </div>
+        <div class="tarjeta">
+          <h3>Fire Events <span class="regla">1.6</span></h3>
+          <p>Each unit has <strong>two per activation</strong> (with a Full or Partial SNAFU; with a Fail, none). Each of these uses one:</p>
+          <div class="comparte"><span class="chip chip--red">Engagement</span><span class="chip chip--red">Attack by Fire</span><span class="chip chip--amber">Shock Attack</span><span class="chip chip--olive">Recon</span></div>
+          <ul class="rombos mb0" style="margin-top:10px;font-size:.9rem">
+            <li>It is spent when announced, whatever the result.</li>
+            <li>An over-stacked unit cannot use them.</li>
+            <li>A Regular Attack uses no Fire Events, but it leaves the unit FINISHED and any it had left are wasted.</li>
+            <li><strong>On spending the last one, the unit is STOPPED.</strong></li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>STOPPED y FINISHED <span class="regla">3.4e–3.4i</span></h3>
+          <p><strong>STOPPED</strong>: it cannot move any more, even with MPs left, but it can still fight. Terrain, enemy ZOCs, Traffic or spending its last Fire Event STOP it.</p>
+          <p class="mb0"><strong>FINISHED</strong>: it is done for the activation and can only spot for artillery. A unit becomes FINISHED by attacking or assisting in a Regular Attack, or by making a Voluntary Retreat.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:26px">What it can do in each state</h3>
+      <div class="tabla-wrap"><table class="t estados">
+        <thead><tr><th>Action</th><th class="num">Active</th><th class="num">STOPPED</th><th class="num">FINISHED</th></tr></thead>
+        <tbody>
+          <tr><td>Move</td><td class="num si">✓</td><td class="num no">✕</td><td class="num no">✕</td></tr>
+          <tr><td>Engagement or Attack by Fire (Fire Event)</td><td class="num si">✓</td><td class="num si">✓ if one is left</td><td class="num no">✕</td></tr>
+          <tr><td>Shock Attack or Recon (Fire Event)</td><td class="num si">✓</td><td class="num no">✕</td><td class="num no">✕</td></tr>
+          <tr><td>Attack or Assist in a Regular Attack</td><td class="num si">✓</td><td class="num si">✓</td><td class="num no">✕</td></tr>
+          <tr><td>Spot for a Barrage</td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td></tr>
+        </tbody>
+      </table></div>
+      <p class="muted" style="font-size:.88rem;margin-top:8px">An AV unit STOPPED by an AV ZOC can waive the STOP by winning a <a href="combate.html#detencion">Stopping Engagement</a>. The full list of causes is in <a href="tablas.html#stop">Charts</a>.</p>
+
+      <div class="tarjeta" style="margin-top:16px">
+        <h3>Example: a Sherman battalion in one activation</h3>
+        <ol class="ejemplo-act" id="ejemplo-act"></ol>
+      </div>
+    </div>
+  </section>
+
   <section class="seccion" id="segunda">
     <div class="wrap">
       <div class="seccion__cab">
@@ -197,7 +259,7 @@
     ['b', 'Preparation', 'In this strict order:', ['If the trains are off-map: add or raise the MSR Blocked marker.', 'If the MSR is not complete: the trains go off-map.', 'If the MSR is complete: remove MSR Blocked.', 'Create, keep or remove Prepared Defense (creating it only in the Initial Activation).', 'If the formation is Mixed, place the Coordination markers.', 'A Recovery Activation can be declared here instead of everything else.']],
     ['c', 'SNAFU', 'Roll 2d6 with the modifiers: Fail, Partial or Full. If the formation is not Mixed, its Coordination is then removed. On a Fail in the Initial Activation you can make a Failure Flip: turn it into a Recovery.', ['Prepared Defense: the result is never better than Partial.']],
     ['d', 'Objectives', 'Place the OBJs the SNAFU allows (2 on Full, 1 on Partial, 0 on Fail) on enemy units or Victory hexes, at any distance from the HQ.', ['Recon units can create more during the Activities Phase.', 'OBJs are not saved: they are removed at the end.']],
-    ['e', 'Activities', 'The heart of the activation: move, fight, engage and barrage.', ['One unit at a time: once you start moving another, the previous one can only attack, assist or spot.', 'Barrages can happen before, during or after any movement.', 'Trains at Optimal Distance that did not move recover from Ghost; trains that moved become Ghost.', 'Off-map trains can come back if that completes the MSR.']],
+    ['e', 'Activities', 'The heart of the activation: move, fight, engage and barrage. See <a href="#actividades">During the Activities Phase</a> below.', ['One unit at a time: once you start moving another, the previous one can only attack, assist or spot.', 'Barrages can happen before, during or after any movement.', 'Trains at Optimal Distance that did not move recover from Ghost; trains that moved become Ghost.', 'Off-map trains can come back if that completes the MSR.']],
     ['f', 'Clean up', 'Remove all OBJs, Traffic markers and temporary Dropped Support markers. Trains outside Optimal Distance become Ghost.', []],
     ['g', 'Fatigue', 'If any cause occurred (OBJs, Engagements, attacks…) and the SNAFU was not a Fail, roll on the Fatigue Increase Table.', []],
     ['h', 'Isolation', 'Units without a Safe Path or outside Command Radius lose steps according to the Isolation Chart. It is worse if the MSR is also blocked.', []],
@@ -328,6 +390,18 @@
     $('#seg-txt').innerHTML = `It succeeds on <strong>${Math.max(1, act - (fresca ? 1 : 0))}${act - (fresca ? 1 : 0) < 6 ? ' or more' : ''}</strong> on the die: a <strong>${(exitos / 6 * 100).toFixed(0)}%</strong> chance.`;
   }
   pintarSeg();
+
+  // ---------- Ejemplo de activación de una unidad ----------
+  const U = Fichas.UNIDADES;
+  const PASOS_EJ = [
+    ['d', 'It moves three hexes by road until a Panther is in range.', 'Active · 2 FE', 'e-act'],
+    ['d', 'It fires: an <strong>Engagement</strong>. It spends its first Fire Event, whatever the result.', 'Active · 1 FE', 'e-act'],
+    ['d', 'The Panther retreats and the Sherman moves on to a hex of infantry without Support.', 'Active · 1 FE', 'e-act'],
+    ['d', 'It overruns it with a <strong>Shock Attack</strong>: that uses its last Fire Event, so it is STOPPED in the hex it takes.', 'STOPPED', 'e-stop'],
+    ['d', 'Though STOPPED, it can still <strong>Assist</strong> a Regular Attack on the next hex. After that it is done.', 'FINISHED', 'e-fin'],
+    ['d', 'Even FINISHED, later in the activation it can spot for a Barrage against a hex it can see.', 'FINISHED', 'e-fin']
+  ];
+  document.getElementById('ejemplo-act').innerHTML = PASOS_EJ.map(([l, t, e, c]) => `<li>${Fichas.ficha(U['tq-us'], l)}<span>${t}</span><span class="estado-u ${c}">${e}</span></li>`).join('');
 })();
 </script>
 </body>

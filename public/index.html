@@ -53,6 +53,8 @@
     .lecciones { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     @media (max-width: 900px) { .lecciones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 600px) { .lecciones { grid-template-columns: minmax(0, 1fr); } }
+    .lecciones li:first-child { grid-column: 1 / -1; }
+    .lecciones li:first-child a { background: linear-gradient(120deg, var(--olive-soft), transparent 60%), var(--surface); border-color: color-mix(in srgb, var(--olive) 45%, var(--border)); }
     .lecciones a { position: relative; display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 14px; height: 100%; padding: 16px 18px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: border-color .15s, transform .15s, background .15s; }
     .lecciones a:hover { text-decoration: none; border-color: var(--amber); transform: translateY(-2px); background: var(--surface-2); }
     .lecciones .n { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 1.1rem var(--mono); }
@@ -87,7 +89,7 @@
           <a class="boton" href="#utilidades">Ir a las utilidades</a>
         </div>
         <div class="cifras">
-          <div><strong>6</strong><span>lecciones de instrucción</span></div>
+          <div><strong>7</strong><span>lecciones de instrucción</span></div>
           <div><strong>5</strong><span>maneras de combatir</span></div>
           <div><strong>7</strong><span>herramientas para la mesa</span></div>
           <div><strong id="n-glosario">80+</strong><span>términos en el glosario</span></div>
@@ -100,8 +102,8 @@
   <section class="seccion" id="instruccion">
     <div class="wrap">
       <div class="seccion__cab">
-        <div><span class="antetitulo">Plan de instrucción</span><h2>De recluta a comandante en seis lecciones</h2></div>
-        <p>Cada lección es un capítulo del reglamento, en el orden de las <em>Series Rules</em>. Al acabar una, márcala como superada al pie de la página y ascenderás. Tu hoja de servicio se guarda solo en este navegador.</p>
+        <div><span class="antetitulo">Plan de instrucción</span><h2>De recluta a comandante en siete lecciones</h2></div>
+        <p>Empieza por la lección 0, que te pone en contexto; las demás son los capítulos del reglamento, en el orden de las <em>Series Rules</em>. Al acabar una, márcala como superada al pie de la página y ascenderás. Tu hoja de servicio se guarda solo en este navegador.</p>
       </div>
       <div class="hoja" id="hoja"></div>
       <ol class="lecciones" id="lecciones"></ol>
@@ -178,63 +180,6 @@
     </div>
   </section>
 
-  <section class="seccion" id="que-es">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div>
-          <span class="antetitulo">Sesión informativa · Qué es el BCS</span>
-          <h2>Guerra mecanizada a escala de batallón</h2>
-        </div>
-        <p>Diseñado por Dean Essig para The Gamers / MMP, el BCS cubre desde finales de la Primera Guerra Mundial hasta hoy. Cada ficha suele ser un batallón, cada hex mide de 1 a 1,6 km y cada turno es un día.</p>
-      </div>
-      <div class="rejilla rejilla--4">
-        <div class="tarjeta idea"><span class="idea__n">01 · FORMACIONES</span><h3>Se juega por mandos</h3><p>Nada se mueve suelto: cada unidad pertenece a una formación con su HQ, sus trenes y su artillería. Comparten SNAFU, fatiga, apoyo y defensa preparada.</p></div>
-        <div class="tarjeta idea"><span class="idea__n">02 · ACTIVACIONES</span><h3>Turnos alternos</h3><p>Los jugadores se turnan activando una formación cada vez. Con suerte, la formación repite enseguida (Segunda Activación) y el enemigo no llega a reaccionar.</p></div>
-        <div class="tarjeta idea"><span class="idea__n">03 · SNAFU</span><h3>La logística manda</h3><p>Cada activación empieza con 2d6 en la tabla de SNAFU. Una ruta de suministro cortada o un tren mal colocado hunden la tirada, y con un Fail la formación no se activa.</p></div>
-        <div class="tarjeta idea"><span class="idea__n">04 · ARMAS COMBINADAS</span><h3>Cada herramienta, su uso</h3><p>La infantería conquista terreno, los blindados se baten entre sí, el apoyo se reparte entre batallones y la artillería suprime. Elegir bien es la clave.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion" id="turno">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div>
-          <span class="antetitulo">El turno</span>
-          <h2>Un día de operaciones en seis fases</h2>
-        </div>
-        <a class="boton boton--peq" href="secuencia.html">Ver la secuencia completa →</a>
-      </div>
-      <div class="linea linea--fases">
-        <div class="fase"><h4>Refuerzos y reemplazos</h4><p>Clima, puntos aéreos, reemplazos que reconstruyen pasos y llegada de refuerzos.</p></div>
-        <div class="fase"><h4>Asignación</h4><p>Artillería e independientes cambian de formación; entrar y salir del apoyo.</p></div>
-        <div class="fase"><h4>Órdenes</h4><p>Opcional: se anotan las órdenes de cada formación.</p></div>
-        <div class="fase"><h4>Primer jugador</h4><p>2d6 por bando: quien saque más empieza a activar.</p></div>
-        <div class="fase fase--clave"><h4>Activaciones</h4><p>Se alternan las formaciones hasta que todas están Done. Aquí ocurre casi todo.</p></div>
-        <div class="fase"><h4>Fin de turno</h4><p>Los HQ vuelven a su cara sin usar y avanza el marcador de turno.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div>
-          <span class="antetitulo">Combate</span>
-          <h2>Cinco maneras de hacer daño</h2>
-        </div>
-        <p>Cada una tiene su tabla y sus requisitos. Pincha en una para ver cómo funciona.</p>
-      </div>
-      <div class="franja">
-        <a href="combate.html#regular"><span class="tabla-uso">Combat Table · 2d6</span><strong>Ataque regular</strong><span>La infantería asalta un hex con artillería y asistencia.</span></a>
-        <a href="combate.html#choque"><span class="tabla-uso">Combat Table · 2d6</span><strong>Ataque de choque</strong><span>Un mecanizado arrolla un hex sin AV y sigue moviendo.</span></a>
-        <a href="combate.html#enfrentamiento"><span class="tabla-uso">Engagement Table · 2d6</span><strong>Enfrentamiento</strong><span>Blindado contra blindado o contra el apoyo enemigo.</span></a>
-        <a href="combate.html#fuego"><span class="tabla-uso">Barrage Table · 1d6</span><strong>Ataque por fuego</strong><span>Un AV dispara explosivo a un hex adyacente sin AV.</span></a>
-        <a href="combate.html#bombardeo"><span class="tabla-uso">Barrage Table · 1d6</span><strong>Bombardeo</strong><span>Artillería y aviación: destrucción o supresión.</span></a>
-      </div>
-      <p class="nota nota--olive" style="margin-top:24px"><strong>Solo reglas de serie.</strong> Esta referencia resume las <em>Series Rules</em> v2.0, comunes a todos los juegos. Cada título añade sus propias reglas, tablas de terreno, clima y modificadores de SNAFU; si chocan con las de serie, mandan las del juego.</p>
-    </div>
-  </section>
 </main>
 
 <script src="js/i18n.js"></script>
@@ -246,9 +191,10 @@
   // Plan de instrucción: una lección por capítulo y un rango por lección superada
   (function () {
     const QUE = [
+      'Qué es el BCS, a qué escala se juega, cómo es un turno, las cinco formas de combatir y las doce palabras que oirás en todas las lecciones. Empieza aquí.',
       'Qué dice cada número de la ficha, infantería, AV y Dual, los cuatro colores del blindaje y el apoyo.',
-      'El turno de un día, la activación paso a paso, el SNAFU y cuándo repetir con una Segunda Activación.',
-      'Formaciones, HQ y trenes, la MSR, los OBJ y por qué una unidad sin Safe Path acaba aislada.',
+      'El turno de un día, la activación paso a paso, el SNAFU, los Fire Events, STOP y FINISHED, y cuándo repetir con una Segunda Activación.',
+      'Formaciones, radio de mando, Prepared Defense, HQ y trenes, la MSR, los OBJ y por qué una unidad sin Safe Path acaba aislada.',
       'Lo que cuesta cada terreno, cuántas unidades caben en un hex y qué ZOC detienen a quién.',
       'Los cinco tipos de combate: quién puede usarlos, contra qué y qué cuestan. Y las retiradas.',
       'Órdenes, chits de activación, Planned Fatigue y el resto de reglas para veteranos.'
@@ -258,11 +204,12 @@
       '<path d="M5 10l7-5 7 5"/>',
       '<path d="M5 9l7-5 7 5M5 15l7-5 7 5"/>',
       '<path d="M5 7l7-4 7 4M5 12l7-4 7 4M5 17l7-4 7 4"/>',
+      '<path d="M12 4v16M8 8l4-4 4 4"/><circle cx="12" cy="19" r="1.5"/>',
       '<path d="M8 6l1 2.2 2.4.3-1.8 1.6.5 2.4L8 11.3 5.9 12.5l.5-2.4L4.6 8.5 7 8.2zM16 12l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z"/>',
       '<path d="M6 4l.9 2 2.2.3-1.6 1.5.4 2.2L6 8.9 4.1 10l.4-2.2L2.9 6.3l2.2-.3zM18 4l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3zM12 13l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3z"/>',
       '<path d="M12 3l2 5.5 5.8.4-4.5 3.7 1.5 5.7L12 15.1l-4.8 3.2 1.5-5.7-4.5-3.7 5.8-.4z"/>'
     ];
-    const ins = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${INSIGNIAS[Math.min(n, 6)]}</svg>`;
+    const ins = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${INSIGNIAS[Math.min(n, INSIGNIAS.length - 1)]}</svg>`;
     const C = Comun.CAPITULOS;
     function pintar() {
       const hechas = Comun.lecciones().filter((h) => C.some((c) => c[0] === h));
@@ -270,12 +217,12 @@
       const n = hechas.length;
       document.getElementById('hoja').innerHTML = `<div class="hoja__insignia">${ins(n)}</div>
         <div><small>Hoja de servicio</small><strong>${Comun.rango(n)}</strong><span class="muted" style="font-size:.9rem">${n ? `${n} de ${C.length} lecciones superadas.` : 'Aún no has superado ninguna lección. Todos empezamos así.'} ${n < C.length ? `Siguiente ascenso: <b style="color:var(--amber)">${Comun.rango(n + 1)}</b>.` : '¡Instrucción completa!'}</span><div class="barra"><i style="width:${(n / C.length * 100).toFixed(0)}%"></i></div></div>
-        ${sig >= 0 ? `<a class="boton boton--primario" href="${C[sig][0]}">${n ? 'Seguir con la lección ' + (sig + 1) : 'Empezar la lección 1'}</a>` : '<a class="boton" href="simulador.html">Al simulador, comandante</a>'}`;
+        ${sig >= 0 ? `<a class="boton boton--primario" href="${C[sig][0]}">${n ? 'Seguir con la lección ' + sig : 'Empezar por la lección 0'}</a>` : '<a class="boton" href="simulador.html">Al simulador, comandante</a>'}`;
       document.getElementById('lecciones').innerHTML = C.map(([h, t], i) => {
         const hecha = hechas.includes(h);
-        return `<li><a href="${h}" class="${hecha ? 'hecha' : i === sig ? 'siguiente' : ''}"><span class="n">${hecha ? '✓' : i + 1}</span><span><strong>${t}</strong><p>${QUE[i]}</p><span class="premio">${hecha ? 'Superada' : i === sig ? 'Siguiente lección' : 'Lección ' + (i + 1)} · ${Comun.rango(i + 1)}</span></span></a></li>`;
+        return `<li><a href="${h}" class="${hecha ? 'hecha' : i === sig ? 'siguiente' : ''}"><span class="n">${hecha ? '✓' : i}</span><span><strong>${t}</strong><p>${QUE[i]}</p><span class="premio">${hecha ? 'Superada' : i === sig ? 'Siguiente lección' : 'Lección ' + i} · ${Comun.rango(i + 1)}</span></span></a></li>`;
       }).join('');
-      if (sig >= 0) document.getElementById('cta-instruccion').href = n ? C[sig][0] : '#instruccion';
+      if (sig >= 0) document.getElementById('cta-instruccion').href = C[sig][0];
       document.getElementById('cta-instruccion').textContent = n ? (sig >= 0 ? 'Seguir la instrucción' : 'Repasar la instrucción') : 'Empezar la instrucción';
     }
     pintar();

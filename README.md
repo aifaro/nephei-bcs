@@ -2,11 +2,11 @@
 
 [bcs.nephei.org](https://bcs.nephei.org): **Academia BCS**, instrucción paso a paso para reclutas y referencia de consulta del *Battalion Combat Series* (MMP / The Gamers), versión 2.0 de las reglas de serie, con utilidades para la mesa. No es oficial y no cubre las reglas propias de cada juego.
 
-El reglamento va en seis capítulos (las «lecciones» del plan de instrucción de la portada; al superar cada una se asciende de rango, guardado en `localStorage`), en el orden de las *Series Rules*, bajo el menú «Reglamento»:
+La instrucción empieza por la **lección 0** (`intro.html`: qué es el BCS, escala, turno, formas de combatir y un vocabulario básico que remite a cada lección). Después, el reglamento va en seis capítulos (las «lecciones» del plan de instrucción de la portada; al superar cada una se asciende de rango, guardado en `localStorage`), en el orden de las *Series Rules*, bajo el menú «Reglamento»:
 
 1. **Fichas y unidades.** Anatomía interactiva de una ficha, caras desplegada y de movimiento, infantería, AV y Dual, los cuatro tipos de AV, Hard y ruptura, el apoyo, los marcadores y el cuadro de capacidades.
-2. **Secuencia y SNAFU.** Fases del turno, la activación paso a paso, una calculadora de SNAFU, la Segunda Activación y la fatiga.
-3. **Mando y suministro.** Formaciones y mancha, radio de mando, HQ y trenes, la MSR, los OBJ y sus zonas, Safe Path, aislamiento y saltos.
+2. **Secuencia y SNAFU.** Fases del turno, refuerzos y reemplazos, la activación paso a paso, una calculadora de SNAFU, las actividades (Fire Events, STOP y FINISHED), la Segunda Activación y la fatiga.
+3. **Mando y suministro.** Formaciones y mancha, radio de mando, Prepared Defense, HQ y trenes, la MSR, los OBJ y sus zonas, Safe Path, aislamiento y saltos.
 4. **Movimiento y ZOC.** Clases de movimiento, la Terrain Effects Chart de *Arracourt* con hexes recortados de su mapa, apilamiento, un mapa interactivo con los cinco tipos de ZOC (No ZOC, Non-AV, Support AV, Real AV y Engagement Zone), pantallas, tráfico y retiradas voluntarias.
 5. **Combate.** Un asistente para saber qué ataque puedes usar y una ficha por cada tipo: ataque regular, de choque, enfrentamiento, ataque por fuego y bombardeo. Retiradas y Stopping Engagements.
 6. **Reglas opcionales.** Órdenes (2.4) con un **cuaderno de órdenes** por formación y turno, chits de activación (2.5k–2.5n) con un **saco de activaciones** de 3 en 3, Planned Fatigue, Soft Jumps, Unit Traffic y el resto. La partida (formaciones, saco y órdenes) se guarda en `localStorage` (`bcs-partida`) y se borra con un botón.
@@ -14,7 +14,7 @@ El reglamento va en seis capítulos (las «lecciones» del plan de instrucción 
 Además:
 
 - **Simulador.** Se colocan las fichas en un mapa de hexes, se marcan las circunstancias y calcula los modificadores, los requisitos y la probabilidad de cada resultado. Al tirar, aplica el resultado sobre las fichas: bajas, retiradas, avance y tráfico.
-- **Tablas y glosario.** Las tablas de la serie para consultar o imprimir, y más de setenta términos en inglés y castellano. Los términos del texto enlazan al glosario y muestran su definición al pasar por encima.
+- **Tablas y glosario.** Las tablas de la serie para consultar o imprimir, y más de setenta términos en inglés y castellano. Los términos del texto enlazan al glosario y muestran su definición al pasar por encima; cada entrada del glosario dice en qué lección se explica (`DONDE` en `datos.js`) y qué términos conviene ver con ella (`VER`).
 
 Sitio estático, sin dependencias ni paso de compilación. En castellano en la raíz y en inglés en `/en/`, con un conmutador ES/EN en la cabecera que lleva a la misma página en el otro idioma.
 

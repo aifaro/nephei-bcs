@@ -460,6 +460,9 @@ dl.glosario > div:target { border-color: var(--amber); box-shadow: 0 0 0 3px var
 dl.glosario dt { font-family: var(--head); font-weight: 600; color: var(--heading); font-size: 1.04rem; }
 dl.glosario dt .es { font-family: var(--body); font-weight: 400; color: var(--muted); font-size: 0.9rem; margin-left: 6px; }
 dl.glosario dd { margin: 4px 0 0; font-size: 0.95rem; }
+dl.glosario .g-mas { display: flex; flex-wrap: wrap; gap: 6px 18px; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: .84rem; color: var(--muted); }
+dl.glosario .g-donde { font: 600 .78rem var(--mono); letter-spacing: .02em; }
+.g-pop .g-lec { display: block; margin-top: 8px; font: 600 .72rem var(--mono); color: var(--amber); letter-spacing: .04em; }
 
 /* ---------- Secuencia ---------- */
 .linea { position: relative; display: grid; gap: 12px; counter-reset: paso; }
