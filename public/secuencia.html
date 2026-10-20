@@ -58,12 +58,50 @@
         <p>En el primer turno de cada escenario no hay fase de asignación ni reemplazos, y el primer jugador lo fija el escenario. <span class="regla">2.0 · 1.0g</span></p>
       </div>
       <div class="fases-turno">
-        <div class="ft"><span class="letra">a</span><h3>Refuerzos</h3><div><ul class="rombos"><li>Un jugador tira el clima.</li><li>Cada bando tira sus puntos aéreos (para todo el turno; los que sobren se pierden) y sus reemplazos, que se aplican ya: cada uno reconstruye un paso.</li><li>Se colocan los refuerzos del orden de llegada.</li></ul></div></div>
+        <div class="ft"><span class="letra">a</span><h3>Refuerzos y reemplazos</h3><div><ul class="rombos"><li>Un jugador tira el clima.</li><li>Cada bando tira sus puntos aéreos, para todo el turno.</li><li>Cada bando tira sus <a href="#refuerzos">reemplazos</a> y los aplica ya: cada uno reconstruye un paso.</li><li>Se colocan los <a href="#refuerzos">refuerzos</a> del orden de llegada.</li></ul></div></div>
         <div class="ft"><span class="letra">b</span><h3>Asignación</h3><div><ul class="rombos"><li>Asignar o desasignar puntos de artillería y unidades independientes. Lo que se desasigna un turno se puede asignar al siguiente.</li><li>Es el único momento para meter unidades en el apoyo o sacarlas.</li></ul></div></div>
         <div class="ft"><span class="letra">c</span><h3>Órdenes <span class="en">opcional</span></h3><div><p class="mb0">Cada formación recibe por escrito una orden: mover el HQ (con su ruta), Prepared Defense, recuperar fatiga o ninguna orden.</p></div></div>
         <div class="ft"><span class="letra">d</span><h3>Primer jugador</h3><div><p class="mb0">Cada bando tira 2d6; el mayor <strong>debe</strong> empezar. Los empates se repiten.</p></div></div>
         <div class="ft clave"><span class="letra">e</span><h3>Activaciones</h3><div><ul class="rombos"><li>Por turnos, cada jugador elige una formación que no esté Done y la activa (es obligatorio, no se puede pasar).</li><li>Si un bando se queda sin formaciones, el otro sigue activando las suyas hasta acabar.</li><li>Opcional: sacar las fichas de activación de una taza, o la regla de suavizado de activaciones.</li></ul></div></div>
         <div class="ft"><span class="letra">f</span><h3>Fin del turno</h3><div><p class="mb0">Todos los HQ vuelven a su cara sin usar y avanza el marcador de turno.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="refuerzos">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Reinforcements · Replacements</span><h2>Refuerzos y reemplazos</h2></div>
+        <p>Los dos llegan en la primera fase del turno. Los refuerzos son unidades nuevas que entran en el mapa; los reemplazos son puntos que reconstruyen pasos perdidos. <span class="regla">2.1 · 2.2</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta">
+          <h3>Refuerzos <span class="en">Reinforcements</span> <span class="regla">2.1</span></h3>
+          <ul class="rombos mb0">
+            <li>El orden de llegada (OOA) de cada escenario dice qué entra cada turno y por dónde.</li>
+            <li><strong>Por un área de entrada:</strong> el HQ y los trenes se colocan en el hex de entrada en esta fase. El resto de unidades puede esperar fuera del mapa y entrar moviendo en la activación de su formación, incluso turnos después; mientras esperan fuera no se las puede atacar.</li>
+            <li><strong>En un hex concreto o junto a su HQ:</strong> se colocan ahora o al empezar la activación de su formación. Para llegar junto al HQ, la formación necesita una MSR completa.</li>
+            <li>Pueden llegar por cualquiera de sus dos caras, y en apoyo si pueden. Los trenes llegan siempre por su cara normal, en cualquier hex legal que complete la MSR.</li>
+            <li>Si el enemigo ocupa el hex de entrada, se entra por otro hex de la misma área, se ataca desde fuera del mapa o se espera. Las EZOC no impiden usar el área.</li>
+            <li>Las unidades que salieron del mapa por una retirada vuelven solas en esta fase, en o junto a su HQ.</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>Reemplazos <span class="en">Replacements (Repls)</span> <span class="regla">2.2</span></h3>
+          <ul class="rombos">
+            <li>Hay dos clases: <strong>AV</strong>, para unidades con AV en alguna de sus caras, y <strong>sin AV</strong>, para el resto.</li>
+            <li>Cada reemplazo reconstruye un paso de una unidad. Se usan en cuanto llegan: los que no se usan se pierden.</li>
+            <li>Una unidad recibe como mucho uno por fase y nunca pasa de sus pasos impresos.</li>
+            <li>No hay reemplazos en el primer turno de ningún escenario.</li>
+          </ul>
+          <div class="tabla-wrap"><table class="t">
+            <thead><tr><th>Para reconstruir…</th><th>Hace falta</th></tr></thead>
+            <tbody>
+              <tr><td>Una unidad en el mapa</td><td>MSR completa, que la unidad admita reemplazos (sin el punto amarillo) y Safe Path a pie (sin AV) o táctico (AV).</td></tr>
+              <tr><td>Una unidad destruida</td><td>Vuelve en o junto a su HQ si la formación tiene MSR completa; si no, se reconstruye pero espera fuera hasta tenerla.</td></tr>
+            </tbody>
+          </table></div>
+        </div>
       </div>
     </div>
   </section>
