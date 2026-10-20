@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mando y suministro · BCS Referencia</title>
+  <meta name="description" content="Mando y suministro en el Battalion Combat Series v2.0: formaciones, radio de mando, HQ y trenes de combate, la MSR, los OBJ y sus zonas, el Safe Path, el aislamiento y los saltos a HQs.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bcs.css">
+  <style>
+    .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .msr { width: 100%; height: auto; }
+    .comparte { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .obj-zona { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 22px; align-items: center; }
+    @media (max-width: 860px) { .obj-zona { grid-template-columns: 1fr; } }
+    .obj-zona svg { width: 100%; height: auto; display: block; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+    .necesita { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px; margin: 12px 0; }
+    .necesita div { display: flex; gap: 8px; align-items: center; padding: 7px 10px; border-radius: 9px; background: var(--surface-2); border: 1px solid var(--border); font-size: .9rem; }
+    .necesita .i { font-weight: 800; width: 18px; text-align: center; }
+    .necesita .si .i { color: var(--ok); }
+    .necesita .no .i { color: var(--bad); }
+    .necesita .no { opacity: .75; }
+    .leyenda { font-size: .85rem; color: var(--muted); margin: 10px 0 0; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Capítulo 3 · Mando y suministro</span>
+      <h1>Mando, suministro y objetivos</h1>
+      <p class="lead">En el BCS nada se mueve suelto: cada unidad pertenece a una formación, depende de su HQ y vive de la ruta que lo une con los trenes y con la retaguardia. Cortar esos hilos hace más daño que muchos ataques.</p>
+      <div class="indice">
+        <a class="chip" href="#formaciones">Formaciones</a>
+        <a class="chip" href="#radio">Radio de mando</a>
+        <a class="chip" href="#hq">HQ y trenes</a>
+        <a class="chip" href="#msr">MSR</a>
+        <a class="chip" href="#obj">OBJ</a>
+        <a class="chip" href="#safe-path">Safe Path y aislamiento</a>
+        <a class="chip" href="#saltos">Saltos</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="formaciones">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Formations</span><h2>La pieza que se activa</h2></div>
+        <p>Una formación es un mando con su HQ, sus trenes de combate y sus unidades: una división en un juego, una brigada o un Kampfgruppe en otro. El turno gira alrededor de ellas, una cada vez, alternando bandos. <span class="regla">1.3</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta">
+          <h3>Lo que comparten</h3>
+          <p class="muted mb0">Todas las unidades de la formación usan lo mismo:</p>
+          <div class="comparte">
+            <span class="chip">Apoyo</span><span class="chip">Fatiga</span><span class="chip">MSR</span><span class="chip">Resultado del SNAFU</span><span class="chip">Puntos de artillería</span><span class="chip">Prepared Defense</span><span class="chip">OBJ</span><span class="chip">Radio de mando</span><span class="chip">Órdenes</span>
+          </div>
+        </div>
+        <div class="tarjeta">
+          <h3>Propias e independientes</h3>
+          <p class="muted mb0">Las unidades propias (<span class="en">Intrinsic</span>) llevan impresa su formación a la derecha del símbolo y nunca cambian de mando. Las independientes y los puntos de artillería se asignan en la fase de asignación y, mientras tanto, son una parte más de su formación. <span class="regla">1.3b · 2.3</span></p>
+        </div>
+        <div class="tarjeta">
+          <h3>La mancha <span class="en">Blob</span></h3>
+          <p class="muted mb0">El área de la formación: la forma suave que dibujan sus unidades más exteriores (sin contar trenes, unidades fuera de mando ni refuerzos). Si una unidad activa de otra formación amiga se mete dentro, ambas quedan <em>Mixed</em>: Coordination y -1 al SNAFU. <span class="regla">1.3c · 3.2d</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="radio">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Command Radius</span><h2>Hasta dónde llega el HQ</h2></div>
+        <p>El radio de mando va impreso en el HQ. Se cuenta en hexes desde el HQ hasta la unidad, sin mirar terreno, ZOC ni enemigos. Más allá, la unidad está fuera de mando. <span class="regla">1.4</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta">
+          <h3>Fuera de mando <span class="en">Out of Command</span></h3>
+          <ul class="rombos mb0">
+            <li>Sufre aislamiento cada vez que su formación se activa.</li>
+            <li>Sí puede hacer ataques regulares y de choque, y la artillería puede disparar con las zonas de OBJ y los observadores adecuados.</li>
+            <li>Si empieza la fase fuera de mando, no puede observar para bombardeos ni saltar HQs o trenes, ni ir a cortar una MSR enemiga que no tenga alternativa.</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>Volver al redil</h3>
+          <p>Las unidades (salvo los trenes) deben acabar cada activación dentro del radio. Si no pueden, tienen que mover o atacar de forma que se acerquen, o quedarse quietas. <span class="regla">1.4e</span></p>
+          <p class="muted mb0">El radio no limita la colocación de OBJ, el avance tras el combate ni los bombardeos. Las independientes sin asignar no tienen radio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="hq">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">HQs &amp; Combat Trains</span><h2>HQ y trenes de combate</h2></div>
+        <p>Ninguno de los dos combate ni puede ser destruido, atacado ni bombardeado. Pero si el enemigo entra en su hex (los «salta»), se retiran desordenados y la formación lo paga en el SNAFU. <span class="regla">4.7</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo"><div class="centrado"><img class="ficha-real" src="fichas/hq-sin-usar.png" width="94" height="94" alt="HQ de la 11 Pz sin usar"><div class="lado mono muted" style="font-size:.66rem">sin usar</div></div><div class="centrado"><img class="ficha-real" src="fichas/hq-usado.png" width="94" height="94" alt="HQ de la 11 Pz usado"><div class="lado mono muted" style="font-size:.66rem">usado</div></div></div>
+          <div>
+            <h3>HQ</h3>
+            <p>Arriba a la izquierda, el <strong>radio de mando</strong> (12). En la cara sin usar, a la derecha, los <strong>puntos de artillería</strong> propios (2). Al activarse se voltea a la cara usada, con la franja blanca: ahí están el dado de la <strong>tirada de activación</strong> (4: la Segunda Activación sale con 4 o más) y su <strong>MA</strong>.</p>
+            <p class="muted mb0" style="font-size:.9rem">Mueve como cualquier unidad, pero no puede entrar en terreno prohibido para camiones, ni en una EZOC (salvo que la anule una unidad amiga), ni en una zona de enfrentamiento. Acaba siempre en un hex legal de carretera.</p>
+          </div>
+        </div>
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo"><div class="centrado"><img class="ficha-real" src="fichas/trenes.png" width="94" height="94" alt="Trenes de combate de la 11 Pz"><div class="lado mono muted" style="font-size:.66rem">normal</div></div><div class="centrado"><img class="ficha-real" src="fichas/trenes-fantasma.png" width="94" height="94" alt="Trenes de combate fantasma"><div class="lado mono muted" style="font-size:.66rem">ghost</div></div></div>
+          <div>
+            <h3>Trenes de combate <span class="en">Combat Trains</span></h3>
+            <p>Se «mueven» colocándolos directamente en un hex legal que complete la MSR. Si se mueven, o quedan a menos de 5 o más de 15 hexes del HQ, pasan a su cara <strong>Ghost</strong> (-1 al SNAFU).</p>
+            <p class="muted mb0" style="font-size:.9rem">Vuelven a la normalidad si están en un hex legal de una MSR completa, a la distancia óptima y sin moverse durante la fase de actividades anterior. <span class="regla">4.7b · 4.7c</span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="msr">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Main Supply Route</span><h2>La MSR completa</h2></div>
+        <p>Una cadena de hexes legales que va, en este orden, del HQ a sus propios trenes y de los trenes a una fuente de suministro. Se comprueba en cada fase de preparación. <span class="regla">3.1</span></p>
+      </div>
+      <div class="tarjeta">
+        <svg class="msr" viewBox="0 0 900 170" role="img" aria-label="Esquema de la MSR: fuente de suministro, trenes a entre 5 y 15 hexes del HQ, y HQ">
+          <defs><marker id="pt" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="currentColor"/></marker></defs>
+          <path d="M70 95 C 230 60, 330 130, 470 95 S 720 70, 830 95" fill="none" stroke="#b9a46a" stroke-width="10" stroke-linecap="round"/>
+          <path d="M70 95 C 230 60, 330 130, 470 95 S 720 70, 830 95" fill="none" stroke="#e8dcae" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 0"/>
+          <g transform="translate(30 60)"><rect width="80" height="70" rx="8" fill="#3d4a22" stroke="#a6ba4f" stroke-width="2"/><text x="40" y="32" text-anchor="middle" fill="#e9eed9" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="14">Fuente</text><text x="40" y="50" text-anchor="middle" fill="#c6cfb0" font-family="Inter, sans-serif" font-size="11">de suministro</text></g>
+          <image href="fichas/trenes.png" x="430" y="55" width="80" height="80"/>
+          <image href="fichas/hq-sin-usar.png" x="790" y="55" width="80" height="80"/>
+          <g fill="currentColor" style="color: var(--amber)"><path d="M520 30 H 780" stroke="currentColor" stroke-width="2" marker-start="url(#pt)" marker-end="url(#pt)"/><text x="650" y="22" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">5 a 15 hexes → +1 SNAFU</text></g>
+          <text x="470" y="160" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="13">Trenes</text>
+          <text x="830" y="160" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="13">HQ</text>
+          <text x="250" y="150" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="12">carretera principal o secundaria</text>
+        </svg>
+      </div>
+      <div class="rejilla rejilla--3" style="margin-top:16px">
+        <div class="tarjeta">
+          <h3>Hex legal <span class="regla">3.1a</span></h3>
+          <ul class="checks mb0">
+            <li>Tiene carretera principal o secundaria. Una pista solo vale entre el HQ y los trenes (y obliga al DRM de pista en el SNAFU).</li>
+            <li>Está conectado con hexes legales a una fuente de suministro, o lo es.</li>
+            <li>No corta la única MSR de una formación enemiga.</li>
+            <li class="no">No puede tener unidades enemigas ni EZOC. Una unidad amiga anula la EZOC, pero solo para que el HQ pueda estar ahí.</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>Si se corta</h3>
+          <p>Sin MSR completa en la preparación, los trenes salen del mapa: <strong>-3</strong> al SNAFU. Si ya estaban fuera, la formación recibe el marcador <strong>MSR Blocked</strong>, que puede empeorar hasta el nivel 2.</p>
+          <p class="muted mb0" style="font-size:.9rem">Los trenes vuelven al mapa en cualquier hex legal que complete la MSR durante las actividades, ya como Ghost.</p>
+        </div>
+        <div class="tarjeta">
+          <h3>Qué no la afecta</h3>
+          <p class="muted mb0">Las zonas de enfrentamiento y las pantallas no cortan la MSR. Lo que la corta son las unidades enemigas y sus ZOC sobre la carretera. Una vez trazado, el tramo HQ–trenes no cambia hasta que se mueva alguno de los dos, el enemigo lo corte o los salten.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="obj">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Objectives</span><h2>OBJ: dónde se puede atacar</h2></div>
+        <p>Los OBJ marcan dónde operará la formación en esta activación. El SNAFU dice cuántos: 2 con Full, 1 con Partial y ninguno con Fail. Se colocan en un hex con una unidad enemiga (que no sea apoyo) o en un hex de victoria, a cualquier distancia del HQ. <span class="regla">3.3</span></p>
+      </div>
+      <div class="obj-zona">
+        <svg id="obj-mapa" role="img" aria-label="Un OBJ y su zona de dos hexes de radio"></svg>
+        <div>
+          <h3>La zona de OBJ <span class="regla">3.3a</span></h3>
+          <p>Cada OBJ crea una zona de 2 hexes de radio. Dentro de ella se puede:</p>
+          <div class="necesita">
+            <div class="si"><span class="i">✓</span>Ataque regular</div>
+            <div class="si"><span class="i">✓</span>Ataque de choque</div>
+            <div class="si"><span class="i">✓</span>Ataque por fuego</div>
+            <div class="si"><span class="i">✓</span>Bombardeo</div>
+            <div class="si"><span class="i">✓</span>Entrar en un hex de victoria*</div>
+            <div class="no"><span class="i">—</span>Enfrentamientos: no la necesitan</div>
+          </div>
+          <p class="muted" style="font-size:.9rem">* Para tomar un hex de victoria, el OBJ tiene que estar en ese mismo hex.</p>
+          <ul class="rombos mb0">
+            <li><strong>Double OBJ.</strong> Dos OBJ del SNAFU en el mismo hex: +1 en el Combat Table y en el Engagement Table contra lo que haya dentro.</li>
+            <li><strong>Recon.</strong> Una unidad de reconocimiento puede crear un OBJ extra gastando un Fire Event y sacando 1d6 ≤ su AR. No puede estar STOPPED ni crear un Double OBJ. <span class="regla">3.3f</span></li>
+            <li>Una vez puestos no se mueven, y se retiran todos en la fase de limpieza. No se guardan para otra activación.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="safe-path">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Safe Paths · Isolation</span><h2>El hilo con el HQ</h2></div>
+        <p>Un Safe Path es una ruta de hexes contiguos de cada unidad a su HQ, libre de enemigos y de las EZOC que afecten a su clase de movimiento, y no más larga que el radio de mando + 5. En el HQ o al lado de él, siempre la hay. A esta escala, perderlo es peor que perder la MSR. <span class="regla">1.9</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta">
+          <h3>Para qué hace falta</h3>
+          <ul class="rombos mb0">
+            <li>Voltear de la cara a pie a la de camión o táctico.</li>
+            <li>Quitar un marcador de Dropped Support.</li>
+            <li>Recibir reemplazos.</li>
+            <li>Librarse del aislamiento.</li>
+            <li>Retirarse con éxito (a pie o en camión).</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>Qué lo corta</h3>
+          <ul class="rombos mb0">
+            <li>Unidades enemigas.</li>
+            <li>Para a pie y camión, cualquier EZOC; para táctico, solo las Real AV ZOC.</li>
+            <li>Las unidades amigas anulan las EZOC.</li>
+          </ul>
+          <p class="muted mb0" style="font-size:.9rem;margin-top:8px">No lo cortan el STOP Terrain, el apoyo, las zonas de enfrentamiento ni las pantallas.</p>
+        </div>
+        <div class="tarjeta">
+          <h3>Qué clase hace falta</h3>
+          <p class="muted mb0">La de la unidad, salvo para voltear de a pie a camión o táctico (la de la cara nueva), establecer apoyo o recibir reemplazos AV (táctico) y reemplazos sin AV (a pie). Las independientes sin asignar y las unidades en el borde del mapa siempre lo tienen.</p>
+        </div>
+      </div>
+      <div class="tarjeta" style="margin-top:16px">
+        <h3>Aislamiento <span class="en">Isolation</span> <span class="regla">3.6</span></h3>
+        <p class="muted">Al activarse, cada pila activa sin Safe Path o fuera del radio de mando pierde pasos según esta tabla. El MSR Blocked lo empeora.</p>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Safe Path</th><th>En radio de mando</th><th>MSR Blocked</th><th class="num">Pasos perdidos por unidad</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="3">Sí</td><td>Sí</td><td>Sí o no</td><td class="num">0</td></tr>
+            <tr><td>No</td><td>No</td><td class="num">1</td></tr>
+            <tr><td>No</td><td>Sí</td><td class="num">2</td></tr>
+            <tr><td rowspan="4">No</td><td>Sí</td><td>No</td><td class="num">1</td></tr>
+            <tr><td>Sí</td><td>Sí</td><td class="num">2</td></tr>
+            <tr><td>No</td><td>No</td><td class="num">2</td></tr>
+            <tr><td>No</td><td>Sí</td><td class="num">3</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="saltos">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Jumping HQs &amp; Combat Trains</span><h2>Saltar un HQ</h2></div>
+        <p>Los resultados de las tablas no afectan a HQs ni a trenes, pero si una unidad enemiga entra en su hex (moviendo o avanzando tras el combate), los salta y tienen que retirarse. <span class="regla">4.7d</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta">
+          <h3>El HQ saltado <span class="regla">4.7e</span></h3>
+          <ul class="checks mb0">
+            <li>Se coloca a 3 hexes o más, en un hex legal fuera de toda zona de enfrentamiento.</li>
+            <li>Sus trenes pasan a Ghost.</li>
+            <li>Pierde su Prepared Defense.</li>
+            <li>Recibe un marcador de Coordination.</li>
+          </ul>
+          <p class="muted mb0" style="font-size:.88rem">Puede escapar a una bolsa: sin MSR completa ni distancia mínima, pero en un hex con una de sus unidades. <span class="regla">4.7f</span></p>
+        </div>
+        <div class="tarjeta">
+          <h3>Los trenes saltados <span class="regla">4.7h</span></h3>
+          <p>Se colocan en un hex legal que complete la MSR, al menos a 10 hexes siguiendo la carretera de su MSR, y pasan a Ghost. Si no hay ninguno, salen del mapa.</p>
+          <p class="muted mb0" style="font-size:.88rem">Regla opcional: con 1-4 en un dado el salto es suave y el dueño los recoloca donde quiera. <span class="regla">4.7i</span></p>
+        </div>
+        <div class="tarjeta">
+          <h3>Quién no puede saltar</h3>
+          <ul class="rombos mb0">
+            <li>Las unidades desprevenidas.</li>
+            <li>Las que se retiran.</li>
+            <li>Las que están en Screen.</li>
+            <li>Las que empezaron la fase fuera de mando.</li>
+            <li>Otros HQs y trenes.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="js/fichas.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/comun.js"></script>
+<script>
+(function () {
+  'use strict';
+  // La zona de OBJ: dos hexes de radio alrededor del marcador, sobre hexes del mapa de Arracourt
+  const svg = document.getElementById('obj-mapa');
+  const COLS = 7, FILAS = 5, R = 30, W = Math.sqrt(3) * R, CEN = [3, 2];
+  const TER = { '1,1': 'bosque', '5,3': 'pueblo', '0,4': 'bosque', '6,0': 'colina' };
+  const centro = (q, r) => [W / 2 + q * W + (r % 2 ? W / 2 : 0) + 6, R + r * R * 1.5 + 6];
+  const cubo = (q, r) => { const x = q - (r - (r & 1)) / 2; return [x, r, -x - r]; };
+  const dist = (a, b) => { const A = cubo(...a), B = cubo(...b); return Math.max(Math.abs(A[0] - B[0]), Math.abs(A[1] - B[1]), Math.abs(A[2] - B[2])); };
+  const pts = (cx, cy) => Array.from({ length: 6 }, (_, i) => { const a = Math.PI / 180 * (60 * i - 90); return (cx + R * .97 * Math.cos(a)).toFixed(1) + ',' + (cy + R * .97 * Math.sin(a)).toFixed(1); }).join(' ');
+  let fondo = '', capa = '';
+  for (let r = 0; r < FILAS; r++) for (let q = 0; q < COLS; q++) {
+    const [cx, cy] = centro(q, r), hw = W * 1.035, hh = R * 2 * 1.035;
+    fondo += `<image href="fichas/t/${TER[q + ',' + r] || 'abierto'}.png" x="${(cx - hw / 2).toFixed(1)}" y="${(cy - hh / 2).toFixed(1)}" width="${hw.toFixed(1)}" height="${hh.toFixed(1)}" preserveAspectRatio="none"/>`;
+    const d = dist([q, r], CEN);
+    if (d <= 2) capa += `<polygon points="${pts(cx, cy)}" fill="#f2b33d" fill-opacity="${d === 0 ? .45 : .26}" stroke="#f2b33d" stroke-width="1.6" stroke-opacity=".9"/>`;
+  }
+  const [ux, uy] = centro(...CEN), t = W * .8;
+  svg.setAttribute('viewBox', `0 0 ${(COLS * W + W / 2 + 12).toFixed(0)} ${(FILAS * R * 1.5 + R / 2 + 12).toFixed(0)}`);
+  svg.innerHTML = `<defs><filter id="sm" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2" flood-opacity=".5"/></filter></defs>${fondo}${capa}
+    <g filter="url(#sm)"><image href="${Fichas.UNIDADES['inf-de'].img.d}" x="${(ux - t / 2).toFixed(1)}" y="${(uy - t / 2).toFixed(1)}" width="${t.toFixed(1)}" height="${t.toFixed(1)}"/>
+    <image href="fichas/m/obj.png" x="${(ux + t * .05).toFixed(1)}" y="${(uy - t * .75).toFixed(1)}" width="${(t * .6).toFixed(1)}" height="${(t * .6).toFixed(1)}"/></g>`;
+})();
+</script>
+</body>
+</html>

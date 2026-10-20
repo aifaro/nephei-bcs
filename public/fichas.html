@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Fichas y unidades · BCS Referencia</title>
-  <meta name="description" content="Cómo leer una ficha del Battalion Combat Series: AV, Action Rating, alcance, clases de movimiento, infantería, unidades AV y Dual, apoyo, HQ y trenes.">
+  <meta name="description" content="Cómo leer una ficha del Battalion Combat Series: AV, Action Rating, alcance, infantería, unidades AV y Dual, los cuatro tipos de AV, el apoyo y los marcadores.">
   <meta name="theme-color" content="#0d100e">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,11 +23,6 @@
     .caras .tarjeta { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; }
     .caras .estado { font: 600 0.75rem var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--amber); }
     .caras p { margin: 0; font-size: 0.92rem; }
-    .clases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
-    @media (max-width: 720px) { .clases { grid-template-columns: 1fr; } }
-    .clase { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
-    .clase .ma-muestra { width: 54px; height: 54px; font-size: 2rem; }
-    .clase p { margin: 0; font-size: 0.93rem; }
     .av-rejilla { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
     @media (max-width: 960px) { .av-rejilla { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 560px) { .av-rejilla { grid-template-columns: 1fr; } }
@@ -38,7 +33,6 @@
     .ejemplos { font-size: 0.82rem; color: var(--muted); border-top: 1px dashed var(--border); padding-top: 8px; margin-top: auto; }
     .apoyo-diag { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; }
     @media (max-width: 820px) { .apoyo-diag { grid-template-columns: 1fr; } }
-    .msr { width: 100%; height: auto; }
     .marcadores { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
     .marcadores figure { margin: 0; display: flex; gap: 12px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 10px; }
     .marcadores img { width: 56px; height: 56px; flex: none; border-radius: 5px; }
@@ -61,7 +55,7 @@
 <main>
   <section class="hero hero--pagina">
     <div class="wrap">
-      <span class="antetitulo">Fichas y unidades</span>
+      <span class="antetitulo">Capítulo 1 · Fichas y unidades</span>
       <h1>Cómo se lee una ficha</h1>
       <p class="lead">En una ficha de BCS cada número tiene su sitio, y el color y la forma de la cifra también cuentan. La regla de oro: <strong>lo que hace una unidad depende de la cara que muestra en ese momento</strong>.</p>
     </div>
@@ -91,20 +85,6 @@
         <p>La cara con menos MA es la <strong>desplegada</strong> (<span class="en">Deployed</span>); la de más MA, la de <strong>movimiento</strong> (<span class="en">Move</span>). Voltear no cuesta MP, pero solo se hace antes de empezar a actuar y una vez por activación. Pulsa una ficha para darle la vuelta. <span class="regla">1.1c · 4.0b</span></p>
       </div>
       <div class="caras" id="caras-lista"></div>
-    </div>
-  </section>
-
-  <section class="seccion" id="movimiento">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div><span class="antetitulo">Clase de movimiento</span><h2>El color del MA</h2></div>
-        <p>El número de abajo a la derecha es el MA; su color dice cómo se mueve la unidad, cuánto le cuesta el terreno y cómo le afectan las ZOC enemigas. <span class="regla">1.1a · 4.3d</span></p>
-      </div>
-      <div class="clases">
-        <div class="tarjeta clase"><span class="ma-muestra tac">16</span><div><h3>Táctico <span class="en">Tactical</span></h3><p>Orugas y vehículos blindados. Solo se detiene al entrar en una ZOC <strong>blindada</strong>, ignora las ZOC normales al retirarse y es el único que puede hacer Shock Attacks.</p></div></div>
-        <div class="tarjeta clase"><span class="ma-muestra truck">12</span><div><h3>Camión <span class="en">Truck</span></h3><p>Motorizados y remolcados. Rápidos por carretera, pero se detienen en cualquier ZOC enemiga y también al entrar en una zona de enfrentamiento.</p></div></div>
-        <div class="tarjeta clase"><span class="ma-muestra leg">4</span><div><h3>A pie <span class="en">Leg</span></h3><p>Infantería a pie. Se detiene en cualquier ZOC enemiga. Puede entrar en el hex de una unidad enemiga en pantalla y hacerla retroceder.</p></div></div>
-      </div>
     </div>
   </section>
 
@@ -230,47 +210,6 @@
     </div>
   </section>
 
-  <section class="seccion" id="hq">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div><span class="antetitulo">Mando y logística</span><h2>HQ y trenes de combate</h2></div>
-        <p>Ninguno de los dos combate ni puede ser destruido. Pero si el enemigo entra en su hex (los «salta»), se retiran desordenados y la formación lo paga en el SNAFU. <span class="regla">4.7</span></p>
-      </div>
-      <div class="rejilla rejilla--2">
-        <div class="tarjeta tipo">
-          <div class="fichas-tipo"><div class="centrado"><img class="ficha-real" src="fichas/hq-sin-usar.png" width="94" height="94" alt="HQ de la 11 Pz sin usar"><div class="lado mono muted" style="font-size:.66rem">sin usar</div></div><div class="centrado"><img class="ficha-real" src="fichas/hq-usado.png" width="94" height="94" alt="HQ de la 11 Pz usado"><div class="lado mono muted" style="font-size:.66rem">usado</div></div></div>
-          <div>
-            <h3>HQ</h3>
-            <p>Arriba a la izquierda, el <strong>radio de mando</strong> (12). En la cara sin usar, a la derecha, los <strong>puntos de artillería</strong> propios (2). Al activarse se voltea a la cara usada, con la franja blanca: ahí están el dado de la <strong>tirada de activación</strong> (4: la Segunda Activación sale con 4 o más) y su <strong>MA</strong>.</p>
-          </div>
-        </div>
-        <div class="tarjeta tipo">
-          <div class="fichas-tipo"><div class="centrado"><img class="ficha-real" src="fichas/trenes.png" width="94" height="94" alt="Trenes de combate de la 11 Pz"><div class="lado mono muted" style="font-size:.66rem">normal</div></div><div class="centrado"><img class="ficha-real" src="fichas/trenes-fantasma.png" width="94" height="94" alt="Trenes de combate fantasma"><div class="lado mono muted" style="font-size:.66rem">ghost</div></div></div>
-          <div>
-            <h3>Trenes de combate <span class="en">Combat Trains</span></h3>
-            <p>Se «mueven» colocándolos directamente en un hex legal que complete la MSR. Si se mueven, o quedan a menos de 5 o más de 15 hexes del HQ, pasan a su cara <strong>Ghost</strong> (-1 al SNAFU). Se recuperan quedándose quietos a la distancia óptima.</p>
-          </div>
-        </div>
-      </div>
-      <div class="tarjeta" style="margin-top:16px">
-        <h3>La MSR completa <span class="regla">3.1</span></h3>
-        <p class="muted">Una cadena de hexes legales (carretera, sin enemigos ni ZOC enemiga) que va del HQ a sus trenes y de los trenes a una fuente de suministro. Si en la preparación no existe, los trenes salen del mapa (-3 al SNAFU) y en la siguiente llega el marcador MSR Blocked.</p>
-        <svg class="msr" viewBox="0 0 900 170" role="img" aria-label="Esquema de la MSR: fuente de suministro, trenes a entre 5 y 15 hexes del HQ, y HQ">
-          <defs><marker id="pt" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="currentColor"/></marker></defs>
-          <path d="M70 95 C 230 60, 330 130, 470 95 S 720 70, 830 95" fill="none" stroke="#b9a46a" stroke-width="10" stroke-linecap="round"/>
-          <path d="M70 95 C 230 60, 330 130, 470 95 S 720 70, 830 95" fill="none" stroke="#e8dcae" stroke-width="5" stroke-linecap="round" stroke-dasharray="1 0"/>
-          <g transform="translate(30 60)"><rect width="80" height="70" rx="8" fill="#3d4a22" stroke="#a6ba4f" stroke-width="2"/><text x="40" y="32" text-anchor="middle" fill="#e9eed9" font-family="Space Grotesk, sans-serif" font-weight="700" font-size="14">Fuente</text><text x="40" y="50" text-anchor="middle" fill="#c6cfb0" font-family="Inter, sans-serif" font-size="11">de suministro</text></g>
-          <image href="fichas/trenes.png" x="430" y="55" width="80" height="80"/>
-          <image href="fichas/hq-sin-usar.png" x="790" y="55" width="80" height="80"/>
-          <g fill="currentColor" style="color: var(--amber)"><path d="M520 30 H 780" stroke="currentColor" stroke-width="2" marker-start="url(#pt)" marker-end="url(#pt)"/><text x="650" y="22" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="13" font-weight="700">5 a 15 hexes → +1 SNAFU</text></g>
-          <text x="470" y="160" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="13">Trenes</text>
-          <text x="830" y="160" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="13">HQ</text>
-          <text x="250" y="150" text-anchor="middle" fill="currentColor" style="color: var(--muted)" font-family="Inter, sans-serif" font-size="12">carretera principal o secundaria</text>
-        </svg>
-      </div>
-    </div>
-  </section>
-
   <section class="seccion" id="marcadores">
     <div class="wrap">
       <div class="seccion__cab">
@@ -288,6 +227,8 @@
         <figure><img src="fichas/m-fatiga.png" alt=""><figcaption><strong>Fatigue</strong>Nivel de fatiga de la formación, de Fresh a 4.</figcaption></figure>
         <figure><img src="fichas/m-msr-bloqueada.png" alt=""><figcaption><strong>MSR Blocked</strong>Nivel 1 o 2: resta al SNAFU y al combate.</figcaption></figure>
         <figure><img src="fichas/m-pantalla.png" alt=""><figcaption><strong>Screen</strong>Una unidad de reconocimiento haciendo de pantalla.</figcaption></figure>
+        <figure><img src="fichas/m/trafico.png" alt=""><figcaption><strong>Traffic</strong>Congestión: STOP para toda unidad que esté o entre en el hex.</figcaption></figure>
+        <figure><img src="fichas/m/pd.png" alt=""><figcaption><strong>Prepared Defense</strong>La formación está en defensa preparada: +1 al defender.</figcaption></figure>
         <figure><img src="fichas/m-artilleria.png" alt=""><figcaption><strong>Arty Points</strong>Puntos de artillería asignables a un HQ.</figcaption></figure>
         <figure><img src="fichas/m-aviacion.png" alt=""><figcaption><strong>Air Points</strong>Puntos aéreos del bando para todo el turno.</figcaption></figure>
       </div>

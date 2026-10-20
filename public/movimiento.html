@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Movimiento y ZOC · BCS Referencia</title>
+  <meta name="description" content="Movimiento en el Battalion Combat Series v2.0: clases de movimiento, Terrain Effects Chart con hexes reales, apilamiento, los tipos de ZOC y sus efectos, zonas de enfrentamiento, pantallas y tráfico.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bcs.css">
+  <style>
+    .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .clases { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    @media (max-width: 720px) { .clases { grid-template-columns: 1fr; } }
+    .clase { display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: start; }
+    .clase .ma-muestra { width: 54px; height: 54px; font-size: 2rem; }
+    .clase p { margin: 0; font-size: 0.93rem; }
+    .clase .ejemplo-fichas { display: flex; gap: 6px; margin-top: 10px; }
+    .clase .ejemplo-fichas .ficha { width: 46px; }
+
+    /* Terrain Effects Chart */
+    .tec { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+    .ter { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 4px 14px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px 14px 12px 12px; }
+    .ter img { width: 84px; height: auto; grid-row: span 2; filter: drop-shadow(0 2px 4px rgba(0,0,0,.35)); }
+    .ter h3 { margin: 0; font-size: 1.02rem; display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+    .ter h3 .en { font-size: .82rem; }
+    .ter .marcas { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 4px; }
+    .ter .marcas .chip { font-size: .7rem; padding: 1px 7px; }
+    .costes { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; margin-top: 8px; }
+    .coste { border-radius: 9px; background: var(--surface-2); border: 1px solid var(--border); padding: 5px 8px; display: flex; align-items: center; justify-content: space-between; gap: 6px; transition: opacity .15s, border-color .15s, background .15s; }
+    .coste .ma-muestra { min-width: 22px; height: 22px; font-size: .85rem; border-radius: 5px; padding: 0 3px; }
+    .coste b { font: 700 .95rem var(--mono); color: var(--heading); white-space: nowrap; }
+    .coste b.p { color: var(--bad); }
+    .coste b.stop { color: var(--amber); font-size: .8rem; }
+    .coste b.ot { color: var(--muted); font-weight: 500; font-size: .8rem; }
+    .tec[data-clase] .coste { opacity: .35; }
+    .tec[data-clase="leg"] .coste.leg, .tec[data-clase="tac"] .coste.tac, .tec[data-clase="truck"] .coste.truck { opacity: 1; border-color: var(--amber); background: var(--amber-soft); }
+    .tec-grupo { grid-column: 1 / -1; font: 600 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 10px 0 -2px; display: flex; align-items: center; gap: 10px; }
+    .tec-grupo::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+    .leyenda-tec { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 8px 18px; margin-top: 16px; font-size: .88rem; color: var(--muted); }
+    .leyenda-tec b { font-family: var(--mono); color: var(--heading); margin-right: 6px; }
+
+    /* ZOC */
+    .zoc { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 22px; align-items: start; }
+    @media (max-width: 940px) { .zoc { grid-template-columns: 1fr; } }
+    .zoc__tipos { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .zoc__tipos button { display: flex; align-items: center; gap: 8px; padding: 6px 12px 6px 6px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-size: .88rem; cursor: pointer; }
+    .zoc__tipos button .ficha { width: 30px; }
+    .zoc__tipos button[aria-pressed="true"] { border-color: var(--amber); background: var(--amber-soft); color: var(--heading); }
+    .zoc__mapa { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 10px; }
+    .zoc__mapa svg { display: block; width: 100%; height: auto; }
+    .zoc__mapa .hz { transition: fill-opacity .25s, stroke-opacity .25s; }
+    .zoc__leyenda { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 8px 6px 2px; font-size: .82rem; color: var(--muted); }
+    .zoc__leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+    .zoc__leyenda i { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+    .zoc__info h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .efectos { display: grid; gap: 6px; margin-top: 12px; }
+    .efecto { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: 12px; align-items: start; padding: 9px 12px; border-radius: 11px; background: var(--surface-2); border: 1px solid var(--border); font-size: .9rem; }
+    .efecto .quien { display: flex; align-items: center; gap: 6px; font-weight: 600; color: var(--heading); font-size: .84rem; }
+    .efecto .quien .ma-muestra { min-width: 22px; height: 22px; font-size: .85rem; border-radius: 5px; }
+    .efecto .res { display: grid; gap: 3px; }
+    .efecto .res span b { color: var(--heading); }
+    .efecto .z { font: 600 .68rem var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin-right: 6px; }
+    .stop { color: var(--amber); font-weight: 700; }
+    .sin { color: var(--ok); font-weight: 600; }
+    .prohibido { color: var(--bad); font-weight: 700; }
+    table.matriz td, table.matriz th { font-size: .88rem; }
+    table.matriz td:first-child { white-space: nowrap; font-weight: 600; color: var(--heading); }
+    .apilar { display: flex; align-items: flex-end; gap: 20px; flex-wrap: wrap; }
+    .pila-demo { position: relative; width: 84px; height: 96px; }
+    .pila-demo .ficha { position: absolute; width: 72px; }
+    .pila-demo .ficha:nth-child(1) { left: 0; top: 0; }
+    .pila-demo .ficha:nth-child(2) { left: 6px; top: 8px; }
+    .pila-demo .ficha:nth-child(3) { left: 12px; top: 16px; }
+    .pila-demo + .lado { font-size: .78rem; }
+    .apilar figure { margin: 0; display: grid; justify-items: center; gap: 8px; text-align: center; font-size: .82rem; color: var(--muted); }
+    .apilar figure strong { color: var(--heading); display: block; font-size: .9rem; }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Capítulo 4 · Movimiento</span>
+      <h1>Movimiento, terreno y ZOC</h1>
+      <p class="lead">Cada unidad mueve sola, con su propio MA, pagando el terreno según su clase de movimiento. Lo que la detiene son el terreno, el tráfico y, sobre todo, las <strong>zonas de control</strong> del enemigo: no todas afectan a todos.</p>
+      <div class="indice">
+        <a class="chip" href="#clases">Clases de movimiento</a>
+        <a class="chip" href="#terreno">Terreno</a>
+        <a class="chip" href="#apilamiento">Apilamiento</a>
+        <a class="chip" href="#zoc">Tipos de ZOC</a>
+        <a class="chip" href="#zonas">Zonas de enfrentamiento</a>
+        <a class="chip" href="#pantalla">Pantallas</a>
+        <a class="chip" href="#trafico">Tráfico y retiradas</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="clases">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Clase de movimiento</span><h2>El color del MA</h2></div>
+        <p>El número de abajo a la derecha de la ficha es el MA; su color dice cómo se mueve la unidad, cuánto le cuesta el terreno y qué ZOC enemigas le afectan. Mover de una cara a otra no cuesta MP, pero pasar de a pie a táctico o camión necesita Safe Path. <span class="regla">1.1a · 4.0 · 4.3d</span></p>
+      </div>
+      <div class="clases">
+        <div class="tarjeta clase"><span class="ma-muestra tac">16</span><div><h3>Táctico <span class="en">Tac</span></h3><p>Orugas y vehículos blindados. No le afectan las ZOC normales: solo se detiene al entrar en una ZOC <strong>blindada</strong>. Es la única clase que puede hacer Shock Attacks.</p><div class="ejemplo-fichas" data-fichas="tq-us:m,mec-de:m,rec-us:d"></div></div></div>
+        <div class="tarjeta clase"><span class="ma-muestra truck">12</span><div><h3>Camión <span class="en">Truck</span></h3><p>Motorizados y remolcados. Rápidos por carretera y lentos fuera de ella. Se detienen en cualquier ZOC enemiga y además al entrar en una zona de enfrentamiento.</p><div class="ejemplo-fichas" data-fichas="flak:m,flak:d"></div></div></div>
+        <div class="tarjeta clase"><span class="ma-muestra leg">4</span><div><h3>A pie <span class="en">Leg</span></h3><p>Infantería a pie, en el terreno que haga falta. Se detiene en cualquier ZOC enemiga, pero ignora las zonas de enfrentamiento. Desplegada, puede entrar en el hex de una pantalla enemiga y echarla.</p><div class="ejemplo-fichas" data-fichas="inf-us:d,inf-us:m,mec-de:d"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="terreno">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Terrain Effects Chart</span><h2>Lo que cuesta cada terreno</h2></div>
+        <p>Cada juego trae su propia tabla de efectos del terreno. Esta es la de <em>Arracourt</em>, con hexes recortados de su mapa de VASSAL. Elige una clase para ver solo su coste. <span class="regla">4.1</span></p>
+      </div>
+      <div class="conmutador" id="tec-clase" role="group" aria-label="Clase de movimiento" style="margin-bottom:16px">
+        <button type="button" data-c="" aria-pressed="true">Todas</button>
+        <button type="button" data-c="leg" aria-pressed="false">A pie</button>
+        <button type="button" data-c="tac" aria-pressed="false">Táctico</button>
+        <button type="button" data-c="truck" aria-pressed="false">Camión</button>
+      </div>
+      <div class="tec" id="tec"></div>
+      <div class="leyenda-tec">
+        <div><b>ot</b>Usa el otro terreno del hex: el pueblo no cambia el coste, pero sí cuenta para combate.</div>
+        <div><b>P</b>Prohibido: no se puede entrar ni cruzar, salvo por puente o carretera.</div>
+        <div><b>4 + STOP</b>Cuesta 4 MP y obliga a detenerse al entrar (STOP Terrain).</div>
+        <div><b>Todo</b>Gasta todo el MA: solo se entra con el movimiento de un hex.</div>
+        <div><b>+n</b>Lado de hex: se suma al coste del hex al cruzarlo.</div>
+        <div><b>½ · ¼</b>Coste por hex siguiendo la carretera; se ignoran el hex y sus lados.</div>
+      </div>
+      <div class="rejilla rejilla--3" style="margin-top:20px">
+        <div class="tarjeta"><h3>Terreno para combate</h3><p class="muted mb0">El defensor en ese terreno <em>tiene Terrain</em>: anula el +2 del Hard Red AV en abierto y algunos modificadores del Combat Table. Los ríos y arroyos solo cuentan si el atacante los cruza para atacar, y nunca en enfrentamientos, ataques por fuego ni bombardeos. <span class="regla">5.0a</span></p></div>
+        <div class="tarjeta"><h3>Blocking Terrain</h3><p class="muted mb0">Corta la línea entre los centros de dos hexes: el alcance y las zonas de enfrentamiento no pasan a través. Nunca bloquea hacia un hex adyacente, y si la línea va justo por un lado entre un hex que bloquea y otro que no, no bloquea. <span class="regla">4.5c</span></p></div>
+        <div class="tarjeta"><h3>Key Terrain</h3><p class="muted mb0">Ante una retirada situacional, el defensor puede quedarse en el hex: cada unidad pierde un paso, pero no retrocede. <span class="regla">5.5d</span></p></div>
+      </div>
+      <div class="tarjeta" style="margin-top:16px">
+        <h3>Reglas del terreno</h3>
+        <ul class="rombos mb0">
+          <li><strong>Varios terrenos.</strong> Si el hex tiene más de uno, se paga el más caro (salvo que sigas una carretera). Los lados de hex se suman al coste del hex. <span class="regla">4.1a</span></li>
+          <li><strong>Hay que pagarlo entero</strong> antes de entrar. Una unidad que aún no se ha movido en la fase puede avanzar siempre un hex aunque no le lleguen los MP, pero nunca para un Shock Attack, ni hacia terreno prohibido, ni saltándose una ZOC. <span class="regla">4.1 · 4.1f</span></li>
+          <li><strong>Movimiento recíproco.</strong> Solo puedes ir de A a B si también pudieras ir de B a A. <span class="regla">4.1b</span></li>
+          <li><strong>Carreteras.</strong> Siguiendo una carretera continua se paga su coste y se ignoran el del hex y sus lados. Dentro de un hex las carreteras se cruzan aunque no se dibuje el cruce. <span class="regla">4.1c</span></li>
+          <li><strong>MA a la mitad.</strong> Por muchas razones que haya, se divide una sola vez y se conservan las fracciones. <span class="regla">4.0c</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="apilamiento">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Stacking</span><h2>Dos unidades por hex</h2></div>
+        <p>El límite normal es de dos unidades de combate. HQs, trenes, apoyo y marcadores no cuentan. Arriba va siempre la de más alcance impreso (a igualdad, la de más AV); el resto, en el orden que quieras. <span class="regla">4.2</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta">
+          <div class="apilar" id="apilar"></div>
+        </div>
+        <div class="tarjeta">
+          <h3>Over-Stacking</h3>
+          <p>Se puede pasar de dos, pero se paga: un modificador en contra en el Combat Table al defender y más tiradas en el Barrage Table, que convierte el hex en una trampa.</p>
+          <p class="mb0">Y no se puede estar sobreapilado al gastar un Fire Event, al ser la unidad atacante o la que asiste, ni al entrar en un hex con marcador de tráfico. <span class="regla">4.2b · 4.2c</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="zoc">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Zones of Control</span><h2>Los tipos de ZOC y qué hacen</h2></div>
+        <p>Las unidades de combate tienen ZOC en los hexes adyacentes. Una ZOC enemiga (EZOC) detiene o no según la clase de movimiento de quien entra y según quién la genera. Elige una unidad enemiga para ver su zona. <span class="regla">4.3</span></p>
+      </div>
+      <div class="zoc">
+        <div>
+          <div class="zoc__tipos" id="zoc-tipos" role="group" aria-label="Tipo de ZOC"></div>
+          <div class="zoc__mapa"><svg id="zoc-mapa" role="img" aria-label="Mapa de hexes con la zona de control de la unidad elegida"></svg>
+            <div class="zoc__leyenda" id="zoc-leyenda"></div>
+          </div>
+        </div>
+        <div class="tarjeta zoc__info" id="zoc-info"></div>
+      </div>
+
+      <h3 style="margin-top:30px">Resumen: qué le pasa a quien entra</h3>
+      <div class="tabla-wrap"><table class="t matriz">
+        <thead><tr><th>Quien entra</th><th>Non-AV ZOC</th><th>Support AV ZOC</th><th>Real AV ZOC</th><th>Engagement Zone</th></tr></thead>
+        <tbody>
+          <tr><td><span class="ma-muestra leg" style="min-width:24px;height:24px;font-size:.9rem">4</span> A pie</td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td><td><span class="sin">Sin efecto</span></td></tr>
+          <tr><td><span class="ma-muestra truck" style="min-width:24px;height:24px;font-size:.9rem">8</span> Camión</td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td></tr>
+          <tr><td><span class="ma-muestra tac" style="min-width:24px;height:24px;font-size:.9rem">16</span> Táctico</td><td><span class="sin">Sin efecto</span></td><td><span class="stop">STOP</span>. Stopping Engagement opcional (obligatorio si el apoyo es Stand Off)</td><td><span class="stop">STOP</span>. Stopping Engagement obligatorio: si no lo gana, se queda</td><td><span class="sin">Sin efecto</span></td></tr>
+          <tr><td>HQ</td><td colspan="3"><span class="prohibido">No puede entrar</span>, salvo que una unidad amiga anule la EZOC estando en el hex</td><td><span class="prohibido">No puede entrar</span> ni acabar una retirada; las unidades amigas no la anulan</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="rejilla rejilla--3" style="margin-top:16px">
+        <div class="tarjeta"><h3>De EZOC a EZOC</h3><p class="muted mb0">Ninguna unidad puede pasar directamente de una EZOC a otra que le afecte. Sí puede salir libremente de la EZOC en la que empezó a mover. El terreno no limita las ZOC, y las unidades amigas solo las anulan para el Safe Path y para el movimiento de los HQs. <span class="regla">4.3c · 4.3d</span></p></div>
+        <div class="tarjeta"><h3>Safe Path</h3><p class="muted mb0">Todas las EZOC cortan el Safe Path de las unidades a pie y en camión. Para las tácticas, solo las Real AV ZOC. Las zonas de enfrentamiento y de pantalla no lo cortan. <span class="regla">1.9e · 1.9f</span></p></div>
+        <div class="tarjeta"><h3>Al acabar una retirada</h3><p class="muted mb0">Si el hex final tiene una EZOC que afecte a la unidad, pierde otro paso: todas cuentan para a pie y camión; para las tácticas, solo las Real AV ZOC. Por el camino, las ZOC no importan. <span class="regla">5.5g</span></p></div>
+      </div>
+      <p class="muted" style="margin-top:14px;font-size:.92rem">Para librarse de una ZOC blindada, las unidades AV tienen los <a href="combate.html#detencion">Stopping Engagements</a>.</p>
+    </div>
+  </section>
+
+  <section class="seccion" id="zonas">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Engagement Zones</span><h2>Hasta donde llega el cañón</h2></div>
+        <p>Las unidades AV reales (no las de apoyo, ni las Light AV, ni las que están en Screen) generan una zona de enfrentamiento hasta su alcance. Es más grande que su ZOC, pero hace mucho menos. <span class="regla">4.5</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta"><h3>Qué hace</h3><ul class="rombos mb0"><li>Las unidades en camión se detienen al entrar.</li><li>Los HQs no pueden entrar ni acabar en ella una retirada, y las unidades amigas no la anulan.</li><li>Marca dónde se puede iniciar un enfrentamiento.</li></ul></div>
+        <div class="tarjeta"><h3>Qué no hace</h3><ul class="rombos mb0"><li>No afecta a las unidades a pie ni tácticas.</li><li>No corta la MSR ni el Safe Path.</li><li>No afecta a las retiradas, salvo a la de los HQs.</li></ul></div>
+        <div class="tarjeta"><h3>Línea de visión</h3><p class="muted mb0">Hacia los hexes adyacentes nada la bloquea. Más allá, se corta en cuanto la línea entre centros pasa por un Blocking Terrain intermedio. Se ignoran los hexes de los extremos, los lados de hex, las unidades y los marcadores. En el mapa de arriba, el bosque y el pueblo hacen sombra al Panther. <span class="regla">4.5c</span></p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="pantalla">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Screening</span><h2>Pantallas de reconocimiento</h2></div>
+        <p>Una unidad de reconocimiento en su cara de movimiento puede ponerse en Screen al empezar sus actividades, incluso con un SNAFU Fail (pero nunca en una Segunda Activación). Frena al enemigo sin arriesgarse en combate. <span class="regla">4.6</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta"><h3>La unidad en Screen</h3><ul class="rombos mb0"><li>No tiene ZOC, solo su zona de pantalla.</li><li>Puede mover, hacer Recon y observar para la artillería.</li><li>No ataca, no asiste, no dispara por fuego ni inicia enfrentamientos, y no salta HQs.</li><li>No puede acabar apilada con otra unidad.</li></ul></div>
+        <div class="tarjeta"><h3>La zona de pantalla</h3><ul class="rombos mb0"><li>Llega a 3 hexes, sin importar terreno ni unidades.</li><li>El enemigo en cara de movimiento paga <strong>+1 MP</strong> por cada hex de la zona en que entra; al desplegado no le afecta.</li><li>Las unidades desprevenidas no pueden entrar.</li><li>No afecta a la MSR, al Safe Path, al tráfico ni a las zonas de enfrentamiento.</li></ul></div>
+        <div class="tarjeta"><h3>Si la tocan</h3><ul class="rombos mb0"><li>Unidades tácticas y en camión no pueden entrar en su hex. La infantería a pie desplegada sí, y la echa 3 hexes.</li><li>No se la puede atacar ni bombardear, solo enfrentar. Cada «Both Loss» se convierte en «sin bajas, el blanco se retira 3 hexes».</li><li>Queda FINISHED al entrar en una ZOC blindada.</li></ul></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="trafico">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Traffic · Voluntary Retreat</span><h2>Atascos y salidas de emergencia</h2></div>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta tipo">
+          <div class="fichas-tipo" id="ficha-trafico"></div>
+          <div>
+            <h3>Tráfico <span class="en">Traffic</span></h3>
+            <p>Lo dejan algunos resultados: en el hex del defensor en el Combat Table (solo si se retira o es destruido) o en el del tirador en el Engagement Table. Impone un STOP a toda unidad que esté o entre en ese hex, aunque no cuesta MP. Si el hex ya está lleno, nadie más puede entrar, ni de paso. <span class="regla">4.0d</span></p>
+            <p class="muted mb0" style="font-size:.88rem">Regla opcional: el Unit Traffic hace que las unidades que no estén desplegadas y activas anulen las carreteras de su hex. <span class="regla">4.0e</span></p>
+          </div>
+        </div>
+        <div class="tarjeta">
+          <h3>Retirada voluntaria <span class="en">Voluntary Retreat</span></h3>
+          <p>En lugar de mover, una unidad activa puede retirarse 3 hexes para salir de donde no podría salir moviendo. Las ZOC, el terreno, las zonas de enfrentamiento y el Safe Path no la limitan.</p>
+          <ul class="rombos mb0"><li>Pierde un paso, pasa a su cara de movimiento y queda FINISHED.</li><li>Si el hex final tiene una EZOC, pierde otro paso.</li><li>Hace falta un SNAFU Partial o mejor. Los HQs pueden incluso con Fail, sin perder pasos, pero suben un nivel de fatiga.</li></ul>
+          <p class="mb0"><span class="regla">4.8</span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="js/fichas.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/comun.js"></script>
+<script>
+(function () {
+  'use strict';
+  const U = Fichas.UNIDADES, esc = Fichas.esc;
+
+  document.querySelectorAll('[data-fichas]').forEach((c) => {
+    c.innerHTML = c.dataset.fichas.split(',').map((x) => { const [k, l] = x.split(':'); return Fichas.ficha(U[k], l); }).join('');
+  });
+  document.getElementById('ficha-trafico').innerHTML = Fichas.marcador('trafico', { tam: 84 });
+
+  // ---------- Terrain Effects Chart (Arracourt) ----------
+  // [imagen, nombre, inglés, a pie, táctico, camión, combate, bloquea, clave, lado de hex, nota]
+  const TEC = [
+    ['grupo', 'Terreno del hex'],
+    ['abierto', 'Abierto', 'Open', '1', '1', '2', 'Open', false, false, false, 'Aquí se aplica el +2 del Hard Red AV defendiendo en abierto.'],
+    ['colina', 'Colina', 'Hill', '1', '2', '3', true, true, false, false],
+    ['pueblo', 'Pueblo', 'Village', 'ot', 'ot', 'ot', true, true, false, false],
+    ['ciudad', 'Ciudad', 'City', 'ot', 'ot', 'ot', true, true, true, false],
+    ['bosque', 'Bosque', 'Woods', '1', 'STOP', 'STOP', true, true, false, false],
+    ['pantano', 'Pantano', 'Marsh', 'All', 'P', 'P', true, false, false, false],
+    ['grupo', 'Lados de hex'],
+    ['rio', 'Río', 'River', '+2', 'P', 'P', 'lado', false, true, true],
+    ['arroyo', 'Arroyo', 'Stream', '+1', '+1', '+4', 'lado', false, false, true],
+    ['barrera', 'Barrera de agua', 'Water Barrier', 'P', 'P', 'P', false, false, false, true],
+    ['grupo', 'Carreteras'],
+    ['primaria', 'Carretera principal', 'Primary', '½', '½', '¼', false, false, false, false],
+    ['secundaria', 'Carretera secundaria', 'Secondary', '½', '½', '½', false, false, false, false],
+    ['pista', 'Pista', 'Track', '½', '1', '1', false, false, false, false],
+    ['ferrocarril', 'Ferrocarril', 'RR', '1', '2', '2', false, false, false, false]
+  ];
+  const MA = { leg: ['leg', '4', 'A pie'], tac: ['tac', '16', 'Táctico'], truck: ['truck', '8', 'Camión'] };
+  const valor = (v) => {
+    if (v === 'P') return '<b class="p" title="Prohibido">P</b>';
+    if (v === 'STOP') return '<b class="stop" title="4 MP y STOP">4 + STOP</b>';
+    if (v === 'ot') return '<b class="ot" title="Usa el otro terreno del hex">ot</b>';
+    if (v === 'All') return '<b title="Gasta todo el MA">Todo</b>';
+    return `<b>${v}</b>`;
+  };
+  document.getElementById('tec').innerHTML = TEC.map((t) => {
+    if (t[0] === 'grupo') return `<div class="tec-grupo">${t[1]}</div>`;
+    const [img, nombre, en, leg, tac, truck, combate, bloquea, clave, lado, nota] = t;
+    const marcas = [
+      combate === 'Open' ? '<span class="chip">Abierto para combate</span>' : combate === 'lado' ? '<span class="chip chip--amber">Terrain si se ataca a través</span>' : combate ? '<span class="chip chip--amber">Terrain</span>' : '',
+      bloquea ? '<span class="chip chip--blue">Bloquea</span>' : '',
+      clave ? '<span class="chip chip--red">Key Terrain</span>' : '',
+      lado ? '<span class="chip">Lado de hex</span>' : ''
+    ].join('');
+    const costes = [['leg', leg], ['tac', tac], ['truck', truck]].map(([c, v]) => `<div class="coste ${c}" title="${MA[c][2]}"><span class="ma-muestra ${c}">${MA[c][1]}</span>${valor(v)}</div>`).join('');
+    return `<div class="ter"><img src="fichas/t/${img}.png" width="134" height="155" alt="Hex de ${nombre.toLowerCase()} del mapa de Arracourt" loading="lazy">
+      <h3>${nombre} <span class="en">${en}</span></h3>
+      <div class="marcas">${marcas || '<span class="chip">Sin efecto en combate</span>'}</div>
+      <div class="costes">${costes}</div>${nota ? `<p class="muted mb0" style="grid-column:1/-1;font-size:.82rem;margin-top:6px">${nota}</p>` : ''}</div>`;
+  }).join('');
+  const tec = document.getElementById('tec');
+  document.querySelectorAll('#tec-clase button').forEach((b) => b.addEventListener('click', () => {
+    document.querySelectorAll('#tec-clase button').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    if (b.dataset.c) tec.dataset.clase = b.dataset.c; else delete tec.dataset.clase;
+  }));
+
+  // ---------- Apilamiento ----------
+  const pila = (us, pie, txt) => `<figure><div class="pila-demo">${us.map(([k, l]) => Fichas.ficha(U[k], l)).join('')}</div><figcaption><strong>${pie}</strong>${txt}</figcaption></figure>`;
+  document.getElementById('apilar').innerHTML =
+    pila([['inf-us', 'd'], ['tq-us', 'd']], 'Pila normal', 'Los tanques arriba: alcance 2.') +
+    pila([['inf-us', 'd'], ['mec-us', 'd'], ['tq-us', 'd']], 'Sobreapilada', 'Tres unidades de combate.') +
+    `<figure><div class="pila-demo"><img class="ficha-real" src="fichas/hq-sin-usar.png" width="72" height="72" alt="HQ" style="position:absolute;left:0;top:0">${Fichas.ficha(U['inf-de'], 'd', { clase: '' }).replace('class="ficha ', 'style="left:8px;top:12px" class="ficha ')}</div><figcaption><strong>Con HQ</strong>El HQ no cuenta.</figcaption></figure>`;
+
+  // ---------- Mapa de ZOC ----------
+  const COLS = 9, FILAS = 7, R = 34, W = Math.sqrt(3) * R, CEN = [4, 3];
+  const TERRENO = { '3,2': 'bosque', '4,1': 'bosque', '5,4': 'pueblo', '6,1': 'colina', '1,5': 'bosque', '8,6': 'bosque', '0,1': 'colina' };
+  const BLOQUEA = { bosque: 1, pueblo: 1, colina: 1, ciudad: 1 };
+  const centro = (q, r) => [W / 2 + q * W + (r % 2 ? W / 2 : 0) + 6, R + r * R * 1.5 + 6];
+  const cubo = (q, r) => { const x = q - (r - (r & 1)) / 2; return [x, r, -x - r]; };
+  const dist = (a, b) => { const A = cubo(...a), B = cubo(...b); return Math.max(Math.abs(A[0] - B[0]), Math.abs(A[1] - B[1]), Math.abs(A[2] - B[2])); };
+  const hexEn = (x, y) => {
+    let mejor = null, d = 1e9;
+    for (let r = 0; r < FILAS; r++) for (let q = 0; q < COLS; q++) { const [cx, cy] = centro(q, r); const dd = (cx - x) ** 2 + (cy - y) ** 2; if (dd < d) { d = dd; mejor = [q, r]; } }
+    return mejor;
+  };
+  // Línea de visión: muestrea la línea entre centros; si pasa justo por un lado (dos hexes a la misma distancia), solo bloquea si ambos bloquean
+  const visible = (a, b) => {
+    const [x0, y0] = centro(...a), [x1, y1] = centro(...b), N = 60;
+    for (let i = 1; i < N; i++) {
+      const t = i / N, x = x0 + (x1 - x0) * t, y = y0 + (y1 - y0) * t;
+      const cands = [];
+      for (let r = 0; r < FILAS; r++) for (let q = 0; q < COLS; q++) { const [cx, cy] = centro(q, r); cands.push([Math.hypot(cx - x, cy - y), q, r]); }
+      cands.sort((m, n) => m[0] - n[0]);
+      const enLado = cands[1][0] - cands[0][0] < 1.2;
+      const bloq = (c) => { const k = c[1] + ',' + c[2]; return k !== a.join(',') && k !== b.join(',') && BLOQUEA[TERRENO[k]]; };
+      if (enLado ? bloq(cands[0]) && bloq(cands[1]) : bloq(cands[0])) return false;
+    }
+    return true;
+  };
+  const puntos = (cx, cy, s) => Array.from({ length: 6 }, (_, i) => { const a = Math.PI / 180 * (60 * i - 90); return (cx + R * s * Math.cos(a)).toFixed(1) + ',' + (cy + R * s * Math.sin(a)).toFixed(1); }).join(' ');
+
+  const COLOR = { normal: '#e7c547', apoyo: '#f08a3a', real: '#e2412f', ez: '#e2412f', pantalla: '#4f9fe0' };
+  const TIPOS = {
+    ninguna: { nombre: 'No ZOC', u: ['inf-de', 'm'], boton: 'Desprevenida', quien: 'Infantería alemana en marcha',
+      txt: 'HQs, trenes, unidades desprevenidas (sin flecha ni AV a la vista, como esta infantería en marcha) y unidades en Screen no tienen ZOC. Se puede pasar a su lado sin detenerse.',
+      ef: { leg: ['Sin efecto'], truck: ['Sin efecto'], tac: ['Sin efecto'], hq: ['Sin efecto'] } },
+    normal: { nombre: 'Non-AV ZOC', u: ['inf-de', 'd'], zoc: 'normal', boton: 'Infantería', quien: 'Infantería alemana desplegada',
+      txt: 'Cualquier unidad de combate sin AV, como esta infantería desplegada. Solo llega a los hexes adyacentes y frena a todo lo que no es táctico.',
+      ef: { leg: ['STOP', 'y no puede pasar a otra EZOC'], truck: ['STOP', 'y no puede pasar a otra EZOC'], tac: ['Sin efecto', 'la ignora'], hq: ['No puede entrar', 'salvo que una unidad amiga la anule'] } },
+    apoyo: { nombre: 'Support AV ZOC', u: ['inf-de', 'd'], m: 'red', zoc: 'apoyo', boton: 'Host con apoyo', quien: 'Infantería alemana con apoyo de tanques',
+      txt: 'Un host con apoyo de su formación (aquí, Red Support) tiene ZOC blindada, sea cual sea el tipo de apoyo. Detiene también a los tanques, pero el Stopping Engagement es opcional, salvo que el apoyo sea Stand Off.',
+      ef: { leg: ['STOP'], truck: ['STOP'], tac: ['STOP', 'puede hacer un Stopping Engagement para seguir (obligatorio si el apoyo es Stand Off)'], hq: ['No puede entrar', 'salvo que una unidad amiga la anule'] } },
+    real: { nombre: 'Real AV ZOC', u: ['panther', 'd'], zoc: 'real', ez: 3, boton: 'Unidad AV', quien: 'Panther alemán, alcance 3',
+      txt: 'Una unidad AV en el mapa, como este Panther. Su ZOC blindada sigue siendo solo de un hex, pero además proyecta una zona de enfrentamiento hasta su alcance (3), que el terreno que bloquea recorta.',
+      ef: { leg: ['STOP', 'en la ZOC', 'Sin efecto', 'en la zona de enfrentamiento'], truck: ['STOP', 'en la ZOC', 'STOP', 'también en la zona de enfrentamiento'], tac: ['STOP', 'y Stopping Engagement obligatorio: si no lo gana, se queda', 'Sin efecto', 'en la zona de enfrentamiento'], hq: ['No puede entrar', 'en la ZOC, salvo que la anule una amiga', 'No puede entrar', 'ni acabar una retirada en la zona; las amigas no la anulan'] } },
+    pantalla: { nombre: 'Screen Zone', u: ['rec-de', 'd'], m: 'screen', pantalla: 3, boton: 'Pantalla', quien: 'Reconocimiento alemán en Screen',
+      txt: 'Un reconocimiento en Screen no tiene ZOC: tiene una zona de pantalla de 3 hexes que ignora terreno y unidades. Solo frena a quien va en su cara de movimiento.',
+      ef: { leg: ['+1 MP', 'por hex si va en cara de movimiento; desplegada puede entrar en su hex y echarla'], truck: ['+1 MP', 'por hex en cara de movimiento; no puede entrar en su hex'], tac: ['+1 MP', 'por hex en cara de movimiento; no puede entrar en su hex'], hq: ['Sin efecto', 'la pantalla no es una ZOC: un HQ puede entrar en su zona'] } }
+  };
+  let tipo = 'real';
+  const svg = document.getElementById('zoc-mapa');
+  const ancho = COLS * W + W / 2 + 12, alto = FILAS * R * 1.5 + R / 2 + 12;
+  svg.setAttribute('viewBox', `0 0 ${ancho.toFixed(0)} ${alto.toFixed(0)}`);
+
+  function pintarMapa() {
+    const T = TIPOS[tipo];
+    let fondo = '', capas = '';
+    for (let r = 0; r < FILAS; r++) for (let q = 0; q < COLS; q++) {
+      const [cx, cy] = centro(q, r), k = q + ',' + r, ter = TERRENO[k] || 'abierto';
+      const hw = W * 1.035, hh = R * 2 * 1.035;
+      fondo += `<image href="fichas/t/${ter}.png" x="${(cx - hw / 2).toFixed(1)}" y="${(cy - hh / 2).toFixed(1)}" width="${hw.toFixed(1)}" height="${hh.toFixed(1)}" preserveAspectRatio="none"/>`;
+      const d = dist([q, r], CEN);
+      let color = null, op = 0, patron = false;
+      if (d === 1 && T.zoc) { color = COLOR[T.zoc]; op = 0.5; }
+      else if (T.ez && d > 1 && d <= T.ez && visible(CEN, [q, r])) { color = COLOR.ez; op = 0.22; patron = true; }
+      else if (T.ez && d > 1 && d <= T.ez) { color = '#000'; op = 0.28; }
+      if (T.pantalla && d >= 1 && d <= T.pantalla) { color = COLOR.pantalla; op = 0.18 + (T.pantalla - d) * 0.07; }
+      if (color) capas += `<polygon class="hz" points="${puntos(cx, cy, 0.97)}" fill="${patron ? 'url(#rayas)' : color}" fill-opacity="${patron ? 1 : op}" stroke="${color === '#000' ? 'none' : color}" stroke-width="${d === 1 ? 2.4 : 1.2}" stroke-opacity=".9"/>`;
+    }
+    const [ux, uy] = centro(...CEN), tam = W * 0.78;
+    const uimg = U[T.u[0]].img[T.u[1]];
+    const marca = T.m ? `<image href="fichas/m/${T.m}.png" x="${(ux + tam * 0.18).toFixed(1)}" y="${(uy - tam * 0.62).toFixed(1)}" width="${(tam * 0.62).toFixed(1)}" height="${(tam * 0.62).toFixed(1)}"/>` : '';
+    svg.innerHTML = `<defs><pattern id="rayas" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="${COLOR.ez}" fill-opacity=".14"/><line x1="0" y1="0" x2="0" y2="7" stroke="${COLOR.ez}" stroke-width="2.2" stroke-opacity=".55"/></pattern>
+      <filter id="sombra" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="2" stdDeviation="2.2" flood-opacity=".5"/></filter></defs>
+      ${fondo}${capas}<g filter="url(#sombra)"><image href="${uimg}" x="${(ux - tam / 2).toFixed(1)}" y="${(uy - tam / 2).toFixed(1)}" width="${tam.toFixed(1)}" height="${tam.toFixed(1)}"/>${marca}</g>`;
+    svg.setAttribute('aria-label', 'Mapa de hexes: ' + T.nombre + ' alrededor de ' + Fichas.etiqueta(U[T.u[0]]));
+
+    const ley = [];
+    if (T.zoc) ley.push(`<span><i style="background:${COLOR[T.zoc]};opacity:.7"></i>${T.nombre} (adyacentes)</span>`);
+    if (T.ez) ley.push(`<span><i style="background:repeating-linear-gradient(45deg,${COLOR.ez}99 0 2px,transparent 2px 5px)"></i>Engagement Zone (alcance ${T.ez})</span>`, '<span><i style="background:#000;opacity:.35"></i>Tapado por terreno que bloquea</span>');
+    if (T.pantalla) ley.push(`<span><i style="background:${COLOR.pantalla};opacity:.5"></i>Screen Zone (3 hexes)</span>`);
+    if (!ley.length) ley.push('<span>Sin zona de ningún tipo</span>');
+    document.getElementById('zoc-leyenda').innerHTML = ley.join('');
+
+    const fila = (c, et, muestra) => {
+      const e = T.ef[c];
+      const parte = (v, d) => `<span class="${v === 'STOP' ? 'stop' : v === 'Sin efecto' ? 'sin' : v === 'No puede entrar' ? 'prohibido' : 'stop'}">${v}</span>${d ? ' ' + d : ''}`;
+      const res = e.length > 2 ? `<span>${parte(e[0], e[1])}</span><span>${parte(e[2], e[3])}</span>` : `<span>${parte(e[0], e[1])}</span>`;
+      return `<div class="efecto"><div class="quien">${muestra || ''}${et}</div><div class="res">${res}</div></div>`;
+    };
+    const mm = (c, n) => `<span class="ma-muestra ${c}">${n}</span>`;
+    document.getElementById('zoc-info').innerHTML = `<span class="antetitulo">${esc(T.quien)}</span>
+      <h3>${T.nombre}</h3><p class="mb0">${T.txt}</p>
+      <div class="efectos">${fila('leg', 'A pie', mm('leg', 4))}${fila('truck', 'Camión', mm('truck', 8))}${fila('tac', 'Táctico', mm('tac', 16))}${fila('hq', 'HQ')}</div>`;
+  }
+
+  const botones = document.getElementById('zoc-tipos');
+  botones.innerHTML = Object.entries(TIPOS).map(([k, T]) => `<button type="button" data-t="${k}" aria-pressed="${k === tipo}">${Fichas.ficha(U[T.u[0]], T.u[1])}<span>${T.boton}<br><small class="muted">${T.nombre}</small></span></button>`).join('');
+  botones.addEventListener('click', (e) => {
+    const b = e.target.closest('button');
+    if (!b) return;
+    tipo = b.dataset.t;
+    botones.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', x === b));
+    pintarMapa();
+  });
+  pintarMapa();
+})();
+</script>
+</body>
+</html>

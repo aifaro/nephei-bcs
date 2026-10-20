@@ -21,6 +21,8 @@
     .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
     td.res { font-family: var(--mono); font-weight: 700; }
     .leyenda { font-size: .84rem; color: var(--muted); margin-top: 10px; }
+    .ter-fila { display: inline-flex; align-items: center; gap: 10px; white-space: nowrap; }
+    .ter-fila img { flex: none; filter: drop-shadow(0 1px 2px rgba(0,0,0,.35)); }
     .leyenda strong { color: var(--heading); font-family: var(--mono); }
     .si { color: var(--ok); font-weight: 700; }
     .no { color: var(--bad); font-weight: 700; }
@@ -45,6 +47,7 @@
         <a class="chip" href="#aislamiento">Aislamiento</a>
         <a class="chip" href="#stop">STOPPED / FINISHED</a>
         <a class="chip" href="#capacidades">Capacidades</a>
+        <a class="chip" href="#terreno">Terreno (Arracourt)</a>
       </nav>
     </div>
   </section>
@@ -271,6 +274,29 @@
           </tbody>
         </table></div>
         <p class="leyenda">De Regular Attack a Attack by Fire exigen OBJ Zone. Shock Attack, Attack by Fire, Engage y Recon gastan un Fire Event (máximo 2). El choque exige MA táctico. ** Si además es de ruptura, añade Shock Attack. Recon solo para unidades de reconocimiento.</p>
+      </section>
+
+      <section class="bloque tarjeta ancha" id="terreno">
+        <h2>Terrain Effects Chart · Arracourt <span class="regla">4.1 · cada juego trae la suya</span></h2>
+        <div class="tabla-wrap"><table class="t">
+          <thead><tr><th>Terreno</th><th class="num">A pie</th><th class="num">Táctico</th><th class="num">Camión</th><th class="num">Terreno para combate</th><th class="num">Bloquea</th><th class="num">Key Terrain</th></tr></thead>
+          <tbody>
+            <tr><td><span class="ter-fila"><img src="fichas/t/abierto.png" width="34" height="39" alt="" loading="lazy">Abierto <span class="en">Open</span></span></td><td class="num">1</td><td class="num">1</td><td class="num">2</td><td class="num">Open</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/colina.png" width="34" height="39" alt="" loading="lazy">Colina <span class="en">Hill</span></span></td><td class="num">1</td><td class="num">2</td><td class="num">3</td><td class="num">Sí</td><td class="num">Sí</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/pueblo.png" width="34" height="39" alt="" loading="lazy">Pueblo <span class="en">Village</span></span></td><td class="num">ot</td><td class="num">ot</td><td class="num">ot</td><td class="num">Sí</td><td class="num">Sí</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/ciudad.png" width="34" height="39" alt="" loading="lazy">Ciudad <span class="en">City</span></span></td><td class="num">ot</td><td class="num">ot</td><td class="num">ot</td><td class="num">Sí</td><td class="num">Sí</td><td class="num">Sí</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/bosque.png" width="34" height="39" alt="" loading="lazy">Bosque <span class="en">Woods</span></span></td><td class="num">1</td><td class="num">4 + STOP</td><td class="num">4 + STOP</td><td class="num">Sí</td><td class="num">Sí</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/pantano.png" width="34" height="39" alt="" loading="lazy">Pantano <span class="en">Marsh</span></span></td><td class="num">Todo</td><td class="num">P</td><td class="num">P</td><td class="num">Sí</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/rio.png" width="34" height="39" alt="" loading="lazy">Río (lado) <span class="en">River</span></span></td><td class="num">+2</td><td class="num">P</td><td class="num">P</td><td class="num">Sí ¹</td><td class="num">–</td><td class="num">Sí</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/arroyo.png" width="34" height="39" alt="" loading="lazy">Arroyo (lado) <span class="en">Stream</span></span></td><td class="num">+1</td><td class="num">+1</td><td class="num">+4</td><td class="num">Sí ¹</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/barrera.png" width="34" height="39" alt="" loading="lazy">Barrera de agua (lado) <span class="en">Water Barrier</span></span></td><td class="num">P</td><td class="num">P</td><td class="num">P</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/primaria.png" width="34" height="39" alt="" loading="lazy">Carretera principal <span class="en">Primary</span></span></td><td class="num">½</td><td class="num">½</td><td class="num">¼</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/secundaria.png" width="34" height="39" alt="" loading="lazy">Carretera secundaria <span class="en">Secondary</span></span></td><td class="num">½</td><td class="num">½</td><td class="num">½</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/pista.png" width="34" height="39" alt="" loading="lazy">Pista <span class="en">Track</span></span></td><td class="num">½</td><td class="num">1</td><td class="num">1</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr>
+            <tr><td><span class="ter-fila"><img src="fichas/t/ferrocarril.png" width="34" height="39" alt="" loading="lazy">Ferrocarril <span class="en">RR</span></span></td><td class="num">1</td><td class="num">2</td><td class="num">2</td><td class="num">–</td><td class="num">–</td><td class="num">–</td></tr>
+          </tbody>
+        </table></div>
+        <p class="leyenda"><strong>ot</strong> usa el otro terreno del hex · <strong>P</strong> prohibido · <strong>4 + STOP</strong> cuesta 4 MP y detiene · <strong>Todo</strong> gasta todo el MA · <strong>½ ¼</strong> siguiendo la carretera. ¹ Solo si el atacante ataca a través de ese lado; nunca en enfrentamientos ni ataques por fuego. Con lluvia, la transitabilidad es Poor. Más en <a href="movimiento.html#terreno">Movimiento y ZOC</a>.</p>
       </section>
     </div>
   </div>
