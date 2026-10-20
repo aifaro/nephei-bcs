@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BCS · Referencia — Battalion Combat Series</title>
-  <meta name="description" content="Referencia visual del Battalion Combat Series (MMP) v2.0: fichas y tipos de unidad, los cinco tipos de combate, tablas y un simulador de ataques.">
+  <title>Academia BCS · Battalion Combat Series</title>
+  <meta name="description" content="Academia BCS: instrucción paso a paso y referencia del Battalion Combat Series (MMP) v2.0, con fichas reales, tablas, simulador de ataques, saco de activaciones y cuaderno de órdenes.">
   <meta name="theme-color" content="#0d100e">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,7 +28,7 @@
     .idea { display: flex; flex-direction: column; gap: 8px; }
     .idea__n { font: 700 0.78rem var(--mono); color: var(--amber); letter-spacing: .1em; }
     .idea p { margin: 0; font-size: 0.95rem; }
-    .portada-ir .ir--destacada { grid-row: span 2; justify-content: flex-end; min-height: 300px; background: radial-gradient(30rem 16rem at 100% 0%, var(--amber-soft), transparent 70%), var(--surface); }
+    .portada-ir .ir--destacada { justify-content: flex-end; min-height: 220px; background: radial-gradient(30rem 16rem at 100% 0%, var(--amber-soft), transparent 70%), var(--surface); }
     .portada-ir .ir--destacada h3 { font-size: 1.6rem; }
     @media (max-width: 900px) { .portada-ir .ir--destacada { grid-column: span 2; grid-row: auto; min-height: 0; } }
     @media (max-width: 640px) { .portada-ir .ir--destacada { grid-column: auto; } }
@@ -39,6 +39,36 @@
     .franja strong { color: var(--heading); font-family: var(--head); }
     .franja span { font-size: 0.85rem; color: var(--muted); }
     .franja .tabla-uso { font: 600 0.72rem var(--mono); color: var(--amber); text-transform: uppercase; letter-spacing: .06em; }
+    .hero__lema { font: 600 1.3rem/1.35 var(--head); color: var(--amber); margin: -6px 0 14px; }
+    .hoja { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 18px 22px; margin-bottom: 18px; border-radius: var(--radius); border: 1px solid color-mix(in srgb, var(--amber) 40%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 55%), var(--surface); }
+    @media (max-width: 640px) { .hoja { grid-template-columns: auto minmax(0, 1fr); } .hoja .boton { grid-column: 1 / -1; } }
+    .hoja__insignia { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; background: var(--surface-3); border: 1px solid var(--border-strong); color: var(--amber); }
+    .hoja__insignia svg { width: 42px; height: 42px; }
+    .hoja small { font: 600 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+    .hoja strong { display: block; font: 700 1.5rem var(--head); color: var(--heading); }
+    .hoja .barra { height: 8px; border-radius: 99px; background: var(--surface-3); overflow: hidden; margin-top: 8px; }
+    .hoja .barra i { display: block; height: 100%; background: linear-gradient(90deg, var(--olive), var(--amber)); border-radius: 99px; transition: width .4s; }
+    .lecciones { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 900px) { .lecciones { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 600px) { .lecciones { grid-template-columns: minmax(0, 1fr); } }
+    .lecciones a { position: relative; display: grid; grid-template-columns: 46px minmax(0, 1fr); gap: 14px; height: 100%; padding: 16px 18px; border-radius: var(--radius); border: 1px solid var(--border); background: var(--surface); color: var(--text); transition: border-color .15s, transform .15s, background .15s; }
+    .lecciones a:hover { text-decoration: none; border-color: var(--amber); transform: translateY(-2px); background: var(--surface-2); }
+    .lecciones .n { width: 46px; height: 46px; border-radius: 12px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 1.1rem var(--mono); }
+    .lecciones .hecha .n { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); }
+    .lecciones .siguiente { border-color: color-mix(in srgb, var(--amber) 55%, var(--border)); box-shadow: 0 0 0 3px var(--amber-soft); }
+    .lecciones strong { display: block; color: var(--heading); font-family: var(--head); font-size: 1.05rem; }
+    .lecciones p { margin: 3px 0 6px; font-size: .88rem; color: var(--muted); }
+    .lecciones .premio { font: 600 .7rem var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+    .lecciones .hecha .premio { color: var(--ok); }
+    .lecciones .siguiente .premio { color: var(--amber); }
+    .consejos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 900px) { .consejos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 600px) { .consejos { grid-template-columns: minmax(0, 1fr); } }
+    .consejo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 16px 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--olive); }
+    .consejo__n { font: 700 1.3rem var(--head); color: var(--olive); }
+    .consejo p { margin: 0; font-size: .92rem; }
+    .consejo strong { display: block; color: var(--heading); margin-bottom: 2px; }
+    .consejo a:not(.g) { font: 600 .74rem var(--mono); letter-spacing: .04em; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -47,73 +77,101 @@
     <div class="wrap hero__rejilla">
       <div>
         <span class="antetitulo">Battalion Combat Series · v2.0</span>
-        <h1>El BCS, explicado ficha a ficha</h1>
-        <p class="lead">Una referencia visual para aprender y consultar la serie de MMP: qué significa cada número de una ficha, cómo se distinguen la infantería, los blindados y las unidades Dual, cuándo usar cada tipo de ataque y qué probabilidades tienes antes de tirar los dados.</p>
+        <h1>Academia BCS</h1>
+        <p class="hero__lema">Instrucción para reclutas. Consulta rápida para veteranos.</p>
+        <p class="lead">Bienvenido a filas. Aquí aprenderás el BCS de MMP ficha a ficha, desde qué significa cada número hasta cuándo conviene un ataque de choque, y tendrás a mano las tablas, un simulador de ataques y las utilidades que hacen falta en la mesa.</p>
         <div class="botones" style="margin-top:26px">
-          <a class="boton boton--primario" href="simulador.html">Abrir el simulador de ataques</a>
-          <a class="boton" href="fichas.html">Empezar por las fichas</a>
+          <a class="boton boton--primario" href="#instruccion" id="cta-instruccion">Empezar la instrucción</a>
+          <a class="boton" href="#utilidades">Ir a las utilidades</a>
         </div>
         <div class="cifras">
+          <div><strong>6</strong><span>lecciones de instrucción</span></div>
           <div><strong>5</strong><span>maneras de combatir</span></div>
-          <div><strong>4</strong><span>tipos de blindaje (AV)</span></div>
-          <div><strong>3</strong><span>resultados de SNAFU</span></div>
-          <div><strong>1</strong><span>formación activa a la vez</span></div>
+          <div><strong>7</strong><span>herramientas para la mesa</span></div>
+          <div><strong id="n-glosario">80+</strong><span>términos en el glosario</span></div>
         </div>
       </div>
       <div class="escena" id="escena" aria-label="Una infantería con apoyo de tanques ataca un hex defendido por un Panther" role="img"></div>
     </div>
   </section>
 
-  <section class="seccion">
+  <section class="seccion" id="instruccion">
     <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Plan de instrucción</span><h2>De recluta a comandante en seis lecciones</h2></div>
+        <p>Cada lección es un capítulo del reglamento, en el orden de las <em>Series Rules</em>. Al acabar una, márcala como superada al pie de la página y ascenderás. Tu hoja de servicio se guarda solo en este navegador.</p>
+      </div>
+      <div class="hoja" id="hoja"></div>
+      <ol class="lecciones" id="lecciones"></ol>
+    </div>
+  </section>
+
+  <section class="seccion" id="utilidades">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Intendencia</span><h2>Utilidades para la mesa</h2></div>
+        <p>Para cuando ya estás jugando: calcular probabilidades antes de tirar, sortear las activaciones o llevar las órdenes de cada formación sin papel.</p>
+      </div>
       <div class="rejilla rejilla--4 portada-ir">
         <a class="ir ir--destacada" href="simulador.html">
           <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><circle cx="7" cy="7" r="1"/><circle cx="15.5" cy="15.5" r="1"/><circle cx="18.5" cy="18.5" r="1"/></svg></span>
           <span class="ir__flecha">→</span>
           <h3>Simulador de ataques</h3>
-          <p>Coloca las fichas en el mapa, marca las circunstancias y mira la probabilidad de cada resultado. Luego tira los dados y verás qué pasa con las unidades: bajas, retiradas, avance y tráfico. Ataque regular, de choque, enfrentamiento, ataque por fuego y bombardeo.</p>
+          <p>Coloca las fichas en el mapa, marca las circunstancias y mira la probabilidad de cada resultado. Luego tira los dados y verás qué pasa con las unidades: bajas, retiradas, avance y tráfico.</p>
         </a>
-        <a class="ir" href="fichas.html">
-          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M8 8h8v5H8z"/><path d="M8 8l8 5M16 8l-8 5"/></svg></span>
+        <a class="ir" href="combate.html#elegir">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg></span>
           <span class="ir__flecha">→</span>
-          <span class="mono muted" style="font-size:.72rem;letter-spacing:.08em">CAPÍTULO 1</span>
-          <h3>Fichas y unidades</h3>
-          <p>Anatomía de la ficha, infantería, AV y Dual, los cuatro colores del blindaje, el apoyo y los marcadores.</p>
+          <h3>¿Qué ataque uso?</h3>
+          <p>Elige tu unidad y lo que hay en el hex enemigo: te dice qué tipos de combate puedes usar.</p>
         </a>
-        <a class="ir" href="secuencia.html">
-          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M4 12h16M4 18h7"/><circle cx="18" cy="6" r="2"/><circle cx="15" cy="18" r="2"/></svg></span>
+        <a class="ir" href="secuencia.html#snafu">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/><circle cx="7" cy="7" r=".8" fill="currentColor"/><circle cx="15.5" cy="15.5" r=".8" fill="currentColor"/><circle cx="18.5" cy="18.5" r=".8" fill="currentColor"/></svg></span>
           <span class="ir__flecha">→</span>
-          <span class="mono muted" style="font-size:.72rem;letter-spacing:.08em">CAPÍTULO 2</span>
-          <h3>Secuencia y SNAFU</h3>
-          <p>Las fases del turno, la activación paso a paso y una calculadora de SNAFU con probabilidades.</p>
+          <h3>Calculadora de SNAFU</h3>
+          <p>Suma los modificadores de la formación y mira cuántas opciones tienes de Full, Partial o Fail.</p>
         </a>
-        <a class="ir" href="mando.html">
-          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5"/><circle cx="5" cy="19" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="M12 7.5v4M12 11.5 6.5 17M12 11.5l5.5 5.5"/></svg></span>
+        <a class="ir" href="opcionales.html#chits">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 11h-11z"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/><path d="M10 13h4"/></svg></span>
           <span class="ir__flecha">→</span>
-          <span class="mono muted" style="font-size:.72rem;letter-spacing:.08em">CAPÍTULO 3</span>
-          <h3>Mando y suministro</h3>
-          <p>Formaciones, radio de mando, HQ y trenes, la MSR, los OBJ, el Safe Path y el aislamiento.</p>
+          <h3>Saco de activaciones</h3>
+          <p>Chits de activación de 3 en 3: el bando con mayoría elige qué formación actúa (regla opcional 2.5m).</p>
         </a>
-        <a class="ir" href="movimiento.html">
-          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 20.5 7v10L12 22 3.5 17V7z"/><path d="M8 13l3 3 5-6"/></svg></span>
+        <a class="ir" href="opcionales.html#ordenes">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h6M9 16h4"/></svg></span>
           <span class="ir__flecha">→</span>
-          <span class="mono muted" style="font-size:.72rem;letter-spacing:.08em">CAPÍTULO 4</span>
-          <h3>Movimiento y ZOC</h3>
-          <p>El terreno con hexes reales, el apilamiento, los cinco tipos de ZOC, las zonas de enfrentamiento y las pantallas.</p>
-        </a>
-        <a class="ir" href="combate.html">
-          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20 20 4M14 4h6v6"/><path d="M4 4l6 6M4 4v5M4 4h5"/></svg></span>
-          <span class="ir__flecha">→</span>
-          <span class="mono muted" style="font-size:.72rem;letter-spacing:.08em">CAPÍTULO 5</span>
-          <h3>Combate</h3>
-          <p>Ataques regulares y de choque, enfrentamientos, ataques por fuego y bombardeos: quién puede, contra qué y qué cuesta.</p>
+          <h3>Cuaderno de órdenes</h3>
+          <p>Anota la orden de cada formación en cada turno, con su ruta, y escóndela antes de pasar la pantalla.</p>
         </a>
         <a class="ir" href="tablas.html">
           <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M3 14h18M9 4v16"/></svg></span>
           <span class="ir__flecha">→</span>
           <h3>Tablas</h3>
-          <p>Combat, Engagement, Barrage, SNAFU, fatiga, aislamiento, capacidades y terreno, listas para la mesa.</p>
+          <p>Combat, Engagement, Barrage, SNAFU, fatiga, aislamiento, capacidades y terreno, listas para imprimir.</p>
         </a>
+        <a class="ir" href="glosario.html">
+          <span class="ir__icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5M9 8h6"/></svg></span>
+          <span class="ir__flecha">→</span>
+          <h3>Glosario y buscador</h3>
+          <p>Cada término en inglés y castellano. Pulsa <kbd>Ctrl K</kbd> en cualquier página para buscar.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="sargento">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Consejos del sargento instructor</span><h2>Lo que nadie te cuenta el primer día</h2></div>
+        <p>Errores clásicos de recluta. Apréndetelos antes de tu primera partida y ahorrarás más de un batallón.</p>
+      </div>
+      <div class="consejos">
+        <div class="consejo"><span class="consejo__n">01</span><p><strong>Mira tu MSR antes que el mapa.</strong> Unos trenes fuera del mapa son -3 al SNAFU, y con un Fail no hay combate. <a href="mando.html#msr">Lección 3</a></p></div>
+        <div class="consejo"><span class="consejo__n">02</span><p><strong>Sin OBJ no hay ataque.</strong> Regulares, choques, fuego y bombardeos necesitan zona de OBJ; solo los enfrentamientos se libran sin ella. <a href="mando.html#obj">Lección 3</a></p></div>
+        <div class="consejo"><span class="consejo__n">03</span><p><strong>Los tanques no toman pueblos a cañonazos.</strong> Un enfrentamiento no conquista terreno: para quedarte el hex hace falta un ataque regular o de choque. <a href="combate.html#elegir">Lección 5</a></p></div>
+        <div class="consejo"><span class="consejo__n">04</span><p><strong>Tres en un hex es una invitación.</strong> Sobreapilar da modificadores en contra y más tiradas a la artillería enemiga. <a href="movimiento.html#apilamiento">Lección 4</a></p></div>
+        <div class="consejo"><span class="consejo__n">05</span><p><strong>Cuenta tus Fire Events.</strong> Cada unidad tiene dos por activación, y al gastar el último se detiene, aunque le quede MA. <a href="fichas.html">Lección 1</a></p></div>
+        <div class="consejo"><span class="consejo__n">06</span><p><strong>No todas las ZOC paran a todos.</strong> Los tanques ignoran las ZOC normales; los camiones se paran hasta en una zona de enfrentamiento. <a href="movimiento.html#zoc">Lección 4</a></p></div>
       </div>
     </div>
   </section>
@@ -122,7 +180,7 @@
     <div class="wrap">
       <div class="seccion__cab">
         <div>
-          <span class="antetitulo">Qué es el BCS</span>
+          <span class="antetitulo">Sesión informativa · Qué es el BCS</span>
           <h2>Guerra mecanizada a escala de batallón</h2>
         </div>
         <p>Diseñado por Dean Essig para The Gamers / MMP, el BCS cubre desde finales de la Primera Guerra Mundial hasta hoy. Cada ficha suele ser un batallón, cada hex mide de 1 a 1,6 km y cada turno es un día.</p>
@@ -181,6 +239,46 @@
 <script src="js/datos.js"></script>
 <script src="js/comun.js"></script>
 <script>
+  document.getElementById('n-glosario').textContent = Datos.GLOSARIO.length;
+  // Plan de instrucción: una lección por capítulo y un rango por lección superada
+  (function () {
+    const QUE = [
+      'Qué dice cada número de la ficha, infantería, AV y Dual, los cuatro colores del blindaje y el apoyo.',
+      'El turno de un día, la activación paso a paso, el SNAFU y cuándo repetir con una Segunda Activación.',
+      'Formaciones, HQ y trenes, la MSR, los OBJ y por qué una unidad sin Safe Path acaba aislada.',
+      'Lo que cuesta cada terreno, cuántas unidades caben en un hex y qué ZOC detienen a quién.',
+      'Los cinco tipos de combate: quién puede usarlos, contra qué y qué cuestan. Y las retiradas.',
+      'Órdenes, chits de activación, Planned Fatigue y el resto de reglas para veteranos.'
+    ];
+    const INSIGNIAS = [
+      '<path d="M12 3l7 3v5c0 5-3.5 8-7 10-3.5-2-7-5-7-10V6z"/>',
+      '<path d="M5 10l7-5 7 5"/>',
+      '<path d="M5 9l7-5 7 5M5 15l7-5 7 5"/>',
+      '<path d="M5 7l7-4 7 4M5 12l7-4 7 4M5 17l7-4 7 4"/>',
+      '<path d="M8 6l1 2.2 2.4.3-1.8 1.6.5 2.4L8 11.3 5.9 12.5l.5-2.4L4.6 8.5 7 8.2zM16 12l1 2.2 2.4.3-1.8 1.6.5 2.4-2.1-1.2-2.1 1.2.5-2.4-1.8-1.6 2.4-.3z"/>',
+      '<path d="M6 4l.9 2 2.2.3-1.6 1.5.4 2.2L6 8.9 4.1 10l.4-2.2L2.9 6.3l2.2-.3zM18 4l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3zM12 13l.9 2 2.2.3-1.6 1.5.4 2.2-1.9-1.1-1.9 1.1.4-2.2-1.6-1.5 2.2-.3z"/>',
+      '<path d="M12 3l2 5.5 5.8.4-4.5 3.7 1.5 5.7L12 15.1l-4.8 3.2 1.5-5.7-4.5-3.7 5.8-.4z"/>'
+    ];
+    const ins = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${INSIGNIAS[Math.min(n, 6)]}</svg>`;
+    const C = Comun.CAPITULOS;
+    function pintar() {
+      const hechas = Comun.lecciones().filter((h) => C.some((c) => c[0] === h));
+      const sig = C.findIndex((c) => !hechas.includes(c[0]));
+      const n = hechas.length;
+      document.getElementById('hoja').innerHTML = `<div class="hoja__insignia">${ins(n)}</div>
+        <div><small>Hoja de servicio</small><strong>${Comun.rango(n)}</strong><span class="muted" style="font-size:.9rem">${n ? `${n} de ${C.length} lecciones superadas.` : 'Aún no has superado ninguna lección. Todos empezamos así.'} ${n < C.length ? `Siguiente ascenso: <b style="color:var(--amber)">${Comun.rango(n + 1)}</b>.` : '¡Instrucción completa!'}</span><div class="barra"><i style="width:${(n / C.length * 100).toFixed(0)}%"></i></div></div>
+        ${sig >= 0 ? `<a class="boton boton--primario" href="${C[sig][0]}">${n ? 'Seguir con la lección ' + (sig + 1) : 'Empezar la lección 1'}</a>` : '<a class="boton" href="simulador.html">Al simulador, comandante</a>'}`;
+      document.getElementById('lecciones').innerHTML = C.map(([h, t], i) => {
+        const hecha = hechas.includes(h);
+        return `<li><a href="${h}" class="${hecha ? 'hecha' : i === sig ? 'siguiente' : ''}"><span class="n">${hecha ? '✓' : i + 1}</span><span><strong>${t}</strong><p>${QUE[i]}</p><span class="premio">${hecha ? 'Superada' : i === sig ? 'Siguiente lección' : 'Lección ' + (i + 1)} · ${Comun.rango(i + 1)}</span></span></a></li>`;
+      }).join('');
+      if (sig >= 0) document.getElementById('cta-instruccion').href = n ? C[sig][0] : '#instruccion';
+      document.getElementById('cta-instruccion').textContent = n ? (sig >= 0 ? 'Seguir la instrucción' : 'Repasar la instrucción') : 'Empezar la instrucción';
+    }
+    pintar();
+    addEventListener('pageshow', pintar);
+  })();
+
   // Escena de la portada: un hex atacante y uno defensor.
   (function () {
     const e = document.getElementById('escena');

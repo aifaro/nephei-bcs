@@ -201,7 +201,7 @@ kbd {
   .nav a { padding: 11px 12px; font-size: 1rem; }
   .nav__btn { display: none; }
   .nav__menu, .nav__grupo.abierto .nav__menu { display: grid; position: static; transform: none; width: auto; border: 0; box-shadow: none; padding: 4px 0 8px; margin: 0 0 6px; border-bottom: 1px solid var(--border); border-radius: 0; background: none; }
-  .nav__menu::before { content: 'Reglamento'; font: 600 0.72rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); padding: 6px 12px 4px; }
+  .nav__menu::before { content: attr(data-titulo); font: 600 0.72rem var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber); padding: 6px 12px 4px; }
   .nav .nav__menu a small { display: none; }
   .menu-movil { display: inline-flex; }
   .acciones { margin-left: auto; }
@@ -399,6 +399,16 @@ table.t.capacidades tr.resaltada td { outline: 2px solid var(--amber); outline-o
 .pasar__sig { text-align: right; grid-column: 2; }
 @media (max-width: 560px) { .pasar { grid-template-columns: 1fr; } .pasar__sig { grid-column: auto; } .pasar > span { display: none; } }
 
+/* Lección superada */
+.sello { margin-top: 34px; }
+.sello__caja { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; padding: 18px 22px; border-radius: var(--radius); border: 1px dashed color-mix(in srgb, var(--amber) 55%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 60%), var(--surface); }
+.sello__caja .antetitulo { margin-bottom: 6px; }
+.sello__caja strong { display: block; font-family: var(--head); font-size: 1.15rem; color: var(--heading); }
+.sello__caja p { margin: 4px 0 0; color: var(--muted); font-size: .92rem; }
+.sello__caja p b { color: var(--amber); }
+.sello__caja.hecha { border-style: solid; border-color: color-mix(in srgb, var(--ok) 50%, var(--border)); background: linear-gradient(120deg, color-mix(in srgb, var(--ok) 12%, transparent), transparent 60%), var(--surface); }
+.sello__caja.hecha strong::before { content: '★ '; color: var(--amber); }
+
 /* Enlaces al glosario */
 a.g { color: inherit; text-decoration: underline dotted color-mix(in srgb, var(--amber) 70%, transparent); text-decoration-thickness: 1.5px; text-underline-offset: 3px; cursor: help; }
 a.g:hover { color: var(--amber); text-decoration-style: solid; }
@@ -482,7 +492,7 @@ dl.glosario dd { margin: 4px 0 0; font-size: 0.95rem; }
 @media print {
   :root { --bg: #fff; --surface: #fff; --surface-2: #f6f6f6; --surface-3: #eee; --border: #ccc; --text: #111; --muted: #444; --heading: #000; --amber: #8a5300; --amber-soft: #f3e6cc; }
   body { background: #fff; }
-  body::before, .cabecera, .pie, .buscador, .botones, .indice, .hero .lead, .capitulos, .pasar, .g-pop { display: none !important; }
+  body::before, .cabecera, .pie, .buscador, .botones, .indice, .hero .lead, .capitulos, .pasar, .g-pop, .sello { display: none !important; }
   a.g { text-decoration: none; }
   .hero--pagina { padding: 0 0 10px; }
   .tarjeta, .bloque { box-shadow: none; break-inside: avoid; }

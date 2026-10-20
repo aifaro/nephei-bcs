@@ -8,18 +8,30 @@
     ['secuencia.html', 'Secuencia y SNAFU', 'El turno, la activación, el SNAFU y la Segunda Activación'],
     ['mando.html', 'Mando y suministro', 'Formaciones, HQ, trenes, MSR, OBJ, Safe Path y aislamiento'],
     ['movimiento.html', 'Movimiento y ZOC', 'Terreno, apilamiento, ZOC, zonas de enfrentamiento y pantallas'],
-    ['combate.html', 'Combate', 'Ataques, enfrentamientos, fuego, bombardeos y retiradas']
+    ['combate.html', 'Combate', 'Ataques, enfrentamientos, fuego, bombardeos y retiradas'],
+    ['opcionales.html', 'Reglas opcionales', 'Órdenes, chits de activación, Planned Fatigue y otras']
+  ];
+  // Rango que se gana al superar cada lección
+  const RANGOS = ['Recluta', 'Soldado', 'Cabo', 'Sargento', 'Teniente', 'Capitán', 'Comandante'];
+  // Herramientas para la mesa
+  const UTILIDADES = [
+    ['simulador.html', 'Simulador de ataques', 'Fichas en el mapa, probabilidades y tiradas animadas'],
+    ['combate.html#elegir', '¿Qué ataque uso?', 'Elige tu unidad y el blanco, y te dice qué puedes hacer'],
+    ['secuencia.html#snafu', 'Calculadora de SNAFU', 'Modificadores y probabilidad de Full, Partial y Fail'],
+    ['opcionales.html#chits', 'Saco de activaciones', 'Saca chits de 3 en 3: el bando con mayoría elige'],
+    ['opcionales.html#ordenes', 'Cuaderno de órdenes', 'Anota las órdenes de cada formación, turno a turno']
   ];
   const PAGINAS = [
     ['index.html', 'Inicio'],
     ['reglamento', 'Reglamento'],
-    ['simulador.html', 'Simulador'],
+    ['utilidades', 'Utilidades'],
     ['tablas.html', 'Tablas'],
     ['glosario.html', 'Glosario']
   ];
   const actual = location.pathname.split('/').pop().replace(/\.html$/, '') || 'index';
   const esActual = (href) => href.replace(/\.html$/, '') === actual;
   const capActual = CAPITULOS.findIndex(([h]) => esActual(h));
+  const utilActual = actual === 'simulador';
 
   const ICONOS = {
     buscar: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>',
@@ -42,17 +54,16 @@
   }
 
   function cabecera() {
+    const grupo = (txt, items, marca, actualGrupo) => `<div class="nav__grupo"><button type="button" class="nav__btn${actualGrupo ? ' actual' : ''}" aria-expanded="false">${txt} ${ICONOS.flecha}</button><div class="nav__menu" data-titulo="${txt}">${items.map(([h, t, d], i) => `<a href="${h}"${esActual(h) ? ' aria-current="page"' : ''}><span class="nav__n">${marca(i)}</span><span><strong>${t}</strong><small>${d}</small></span></a>`).join('')}</div></div>`;
     const enlaces = PAGINAS.map(([href, txt]) => {
-      if (href === 'reglamento') {
-        const caps = CAPITULOS.map(([h, t, d], i) => `<a href="${h}"${esActual(h) ? ' aria-current="page"' : ''}><span class="nav__n">${i + 1}</span><span><strong>${t}</strong><small>${d}</small></span></a>`).join('');
-        return `<div class="nav__grupo"><button type="button" class="nav__btn${capActual >= 0 ? ' actual' : ''}" aria-expanded="false">${txt} ${ICONOS.flecha}</button><div class="nav__menu">${caps}</div></div>`;
-      }
+      if (href === 'reglamento') return grupo(txt, CAPITULOS, (i) => i + 1, capActual >= 0);
+      if (href === 'utilidades') return grupo(txt, UTILIDADES, () => '›', utilActual);
       return `<a href="${href}"${esActual(href) ? ' aria-current="page"' : ''}>${txt}</a>`;
     }).join('');
     const h = document.createElement('header');
     h.className = 'cabecera';
     h.innerHTML = `<div class="wrap cabecera__fila">
-      <a class="marca" href="index.html">${LOGO}<span class="marca__txt">BCS · Referencia<small>Battalion Combat Series v2.0</small></span></a>
+      <a class="marca" href="index.html">${LOGO}<span class="marca__txt">Academia BCS<small>Battalion Combat Series v2.0</small></span></a>
       <nav class="nav" id="nav" aria-label="Secciones">${enlaces}</nav>
       <div class="acciones">
         <button class="boton-icono" id="btn-buscar" type="button" aria-label="Buscar">${ICONOS.buscar}<span class="buscar-txt">Buscar</span> <kbd class="buscar-txt">Ctrl K</kbd></button>
@@ -78,12 +89,27 @@
       btnMenu.setAttribute('aria-expanded', abierta);
     });
     h.querySelector('#btn-buscar').addEventListener('click', abrirBuscador);
-    const grupo = h.querySelector('.nav__grupo'), btnGrupo = grupo.querySelector('.nav__btn');
-    const abrirGrupo = (v) => { grupo.classList.toggle('abierto', v); btnGrupo.setAttribute('aria-expanded', v); };
-    btnGrupo.addEventListener('click', (e) => { e.stopPropagation(); abrirGrupo(!grupo.classList.contains('abierto')); });
-    document.addEventListener('click', (e) => { if (!grupo.contains(e.target)) abrirGrupo(false); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') abrirGrupo(false); });
+    const grupos = [...h.querySelectorAll('.nav__grupo')];
+    const abrirGrupo = (g, v) => { g.classList.toggle('abierto', v); g.querySelector('.nav__btn').setAttribute('aria-expanded', v); };
+    grupos.forEach((g) => g.querySelector('.nav__btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      const v = !g.classList.contains('abierto');
+      grupos.forEach((o) => abrirGrupo(o, false));
+      abrirGrupo(g, v);
+    }));
+    document.addEventListener('click', (e) => grupos.forEach((g) => { if (!g.contains(e.target)) abrirGrupo(g, false); }));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') grupos.forEach((g) => abrirGrupo(g, false)); });
   }
+
+  // Hoja de servicio: lecciones superadas, guardadas en este navegador
+  function lecciones() { try { return JSON.parse(leer('bcs-lecciones')) || []; } catch (e) { return []; } }
+  function marcarLeccion(href, hecha) {
+    const l = lecciones().filter((x) => x !== href);
+    if (hecha) l.push(href);
+    guardar('bcs-lecciones', JSON.stringify(l));
+    return l;
+  }
+  function rango(n) { return RANGOS[Math.min(n, RANGOS.length - 1)]; }
 
   // Franja de capítulos bajo la cabecera de cada página del reglamento, y anterior/siguiente al final
   function capitulos() {
@@ -102,13 +128,24 @@
     pasar.setAttribute('aria-label', 'Capítulo anterior y siguiente');
     pasar.innerHTML = (ant ? `<a class="pasar__ant" href="${ant[0]}"><small>← Capítulo ${capActual}</small><strong>${ant[1]}</strong></a>` : '<span></span>')
       + (sig ? `<a class="pasar__sig" href="${sig[0]}"><small>Capítulo ${capActual + 2} →</small><strong>${sig[1]}</strong></a>` : '<a class="pasar__sig" href="simulador.html"><small>Para practicar →</small><strong>Simulador de ataques</strong></a>');
-    document.querySelector('main').append(pasar);
+    const href = CAPITULOS[capActual][0];
+    const sello = document.createElement('div');
+    sello.className = 'wrap sello';
+    const pintarSello = () => {
+      const l = lecciones(), hecha = l.includes(href);
+      sello.innerHTML = `<div class="sello__caja${hecha ? ' hecha' : ''}"><div><span class="antetitulo">Lección ${capActual + 1} de ${CAPITULOS.length}</span><strong>${hecha ? 'Lección superada' : '¿Lo tienes claro, recluta?'}</strong><p>${hecha ? `Rango actual: <b>${rango(l.length)}</b>. Sigue con la siguiente lección o repasa esta cuando quieras.` : `Márcala como superada y asciende a <b>${rango(l.length + 1)}</b>. Se guarda solo en este navegador.`}</p></div>
+        <button type="button" class="boton${hecha ? '' : ' boton--primario'}">${hecha ? 'Desmarcar' : '✓ Lección superada'}</button></div>`;
+      sello.querySelector('button').addEventListener('click', () => { marcarLeccion(href, !hecha); pintarSello(); });
+    };
+    pintarSello();
+    document.querySelector('main').append(sello, pasar);
   }
 
   // ---------- Enlaces al glosario ----------
   // Enlaza la primera aparición de cada término en cada sección y muestra su definición al pasar por encima.
   // [expresión, término del glosario]
   const TERMINOS = [
+    ['March OBJs?', 'March OBJ'], ['Planned Fatigue', 'Planned Fatigue'], ['Soft Jumps?', 'Soft Jump'], ['Unit Traffic', 'Unit Traffic'],
     ['Non-AV ZOC', 'Non-AV ZOC'], ['Real AV ZOC', 'Real AV ZOC'], ['Support AV ZOC', 'Support AV ZOC'],
     ['ZOC blindadas?', 'AV ZOC'], ['AV E?ZOCs?', 'AV ZOC'], ['E?ZOCs?', 'ZOC'],
     ['zonas? de enfrentamiento', 'Engagement Zone'], ['Engagement Zones?', 'Engagement Zone'],
@@ -133,7 +170,7 @@
     Datos.GLOSARIO.forEach((g) => { defs[g[0]] = g; });
     const reglas = TERMINOS.filter(([, t]) => defs[t]).map(([p, t]) => [new RegExp('^(?:' + p + ')$', 'i'), t, p]);
     const re = new RegExp('(^|[^\\wÀ-ÿ-])(' + reglas.map((r) => r[2]).join('|') + ')(?![\\wÀ-ÿ-])', 'gi');
-    const PROHIBIDO = 'a, button, h1, h2, h3, h4, .regla, .en, svg, label, select, option, .chip, kbd, code, .antetitulo, script, style, .no-glosario, table.capacidades, figcaption strong';
+    const PROHIBIDO = 'a, button, h1, h2, h3, h4, .regla, .en, svg, label, select, option, .chip, kbd, code, .antetitulo, script, style, .no-glosario, table.capacidades, figcaption strong, .orden-chip, .chit, .herramienta';
     document.querySelectorAll('main .seccion, main .bloque').forEach((sec) => {
       const vistos = new Set();
       const andar = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT, {
@@ -196,7 +233,7 @@
     f.className = 'pie';
     f.innerHTML = `<div class="wrap pie__fila">
       <div>
-        <p><strong>BCS · Referencia</strong> es una ayuda de juego no oficial, hecha por un aficionado. Resume las reglas de la serie (v2.0) sin entrar en las reglas propias de cada juego.</p>
+        <p><strong>Academia BCS</strong> es una ayuda de juego no oficial, hecha por un aficionado: instrucción para reclutas y consulta para veteranos. Resume las reglas de la serie (v2.0) sin entrar en las reglas propias de cada juego.</p>
         <p><em>Battalion Combat Series</em>, sus reglas, tablas y fichas son © Multi-Man Publishing / The Gamers. Las reglas completas y vigentes están en <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. Las fichas que se muestran vienen de los módulos de VASSAL de <em>Arracourt</em>, <em>Danger Forward</em> y <em>Valley of Tears</em>.</p>
       </div>
       <div><p><a href="https://nephei.org">nephei.org</a> · <a href="https://rpg.nephei.org">rpg.nephei.org</a></p></div>
@@ -278,5 +315,5 @@
   capitulos();
   pie();
   enlazarGlosario();
-  window.Comun = { guardar, leer, CAPITULOS };
+  window.Comun = { guardar, leer, CAPITULOS, RANGOS, lecciones, marcarLeccion, rango };
 })();

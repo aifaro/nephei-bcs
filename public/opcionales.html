@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reglas opcionales · Academia BCS</title>
+  <meta name="description" content="Reglas opcionales del Battalion Combat Series v2.0: órdenes con cuaderno para anotarlas, chits de activación con saco de 3 en 3, Planned Fatigue, Soft Jumps, Unit Traffic y otras.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/bcs.css">
+  <link rel="stylesheet" href="css/partida.css">
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Capítulo 6 · Reglas opcionales</span>
+      <h1>Reglas opcionales y utilidades de partida</h1>
+      <p class="lead">Las <em>Series Rules</em> marcan como <span class="en">[Optional]</span> varias reglas que añaden detalle o niebla de guerra. Se pactan antes de empezar. Dos de ellas piden papel y lápiz: aquí tienes un <strong>saco de activaciones</strong> y un <strong>cuaderno de órdenes</strong> que lo hacen por ti.</p>
+      <div class="indice">
+        <a class="chip" href="#partida">Tu partida</a>
+        <a class="chip" href="#chits">Chits de activación</a>
+        <a class="chip" href="#ordenes">Órdenes</a>
+        <a class="chip" href="#otras">Otras reglas opcionales</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="partida">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Antes de empezar</span><h2>Tu partida</h2></div>
+        <p>Escribe las formaciones de cada bando. Las usan el saco de activaciones y el cuaderno de órdenes. Todo se guarda solo en este navegador, y lo puedes borrar cuando quieras.</p>
+      </div>
+      <div class="partida">
+        <div class="bandos" id="bandos"></div>
+        <div class="tarjeta partida__ctl">
+          <div class="turno">
+            <span class="antetitulo">Turno de juego</span>
+            <div class="turno__fila">
+              <button type="button" class="boton-icono" id="turno-menos" aria-label="Turno anterior">−</button>
+              <strong id="turno">1</strong>
+              <button type="button" class="boton-icono" id="turno-mas" aria-label="Turno siguiente">+</button>
+            </div>
+          </div>
+          <div class="botones">
+            <button type="button" class="boton boton--peq" id="ejemplo">Cargar un ejemplo</button>
+            <button type="button" class="boton boton--peq peligro" id="borrar">Borrar la partida</button>
+          </div>
+          <p class="muted mb0" style="font-size:.82rem" id="guardado">Guardado en este navegador.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="chits">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">2.5k–2.5n · Formation Activation markers</span><h2>Chits de activación</h2></div>
+        <p>En lugar de alternar a voluntad, las formaciones salen de un vaso. Cada formación tiene su chit; cuando acaba (Done), su chit se aparta hasta el turno siguiente. <span class="regla">2.5k</span></p>
+      </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta"><h3>Aleatoria <span class="regla">2.5l</span></h3><p class="muted mb0">Todos los chits disponibles al vaso; se saca uno y esa formación se activa. Puro azar: puede salir el mismo bando varias veces seguidas.</p></div>
+        <div class="tarjeta destacada"><h3>Modificada, de 3 en 3 <span class="regla">2.5m</span></h3><p class="muted mb0">Los chits de los dos bandos en un mismo vaso. Se sacan <strong>tres</strong>: el bando con mayoría elige cuál de ellos se activa, y los otros dos vuelven al vaso. Si quedan uno o dos chits, se saca uno y se activa ese.</p></div>
+        <div class="tarjeta"><h3>Suavizado <span class="regla">2.5n</span></h3><p class="muted mb0">Sin vaso común. El bando con más formaciones («Large») saca un chit numerado cada vez que le toca: con un 1 activa una formación; con un 2, dos seguidas. Hay tantos chits como formaciones tiene el otro bando, y tantos «2» como la diferencia entre ambos.</p></div>
+      </div>
+
+      <div class="herramienta" id="saco">
+        <div class="herramienta__cab">
+          <div><span class="antetitulo">Utilidad</span><h3>Saco de activaciones</h3></div>
+          <div class="conmutador" id="saco-modo" role="group" aria-label="Modo de sorteo">
+            <button type="button" data-m="modificada" aria-pressed="true">De 3 en 3 (2.5m)</button>
+            <button type="button" data-m="aleatoria" aria-pressed="false">De 1 en 1 (2.5l)</button>
+          </div>
+        </div>
+        <div class="saco">
+          <div class="vaso" id="vaso"></div>
+          <div class="mesa">
+            <div class="mesa__fichas" id="sacadas" aria-live="polite"></div>
+            <div class="mesa__ctl">
+              <button type="button" class="boton boton--primario" id="sacar">Sacar del vaso</button>
+              <button type="button" class="boton boton--peq" id="deshacer">Deshacer la última</button>
+            </div>
+          </div>
+          <div class="usadas">
+            <h4>Activadas este turno</h4>
+            <ol id="usadas"></ol>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="ordenes">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">2.4 · Orders</span><h2>Órdenes</h2></div>
+        <p>En la fase de órdenes cada jugador anota, en secreto, una orden por formación. Las órdenes controlan al HQ, no a las unidades: estas operan con normalidad dentro del radio de mando. <span class="regla">2.4</span></p>
+      </div>
+      <div class="rejilla rejilla--4 ordenes-tipos">
+        <div class="tarjeta"><span class="orden-chip hq">Mover HQ</span><h3>HQ Move</h3><p class="muted mb0">La ruta que seguirá el HQ: puntos de paso y hex final. Al activarse se pone un March OBJ en el final y el HQ va hacia él por esa ruta, sin desviarse. Puede quedarse corto, pero no cambiar de dirección. <span class="regla">2.4b</span></p></div>
+        <div class="tarjeta"><span class="orden-chip no">Sin órdenes</span><h3>No Orders</h3><p class="muted mb0">El HQ no se mueve, salvo para una retirada voluntaria. Las unidades, en cambio, hacen lo que quieran. Es la orden por defecto. <span class="regla">2.4c</span></p></div>
+        <div class="tarjeta"><span class="orden-chip pd">Defensa preparada</span><h3>Prepared Defense</h3><p class="muted mb0">Al activarse, la formación debe crear o mantener su PD, y ya no puede echarse atrás. El HQ no puede hacer una retirada voluntaria. Si pierde la PD, pasa a Sin órdenes. <span class="regla">2.4d</span></p></div>
+        <div class="tarjeta"><span class="orden-chip rec">Recuperación</span><h3>Fatigue Recovery</h3><p class="muted mb0">La formación se compromete a hacer una activación de recuperación. Con órdenes no existe el Failure Flip. Es la única que se puede combinar: <strong>PD + Recuperación</strong>. <span class="regla">2.4e</span></p></div>
+      </div>
+      <div class="rejilla rejilla--3" style="margin-top:16px">
+        <div class="tarjeta"><h3>Cambiar órdenes</h3><p class="muted mb0">Solo en la fase de órdenes, y gratis: se tacha y se escribe la nueva. Las órdenes siguen vigentes los turnos que quieras. Excepción: si la MSR se bloquea este turno, puedes darle al HQ otra orden de movimiento en ese momento. <span class="regla">2.4f</span></p></div>
+        <div class="tarjeta"><h3>March OBJ</h3><p class="muted mb0">Se pone en cualquier hex de carretera, aunque haya enemigos. No crea zona de OBJ ni hace tirar fatiga, y las unidades de Recon no pueden crearlo. <span class="regla">2.4g</span></p></div>
+        <div class="tarjeta"><h3>Ruta de marcha</h3><p class="muted mb0">Si el March OBJ queda más allá del radio de mando, las unidades solo pueden entrar en hexes a 2 o menos de la ruta, salvo que ya estén dentro del radio, sigan la ruta hasta el final, se retiren, avancen tras combatir o sean refuerzos. <span class="regla">2.4h</span></p></div>
+      </div>
+
+      <div class="herramienta" id="cuaderno">
+        <div class="herramienta__cab">
+          <div><span class="antetitulo">Utilidad</span><h3>Cuaderno de órdenes · <span id="cuaderno-turno">turno 1</span></h3></div>
+          <div class="flex">
+            <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Bando"></div>
+            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Ocultar órdenes</button>
+          </div>
+        </div>
+        <p class="muted" style="font-size:.88rem;margin:0 0 14px">Si no cambias nada, cada formación conserva la orden del turno anterior (aparece como <em>vigente desde el turno N</em>). Pulsa «Ocultar» antes de pasarle la pantalla a tu rival.</p>
+        <div id="cuaderno-lista" class="cuaderno"></div>
+        <div class="cuaderno__pie">
+          <button type="button" class="boton boton--peq" id="copiar">Copiar las órdenes del turno</button>
+          <button type="button" class="boton boton--peq peligro" id="vaciar-ordenes">Borrar todas las órdenes</button>
+        </div>
+        <details class="historial">
+          <summary>Historial de órdenes por turno</summary>
+          <div class="tabla-wrap"><table class="t" id="historial"></table></div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="otras">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">[Optional]</span><h2>Otras reglas opcionales</h2></div>
+        <p>El resto de reglas opcionales de la serie, para cuando ya domines lo básico. Algunos juegos convierten alguna en obligatoria: mira siempre sus reglas propias.</p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta"><h3>Planned Fatigue <span class="regla">6.4</span></h3>
+          <p>Un paquete completo, ideado por Jim Stravers: se usa entero o no se usa. La fatiga deja de tirarse y pasa a ser una moneda con la que se compran cosas.</p>
+          <div class="tabla-wrap"><table class="t">
+            <thead><tr><th class="num">Fatiga</th><th>Compra</th></tr></thead>
+            <tbody>
+              <tr><td class="num">1</td><td>Un OBJ extra (no de Recon)</td></tr>
+              <tr><td class="num">1</td><td>Un OBJ a más de 15 hexes del HQ (si además es extra, 1 en total)</td></tr>
+              <tr><td class="num">1</td><td>Quitar un marcador de tráfico (al final de las actividades es gratis)</td></tr>
+              <tr><td class="num">2</td><td>Marcha forzada: MA ×3, sin combate ni OBJ ni Segunda Activación</td></tr>
+              <tr><td class="num">1</td><td>+2 a la tirada de Segunda Activación</td></tr>
+            </tbody>
+          </table></div>
+          <p class="muted mb0" style="font-size:.9rem;margin-top:10px">El SNAFU solo cuenta Fresh (+1) y Fat-4 (-1). Un Full da un único OBJ gratis; Partial y Fail, ninguno. En Fat-4 no se puede pagar nada y hay que recuperarse.</p>
+        </div>
+        <div class="rejilla">
+          <div class="tarjeta"><h3>Soft Jumps <span class="regla">4.7i</span></h3><p class="muted mb0">Al saltar un HQ o unos trenes se tira un dado. Con 1-4 el salto es suave: el dueño recoloca HQ y trenes donde quiera (terreno adecuado, sin enemigos, EZOC ni zonas de enfrentamiento), sin ganar marcadores. Con 5-6, salto normal. Representa que el enemigo no sabía dónde estaba de verdad el HQ.</p></div>
+          <div class="tarjeta"><h3>Unit Traffic <span class="regla">4.0e</span></h3><p class="muted mb0">Cualquier hex con unidades que no estén desplegadas y activas (y siempre con un HQ) anula las carreteras para quien entra: paga el terreno normal. Muy realista y muy lento; el diseñador aconseja añadirla más adelante.</p></div>
+          <div class="tarjeta"><h3>Movimiento realista <span class="regla">4.9</span></h3><p class="muted mb0">Nada de mover, deshacer y probar otra vez: si una ficha entra en un hex, entró. Los errores honestos se corrigen hablándolo con el rival.</p></div>
+          <div class="tarjeta"><h3>Enfrentamientos a distancia <span class="regla">5.2f</span></h3><p class="muted mb0">A más de un hex, el resultado «Both Loss» se convierte en «sin efecto».</p></div>
+          <div class="tarjeta"><h3>Stand Off contra Red Support <span class="regla">6.5</span></h3><p class="muted mb0">Si atacan a un Stand Off AV (o a un host con apoyo Stand Off) con apoyo Red, el defensor dispara antes al apoyo del atacante, en la sección «Target is Support» del Engagement Table. Si lo hace Drop, el atacante pierde su modificador de apoyo en ese ataque.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="js/fichas.js"></script>
+<script src="js/datos.js"></script>
+<script src="js/comun.js"></script>
+<script src="js/partida.js"></script>
+</body>
+</html>
