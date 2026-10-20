@@ -63,4 +63,8 @@ PARES = [
     ("${hecha ? 'Superada' : i === sig ? 'Siguiente lección' : 'Lección ' + i}", "${hecha ? 'Passed' : i === sig ? 'Next lesson' : 'Lesson ' + i}"),
     ("n ? (sig >= 0 ? 'Seguir la instrucción' : 'Repasar la instrucción') : 'Empezar la instrucción'", "n ? (sig >= 0 ? 'Continue training' : 'Review the training') : 'Start training'"),
     ('<span class="etq etq--a" style="left:14%;top:88%">Atacante</span><span class="etq etq--d" style="left:62%;top:57%">Defensor</span>', '<span class="etq etq--a" style="left:14%;top:88%">Attacker</span><span class="etq etq--d" style="left:62%;top:57%">Defender</span>'),
+    ('title="Marca todas las lecciones como superadas">Ya soy veterano</button>', 'title="Mark every lesson as passed">I’m a veteran</button>'),
+    ('id="reiniciar-hoja">Volver a empezar</button>', 'id="reiniciar-hoja">Start over</button>'),
+    ("confirm('¿Marcar todas las lecciones como superadas? Podrás repasarlas igualmente y volver a empezar cuando quieras.')", "confirm('Mark every lesson as passed? You can still review them and start over whenever you like.')"),
+    ("confirm('¿Borrar tu hoja de servicio y volver a Recluta?')", "confirm('Clear your service record and go back to Recruit?')"),
 ]

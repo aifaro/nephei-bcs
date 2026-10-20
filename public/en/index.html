@@ -43,7 +43,8 @@
     .franja .tabla-uso { font: 600 0.72rem var(--mono); color: var(--amber); text-transform: uppercase; letter-spacing: .06em; }
     .hero__lema { font: 600 1.3rem/1.35 var(--head); color: var(--amber); margin: -6px 0 14px; }
     .hoja { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px; align-items: center; padding: 18px 22px; margin-bottom: 18px; border-radius: var(--radius); border: 1px solid color-mix(in srgb, var(--amber) 40%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 55%), var(--surface); }
-    @media (max-width: 640px) { .hoja { grid-template-columns: auto minmax(0, 1fr); } .hoja .boton { grid-column: 1 / -1; } }
+    .hoja__botones { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
+    @media (max-width: 640px) { .hoja { grid-template-columns: auto minmax(0, 1fr); } .hoja__botones { grid-column: 1 / -1; } }
     .hoja__insignia { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; background: var(--surface-3); border: 1px solid var(--border-strong); color: var(--amber); }
     .hoja__insignia svg { width: 42px; height: 42px; }
     .hoja small { font: 600 .72rem var(--mono); letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
@@ -218,7 +219,11 @@
       const n = hechas.length;
       document.getElementById('hoja').innerHTML = `<div class="hoja__insignia">${ins(n)}</div>
         <div><small>Service record</small><strong>${Comun.rango(n)}</strong><span class="muted" style="font-size:.9rem">${n ? `${n} of ${C.length} lessons passed.` : 'You have not passed any lessons yet. We all start here.'} ${n < C.length ? `Next promotion: <b style="color:var(--amber)">${Comun.rango(n + 1)}</b>.` : 'Training complete!'}</span><div class="barra"><i style="width:${(n / C.length * 100).toFixed(0)}%"></i></div></div>
-        ${sig >= 0 ? `<a class="boton boton--primario" href="${C[sig][0]}">${n ? 'Go on to lesson ' + sig : 'Start with lesson 0'}</a>` : '<a class="boton" href="simulador.html">To the simulator, Major</a>'}`;
+        <div class="hoja__botones">${sig >= 0 ? `<a class="boton boton--primario" href="${C[sig][0]}">${n ? 'Go on to lesson ' + sig : 'Start with lesson 0'}</a>` : '<a class="boton" href="simulador.html">To the simulator, Major</a>'}
+        ${sig >= 0 ? '<button type="button" class="boton boton--peq" id="veterano" title="Mark every lesson as passed">I’m a veteran</button>' : '<button type="button" class="boton boton--peq" id="reiniciar-hoja">Start over</button>'}</div>`;
+      const vet = document.getElementById('veterano'), rei = document.getElementById('reiniciar-hoja');
+      if (vet) vet.addEventListener('click', () => { if (confirm('Mark every lesson as passed? You can still review them and start over whenever you like.')) { C.forEach((c) => Comun.marcarLeccion(c[0], true)); pintar(); } });
+      if (rei) rei.addEventListener('click', () => { if (confirm('Clear your service record and go back to Recruit?')) { C.forEach((c) => Comun.marcarLeccion(c[0], false)); pintar(); } });
       document.getElementById('lecciones').innerHTML = C.map(([h, t], i) => {
         const hecha = hechas.includes(h);
         return `<li><a href="${h}" class="${hecha ? 'hecha' : i === sig ? 'siguiente' : ''}"><span class="n">${hecha ? '✓' : i}</span><span><strong>${t}</strong><p>${QUE[i]}</p><span class="premio">${hecha ? 'Passed' : i === sig ? 'Next lesson' : 'Lesson ' + i} · ${Comun.rango(i + 1)}</span></span></a></li>`;

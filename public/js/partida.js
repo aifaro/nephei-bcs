@@ -86,6 +86,8 @@
   }
   $('turno-menos').addEventListener('click', () => cambiarTurno(E.turno - 1));
   $('turno-mas').addEventListener('click', () => cambiarTurno(E.turno + 1));
+  // Controles de turno dentro de cada herramienta, para no tener que subir a «Tu partida»
+  document.querySelectorAll('[data-turno]').forEach((b) => b.addEventListener('click', () => cambiarTurno(E.turno + Number(b.dataset.turno))));
   $('ejemplo').addEventListener('click', () => {
     if (todas().length && !confirm(tr('¿Sustituir las formaciones actuales por el ejemplo? Se borrarán las órdenes y el saco.'))) return;
     const n = nueva();
@@ -218,7 +220,8 @@
   const textoOrden = (v) => v.o.map((x) => ORDENES[x].nombre).join(' + ') + (v.o.includes('hq') && v.ruta ? ` (${tr('ruta')}: ${v.ruta})` : '');
 
   function pintarCuaderno() {
-    $('cuaderno-turno').textContent = tr('turno {n}', { n: E.turno });
+    document.querySelectorAll('[data-turno-n]').forEach((e) => { e.textContent = E.turno; });
+    document.querySelectorAll('[data-turno="-1"]').forEach((b) => { b.disabled = E.turno <= 1; });
     const btn = $('ocultar');
     btn.setAttribute('aria-pressed', E.secreto);
     btn.textContent = tr(E.secreto ? 'Desactivar el modo secreto' : 'Modo secreto');

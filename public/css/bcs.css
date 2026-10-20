@@ -391,9 +391,19 @@ table.t.capacidades tr.resaltada td { outline: 2px solid var(--amber); outline-o
 
 /* Capítulos del reglamento */
 .capitulos { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--surface) 70%, transparent); }
-.capitulos ol { list-style: none; margin: 0; padding: 8px 0; display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.capitulos ol { list-style: none; margin: 0; padding: 8px 0; display: flex; gap: 4px; }
+.capitulos li { flex: 1 1 0; min-width: 0; }
+.capitulos li:has([aria-current]) { flex: 0 0 auto; }
+.capitulos__t { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+@media (max-width: 900px) {
+  .capitulos ol { display: flex; }
+  .capitulos li { flex: none; }
+  .capitulos li:has([aria-current]) { flex: 1 1 auto; min-width: 0; }
+  .capitulos a:not([aria-current]) .capitulos__t { display: none; }
+  .capitulos a:not([aria-current]) { padding: 6px; }
+}
 .capitulos ol::-webkit-scrollbar { display: none; }
-.capitulos a { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; padding: 6px 12px 6px 6px; border-radius: 10px; color: var(--muted); font-size: 0.88rem; font-weight: 500; }
+.capitulos a { display: flex; align-items: center; gap: 8px; white-space: nowrap; min-width: 0; padding: 6px 12px 6px 6px; border-radius: 10px; color: var(--muted); font-size: 0.88rem; font-weight: 500; }
 .capitulos a:hover { background: var(--surface-2); color: var(--heading); text-decoration: none; }
 .capitulos a[aria-current="page"] { background: var(--surface-3); color: var(--heading); }
 .pasar { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 30px; }
@@ -485,6 +495,7 @@ dl.glosario .g-donde { font: 600 .78rem var(--mono); letter-spacing: .02em; }
 .pasos-act .detalle { min-height: 280px; align-self: start; }
 
 /* Utilidades */
+[hidden] { display: none !important; }
 .centrado { text-align: center; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .oculto { display: none !important; }

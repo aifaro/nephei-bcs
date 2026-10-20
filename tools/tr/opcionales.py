@@ -50,7 +50,7 @@ PARES = [
      '<h3>March OBJ</h3><p class="muted mb0">It goes in any road hex, even with enemy units in it. It creates no OBJ Zone and triggers no fatigue roll, and Recon units cannot create one. <span class="regla">2.4g</span></p>'),
     ('<h3>Ruta de marcha</h3><p class="muted mb0">Si el March OBJ queda más allá del radio de mando, las unidades solo pueden entrar en hexes a 2 o menos de la ruta, salvo que ya estén dentro del radio, sigan la ruta hasta el final, se retiren, avancen tras combatir o sean refuerzos. <span class="regla">2.4h</span></p>',
      '<h3>March Routing</h3><p class="muted mb0">If the March OBJ lies beyond Command Radius, units can only enter hexes within 2 of the route, unless they are already inside the radius, follow the route to its end, retreat, advance after combat or are reinforcements. <span class="regla">2.4h</span></p>'),
-    ('<span class="antetitulo">Utilidad</span><h3>Cuaderno de órdenes · <span id="cuaderno-turno">turno 1</span></h3>', '<span class="antetitulo">Tool</span><h3>Orders log · <span id="cuaderno-turno">turn 1</span></h3>'),
+    ('<span class="antetitulo">Utilidad</span><h3>Cuaderno de órdenes</h3>', '<span class="antetitulo">Tool</span><h3>Orders log</h3>'),
     ('id="cuaderno-bando" role="group" aria-label="Bando"', 'id="cuaderno-bando" role="group" aria-label="Side"'),
     ('id="ocultar" aria-pressed="false">Modo secreto</button>', 'id="ocultar" aria-pressed="false">Secret mode</button>'),
     ('id="revelar-todas" hidden>Revelar u ocultar todas</button>', 'id="revelar-todas" hidden>Reveal or hide all</button>'),
@@ -82,4 +82,6 @@ PARES = [
      '<h3>Long-range Engagements <span class="regla">5.2f</span></h3><p class="muted mb0">Beyond one hex, a "Both Loss" result becomes "No Effect".</p>'),
     ('<h3>Stand Off contra Red Support <span class="regla">6.5</span></h3><p class="muted mb0">Si atacan a un Stand Off AV (o a un host con apoyo Stand Off) con apoyo Red, el defensor dispara antes al apoyo del atacante, en la sección «Target is Support» del Engagement Table. Si lo hace Drop, el atacante pierde su modificador de apoyo en ese ataque.</p>',
      '<h3>Stand Off AV vs. Red Support <span class="regla">6.5</span></h3><p class="muted mb0">When a Stand Off AV unit (or a host with Stand Off Support) is attacked by a unit with Red Support, the defender first fires at the attacker\'s Support, on the "Target is Support" part of the Engagement Table. If it Drops it, the attacker loses its Support DRM for that attack.</p>'),
+    ('aria-label="Turno de juego"', 'aria-label="Game turn"'),
+    ('<span>Turno <strong data-turno-n>', '<span>Turn <strong data-turno-n>'),
 ]

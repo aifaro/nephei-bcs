@@ -131,7 +131,7 @@
     const tira = document.createElement('nav');
     tira.className = 'capitulos';
     tira.setAttribute('aria-label', tr('Capítulos del reglamento'));
-    tira.innerHTML = `<div class="wrap"><ol>${CAPITULOS.map(([h, t], i) => `<li><a href="${h}"${i === capActual ? ' aria-current="page"' : ''}><span class="nav__n">${i}</span>${t}</a></li>`).join('')}</ol></div>`;
+    tira.innerHTML = `<div class="wrap"><ol>${CAPITULOS.map(([h, t], i) => `<li><a href="${h}" title="${tr('Lección {n}', { n: i })} · ${t}"${i === capActual ? ' aria-current="page"' : ''}><span class="nav__n">${i}</span><span class="capitulos__t">${t}</span></a></li>`).join('')}</ol></div>`;
     if (hero) hero.after(tira);
     const ol = tira.querySelector('ol'), sel = ol.querySelector('[aria-current]').parentElement;
     ol.scrollLeft = sel.offsetLeft - (ol.clientWidth - sel.offsetWidth) / 2;
