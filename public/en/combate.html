@@ -15,21 +15,8 @@
   <link rel="stylesheet" href="../css/bcs.css">
   <style>
     .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
-    .elegir { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; }
-    @media (max-width: 960px) { .elegir { grid-template-columns: 1fr; } }
-    .elegir h3 { font-size: .78rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
-    .opciones-lista { display: grid; gap: 6px; }
-    .opciones-lista button { display: flex; align-items: center; gap: 12px; text-align: left; padding: 8px 10px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-size: .9rem; cursor: pointer; }
-    .opciones-lista button .ficha { width: 40px; }
-    .opciones-lista button[aria-pressed="true"] { border-color: var(--amber); background: var(--amber-soft); color: var(--heading); }
-    .veredictos { display: grid; gap: 8px; }
-    .vd { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 10px 12px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); }
-    .vd .i { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-weight: 800; font-size: .8rem; }
-    .vd.si .i { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); }
-    .vd.no { opacity: .62; }
-    .vd.no .i { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
-    .vd strong { color: var(--heading); }
-    .vd p { margin: 2px 0 0; font-size: .84rem; color: var(--muted); }
+    table.elegir-t td.si { color: var(--ok); font-weight: 700; }
+    table.elegir-t td.no { color: var(--bad); }
     .ataque { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 28px; }
     @media (max-width: 900px) { .ataque { grid-template-columns: 1fr; } }
     .ficha-tec { position: sticky; top: 90px; align-self: start; }
@@ -82,13 +69,19 @@
     <div class="wrap">
       <div class="seccion__cab">
         <div><span class="antetitulo">Pick your tool</span><h2>Which attack do I use?</h2></div>
-        <p>Pick your unit and what is in the enemy hex. It tells you what you can and cannot do, according to the Unit Capabilities Chart and each attack's requirements.</p>
+        <p>It depends on what is in the enemy hex and on what your unit is. This chart sums up when each type applies; the assistant in Tools works it out for your exact case.</p>
       </div>
-      <div class="elegir">
-        <div class="tarjeta tarjeta--plana"><h3>My unit</h3><div class="opciones-lista" id="el-unidad"></div></div>
-        <div class="tarjeta tarjeta--plana"><h3>The enemy hex</h3><div class="opciones-lista" id="el-blanco"></div></div>
-        <div class="tarjeta tarjeta--plana"><h3>You can…</h3><div class="veredictos" id="el-res"></div></div>
-      </div>
+      <div class="tabla-wrap"><table class="t elegir-t">
+        <thead><tr><th>Combat type</th><th class="num">Hex without AV</th><th class="num">Hex with AV Support</th><th class="num">Real AV unit</th><th>Who can</th></tr></thead>
+        <tbody>
+          <tr><td><a href="#regular">Regular Attack</a></td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td><td>A unit with the assault arrow, adjacent</td></tr>
+          <tr><td><a href="#choque">Shock Attack</a></td><td class="num si">✓</td><td class="num no">✕</td><td class="num no">✕</td><td>Tac MA plus the arrow, Red AV, Light AV or Breakthrough</td></tr>
+          <tr><td><a href="#enfrentamiento">Engagement</a></td><td class="num no">✕</td><td class="num si">✓ the Support</td><td class="num si">✓</td><td>A Real AV unit, except Light AV; no OBJ needed</td></tr>
+          <tr><td><a href="#fuego">Attack by Fire</a></td><td class="num si">✓</td><td class="num no">✕</td><td class="num no">✕</td><td>A Real AV unit, adjacent</td></tr>
+          <tr><td><a href="#bombardeo">Barrage</a></td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td><td>Artillery or air, with a spotter</td></tr>
+        </tbody>
+      </table></div>
+      <div class="botones" style="margin-top:16px"><a class="boton boton--primario" href="utilidades.html#ataque">Open the “Which attack do I use?” assistant →</a></div>
     </div>
   </section>
 
@@ -333,62 +326,5 @@
 <script src="../js/fichas.js"></script>
 <script src="../js/datos.js"></script>
 <script src="../js/comun.js"></script>
-<script>
-(function () {
-  'use strict';
-  const U = Fichas.UNIDADES;
-  const MIAS = [
-    ['inf', 'Leg infantry', { ac: true, tac: false }, 'inf-us'],
-    ['mec', 'Mechanized infantry on the move', { ac: true, tac: true }, 'mec-us', 'm'],
-    ['tq', 'Tank (Red AV)', { av: 'red', tac: true }, 'tq-us'],
-    ['tiger', 'Breakthrough tank', { av: 'red', tac: true, ruptura: true }, 'tiger'],
-    ['td', 'Tank destroyer (Limited)', { av: 'limited', tac: true }, 'td'],
-    ['flak', 'Stand Off gun', { av: 'standoff', tac: false }, 'flak'],
-    ['light', 'Light AV (white number)', { av: 'light', tac: true }, null],
-    ['recon', 'Reconnaissance (Dual)', { ac: true, av: 'red', tac: true, dual: true }, 'rec-us']
-  ];
-  const BLANCOS = [
-    ['sinav', 'Infantry without Support', null, 'inf-de'],
-    ['apoyo', 'Infantry with AV Support', null, 'inf-de'],
-    ['av', 'A Real AV unit', null, 'panther']
-  ];
-  let mia = 'inf', blanco = 'sinav';
-
-  function lista(id, items, sel, al) {
-    const c = document.getElementById(id);
-    c.innerHTML = '';
-    items.forEach(([k, t, x, f, lado]) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.setAttribute('aria-pressed', k === sel);
-      const img = f ? Fichas.ficha(U[f], lado || 'd', { tam: 40 }) : '<span class="av-muestra light" style="width:40px;height:40px">0</span>';
-      b.innerHTML = img + (k === 'apoyo' ? Fichas.marcador('red', { tam: 28 }) : '') + '<span>' + t + '</span>';
-      b.addEventListener('click', () => al(k));
-      c.appendChild(b);
-    });
-  }
-
-  function evaluar() {
-    const p = MIAS.find((m) => m[0] === mia)[2];
-    const conAv = blanco !== 'sinav';
-    const rs = [];
-    const add = (ok, t, d, href) => rs.push({ ok, t, d, href });
-    add(!!p.ac, 'Regular Attack', p.ac ? 'With the assault arrow you can be the Attack unit.' : (p.av ? 'Without the assault arrow you cannot attack, but you can Assist another unit (+1).' : ''), '#regular');
-    const chq = p.tac && (p.ac || p.av === 'red' || p.av === 'light' || p.ruptura);
-    add(chq && !conAv, 'Shock Attack', !p.tac ? 'You need a Tac MA.' : !chq ? 'Limited AV only makes Shock Attacks if it is Breakthrough armor.' : conAv ? 'The hex has ' + (blanco === 'apoyo' ? 'Support ' : '') + 'AV: strip it first with an Engagement.' : 'Tac MA and a hex with no AV: go ahead, and keep moving afterwards.', '#choque');
-    const enf = p.av && p.av !== 'light';
-    add(enf && conAv, 'Engagement', !p.av ? 'You need an AV.' : p.av === 'light' ? 'Light AV cannot start Engagements.' : !conAv ? 'Only against targets with AV, Real or Support.' : blanco === 'apoyo' ? 'Against Support: a Drop strips the whole hex of its Support.' : 'AV + AR against AV + AR.', '#enfrentamiento');
-    add(!!p.av && !conAv, 'Attack by Fire', !p.av ? 'You need an AV.' : conAv ? 'Only against hexes with no AV at all.' : 'One die per unit in the hex, Attack by Fire column.', '#fuego');
-    add(true, 'Spot for a Barrage', 'Any unit of the formation can spot, even when FINISHED, if it began the phase inside Command Radius.', '#bombardeo');
-    document.getElementById('el-res').innerHTML = rs.map((r) => `<div class="vd ${r.ok ? 'si' : 'no'}"><span class="i">${r.ok ? '✓' : '✕'}</span><div><strong><a href="${r.href}" style="color:inherit">${r.t}</a></strong><p>${r.d}</p></div></div>`).join('');
-  }
-  function pintar() {
-    lista('el-unidad', MIAS, mia, (k) => { mia = k; pintar(); });
-    lista('el-blanco', BLANCOS, blanco, (k) => { blanco = k; pintar(); });
-    evaluar();
-  }
-  pintar();
-})();
-</script>
 </body>
 </html>

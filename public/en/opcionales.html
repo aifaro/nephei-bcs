@@ -13,7 +13,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/bcs.css">
-  <link rel="stylesheet" href="../css/partida.css">
+  <style>
+    .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .destacada { border-color: color-mix(in srgb, var(--amber) 45%, var(--border)); background: linear-gradient(150deg, var(--amber-soft), transparent 60%), var(--surface); }
+    .ordenes-tipos .tarjeta { display: flex; flex-direction: column; gap: 4px; }
+    .ordenes-tipos h3 { margin: 6px 0 2px; font-size: 1rem; }
+    .orden-chip { display: inline-flex; align-items: center; padding: 4px 11px; border-radius: 999px; font: 600 .8rem var(--body); align-self: flex-start; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); background: color-mix(in srgb, var(--c) 14%, transparent); }
+    .orden-chip.hq { --c: var(--amber); } .orden-chip.no { --c: var(--muted); } .orden-chip.pd { --c: var(--olive); } .orden-chip.rec { --c: var(--blue); }
+  </style>
 </head>
 <body>
 <main>
@@ -21,40 +28,12 @@
     <div class="wrap">
       <span class="antetitulo">Chapter 6 · Optional rules</span>
       <h1>Optional rules and game tools</h1>
-      <p class="lead">The <em>Series Rules</em> mark several rules as <span class="en">[Optional]</span>: they add detail or fog of war, and players agree on them before starting. The ones that call for pencil, paper or dice have their tool here: an <strong>activation cup</strong>, an <strong>orders log</strong> and the <strong>Soft Jump</strong> roll.</p>
+      <p class="lead">The <em>Series Rules</em> mark several rules as <span class="en">[Optional]</span>: they add detail or fog of war. Players agree on them before starting. Two of them call for pencil and paper, and have their tool in the <a href="utilidades.html#partida">Tools dashboard</a>: an <strong>activation cup</strong> and an <strong>orders log</strong>.</p>
       <div class="indice">
-        <a class="chip" href="#partida">Your game</a>
         <a class="chip" href="#chits">Activation chits</a>
         <a class="chip" href="#ordenes">Orders</a>
         <a class="chip" href="#soft-jump">Soft Jumps</a>
         <a class="chip" href="#otras">Other optional rules</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion" id="partida">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div><span class="antetitulo">Before you start</span><h2>Your game</h2></div>
-        <p>Enter each side's formations. The activation cup and the orders log both use them. Everything is saved in this browser only, and you can clear it whenever you like.</p>
-      </div>
-      <div class="partida">
-        <div class="bandos" id="bandos"></div>
-        <div class="tarjeta partida__ctl">
-          <div class="turno">
-            <span class="antetitulo">Game turn</span>
-            <div class="turno__fila">
-              <button type="button" class="boton-icono" id="turno-menos" aria-label="Previous turn">−</button>
-              <strong id="turno">1</strong>
-              <button type="button" class="boton-icono" id="turno-mas" aria-label="Next turn">+</button>
-            </div>
-          </div>
-          <div class="botones">
-            <button type="button" class="boton boton--peq" id="ejemplo">Load an example</button>
-            <button type="button" class="boton boton--peq peligro" id="borrar">Clear the game</button>
-          </div>
-          <p class="muted mb0" style="font-size:.82rem" id="guardado">Saved in this browser.</p>
-        </div>
       </div>
     </div>
   </section>
@@ -71,28 +50,7 @@
         <div class="tarjeta"><h3>Smoothing <span class="regla">2.5n</span></h3><p class="muted mb0">No shared cup. The side with more formations ("Large") draws a numbered chit each time it is its turn: on a 1 it activates one formation; on a 2, two in a row. There are as many chits as the other side has formations, with as many "2"s as the difference between the two.</p></div>
       </div>
 
-      <div class="herramienta" id="saco">
-        <div class="herramienta__cab">
-          <div class="herramienta__tit"><div><span class="antetitulo">Tool</span><h3>Activation cup</h3></div><div class="turno-mini" role="group" aria-label="Game turn"><button type="button" data-turno="-1" aria-label="Previous turn">−</button><span>Turn <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Next turn">+</button></div></div>
-          <div class="conmutador" id="saco-modo" role="group" aria-label="Draw mode">
-            <button type="button" data-m="modificada" aria-pressed="true">Three at a time (2.5m)</button>
-            <button type="button" data-m="aleatoria" aria-pressed="false">One at a time (2.5l)</button>
-          </div>
-        </div>
-        <div class="saco">
-          <div class="vaso" id="vaso"></div>
-          <div class="mesa">
-            <div class="mesa__fichas" id="sacadas" aria-live="polite"></div>
-            <div class="mesa__ctl">
-              <button type="button" class="boton boton--primario" id="sacar">Draw from the cup</button>
-              <button type="button" class="boton boton--peq" id="deshacer">Undo the last one</button>
-            </div>
-          </div>
-          <div class="usadas">
-            <h4>Activated this turn</h4>
-            <ol id="usadas"></ol>
-          </div>
-        </div>
+      <a class="ir-util" href="utilidades.html#saco"><span class="antetitulo">Tool</span><strong>Activation cup</strong><span>Draw chits three at a time or one at a time, with the formations of your game. It is in the Tools dashboard, next to the orders log.</span><span class="ir-util__f">→</span></a>
       </div>
     </div>
   </section>
@@ -115,25 +73,7 @@
         <div class="tarjeta"><h3>March Routing <span class="chip chip--amber" style="font-size:.7rem">optional</span></h3><p class="muted mb0">Extra realism within the Orders rules: the designer himself asks you not to use it if you would play the route to "pick up" units along the way. If the March OBJ lies beyond Command Radius, units can only enter hexes within 2 of the route, unless they are already inside the radius, follow the route to its end, retreat, advance after combat or are reinforcements. <span class="regla">2.4h</span></p></div>
       </div>
 
-      <div class="herramienta" id="cuaderno">
-        <div class="herramienta__cab">
-          <div class="herramienta__tit"><div><span class="antetitulo">Tool</span><h3>Orders log</h3></div><div class="turno-mini" role="group" aria-label="Game turn"><button type="button" data-turno="-1" aria-label="Previous turn">−</button><span>Turn <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Next turn">+</button></div></div>
-          <div class="flex">
-            <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Side"></div>
-            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Secret mode</button>
-            <button type="button" class="boton boton--peq" id="revelar-todas" hidden>Reveal or hide all</button>
-          </div>
-        </div>
-        <p class="muted" style="font-size:.88rem;margin:0 0 14px">If you change nothing, each formation keeps the previous turn's order (shown as <em>in force since turn N</em>). In <strong>secret mode</strong> every order is covered and revealed one at a time: automatically when the formation activates from the activation cup, or by hand with its "Reveal" button. When a new turn starts, they are all covered again.</p>
-        <div id="cuaderno-lista" class="cuaderno"></div>
-        <div class="cuaderno__pie">
-          <button type="button" class="boton boton--peq" id="copiar">Copy this turn's orders</button>
-          <button type="button" class="boton boton--peq peligro" id="vaciar-ordenes">Clear all orders</button>
-        </div>
-        <details class="historial">
-          <summary>Order history by turn</summary>
-          <div class="tabla-wrap"><table class="t" id="historial"></table></div>
-        </details>
+      <a class="ir-util" href="utilidades.html#ordenes"><span class="antetitulo">Tool</span><strong>Orders log</strong><span>Write down each formation’s order every turn, with a secret mode to reveal them one by one. It is in the Tools dashboard.</span><span class="ir-util__f">→</span></a>
       </div>
     </div>
   </section>
@@ -162,12 +102,7 @@
           </ul>
         </div>
       </div>
-      <div class="herramienta" id="salto">
-        <div class="herramienta__cab">
-          <div><span class="antetitulo">Utilidad</span><h3>Soft Jump or Hard Jump?</h3></div>
-          <button type="button" class="boton boton--primario" id="salto-tirar">Roll the die</button>
-        </div>
-        <div class="salto" id="salto-res"><p class="muted mb0">When the enemy enters the hex of an HQ or trains, roll here before resolving retreats.</p></div>
+
       </div>
     </div>
   </section>
@@ -209,20 +144,5 @@
 <script src="../js/fichas.js"></script>
 <script src="../js/datos.js"></script>
 <script src="../js/comun.js"></script>
-<script src="../js/partida.js"></script>
-<script>
-(function () {
-  'use strict';
-  const t = I18N.t;
-  const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
-  const dado = (v) => `<div class="dado">${Array.from({ length: 9 }, (_, i) => `<i style="visibility:${PIPS[v].includes(i) ? 'visible' : 'hidden'}"></i>`).join('')}</div>`;
-  document.getElementById('salto-tirar').addEventListener('click', () => {
-    const v = 1 + Math.floor(Math.random() * 6), suave = v <= 4;
-    document.getElementById('salto-res').innerHTML = `<div class="salto__fila">${dado(v)}<div><strong class="${suave ? 'suave' : 'duro'}">${suave ? t('Salto suave') : t('Salto normal')}</strong><p class="mb0">${suave
-      ? t('El HQ nunca estuvo ahí: recoloca el HQ y sus trenes donde quieras (sin enemigos, EZOC ni zonas de enfrentamiento), con los mismos marcadores.')
-      : t('Lo han pillado: el HQ se retira 3 hexes o más, sus trenes pasan a Ghost, pierde la Prepared Defense y recibe Coordination.')}</p></div></div>`;
-  });
-})();
-</script>
 </body>
 </html>

@@ -414,6 +414,15 @@ table.t.capacidades tr.resaltada td { outline: 2px solid var(--amber); outline-o
 .pasar__sig { text-align: right; grid-column: 2; }
 @media (max-width: 560px) { .pasar { grid-template-columns: 1fr; } .pasar__sig { grid-column: auto; } .pasar > span { display: none; } }
 
+/* Enlace a una utilidad del panel */
+.ir-util { position: relative; display: grid; gap: 4px; margin-top: 22px; padding: 18px 56px 18px 22px; border-radius: var(--radius); border: 1px dashed color-mix(in srgb, var(--amber) 50%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 60%), var(--surface); color: var(--text); }
+.ir-util:hover { text-decoration: none; border-style: solid; }
+.ir-util .antetitulo { margin-bottom: 2px; }
+.ir-util strong { font: 700 1.15rem var(--head); color: var(--heading); }
+.ir-util span:not(.antetitulo):not(.ir-util__f) { color: var(--muted); font-size: .92rem; }
+.ir-util__f { position: absolute; right: 22px; top: 50%; transform: translateY(-50%); font-size: 1.4rem; color: var(--amber); transition: transform .15s; }
+.ir-util:hover .ir-util__f { transform: translate(3px, -50%); }
+
 /* Lección superada */
 .sello { margin-top: 34px; }
 .sello__caja { display: flex; align-items: center; justify-content: space-between; gap: 18px; flex-wrap: wrap; padding: 18px 22px; border-radius: var(--radius); border: 1px dashed color-mix(in srgb, var(--amber) 55%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 60%), var(--surface); }
@@ -441,6 +450,10 @@ a.g:hover { color: var(--amber); text-decoration-style: solid; }
 .pie__fila { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .pie p { margin: 0.3em 0; max-width: 70ch; }
 .pie a { color: var(--text); }
+.pie__lado { max-width: 44ch; }
+.pie__priv { font-size: .8rem; }
+.pie__borrar { margin-left: 2px; padding: 0; border: 0; background: none; color: var(--text); font: inherit; text-decoration: underline; text-underline-offset: 2px; cursor: pointer; }
+.pie__borrar:hover { color: var(--amber); }
 
 /* ---------- Buscador (Ctrl+K) ---------- */
 .buscador[hidden] { display: none; }

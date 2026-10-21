@@ -23,19 +23,10 @@
     .ft ul { margin: 0; }
     .ft.clave { border-color: color-mix(in srgb, var(--amber) 45%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 45%), var(--surface); }
     .detalle h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .snafu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
-    @media (max-width: 960px) { .snafu { grid-template-columns: 1fr; } }
-    .snafu-res { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
-    .sr-caja { border-radius: 12px; padding: 14px; border: 1px solid var(--border); background: var(--surface-2); text-align: center; transition: box-shadow .2s, transform .2s; }
-    .sr-caja strong { display: block; font: 700 1.8rem var(--head); }
-    .sr-caja span { font-size: .8rem; color: var(--muted); }
-    .sr-caja small { display: block; font: 700 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-    .sr-caja.salio { box-shadow: 0 0 0 3px var(--amber); transform: translateY(-2px); }
-    .sr-fail small, .sr-fail strong { color: var(--bad); }
-    .sr-partial small, .sr-partial strong { color: var(--amber); }
-    .sr-full small, .sr-full strong { color: var(--ok); }
-    .total-drm { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 4px; }
-    .total-drm strong { font: 700 2.2rem var(--head); color: var(--heading); }
+    .snafu-r { border-top: 3px solid var(--c); }
+    .snafu-r h3 { color: var(--c); display: flex; align-items: center; gap: 10px; }
+    .snafu-r.fail { --c: var(--bad); } .snafu-r.partial { --c: var(--amber); } .snafu-r.full { --c: var(--ok); }
+    .snafu-r ul { font-size: .92rem; }
     .comparte { display: flex; flex-wrap: wrap; gap: 6px; }
     table.estados td.num { font-size: .9rem; }
     table.estados td.si { color: var(--ok); font-weight: 700; }
@@ -136,22 +127,19 @@
   <section class="seccion" id="snafu">
     <div class="wrap">
       <div class="seccion__cab">
-        <div><span class="antetitulo">SNAFU Table</span><h2>Calculadora de SNAFU</h2></div>
-        <p>Marca la situación de la formación. Las reglas de cada juego suelen añadir sus propios modificadores (clima, campaña…). <span class="regla">3.2</span></p>
+        <div><span class="antetitulo">SNAFU Table</span><h2>La tirada de SNAFU</h2></div>
+        <p>Al empezar cada activación, la formación tira 2d6 y suma sus modificadores. El resultado dice cuánto puede hacer hoy: con 2 o menos, <strong>Fail</strong>; de 3 a 6, <strong>Partial</strong>; con 7 o más, <strong>Full</strong>. En Prepared Defense nunca pasa de Partial. <span class="regla">3.2</span></p>
       </div>
-      <div class="snafu">
-        <div class="tarjeta" id="snafu-mods"></div>
-        <div class="tarjeta">
-          <h3>Resultado</h3>
-          <div class="total-drm"><strong id="snafu-drm">+0</strong><span class="muted">DRM total sobre 2d6</span></div>
-          <div class="snafu-res" id="snafu-res"></div>
-          <div class="tirar" style="margin-top:18px">
-            <button class="boton boton--primario" type="button" id="snafu-tirar">Tirar SNAFU</button>
-            <div class="dados" id="snafu-dados"></div>
-          </div>
-          <div id="snafu-efectos" style="margin-top:16px"></div>
-        </div>
+      <div class="rejilla rejilla--3">
+        <div class="tarjeta snafu-r fail"><h3>Fail <span class="regla">2 o menos</span></h3><ul class="rombos mb0"><li>Sin OBJ ni Recon: no hay ataques, choques, ataques por fuego ni bombardeos.</li><li>Nadie mueve, salvo el HQ en retirada voluntaria.</li><li>Sí: voltear fichas, mover trenes, Prepared Defense, recuperar apoyo y entrar en Screen.</li><li>Sin Fire Events. No se tira por fatiga.</li></ul></div>
+        <div class="tarjeta snafu-r partial"><h3>Partial <span class="regla">3-6</span></h3><ul class="rombos mb0"><li>1 OBJ y se pueden crear OBJ con Recon.</li><li>Mitad de MA (sin redondear) y mitad de puntos de artillería (redondeando hacia abajo).</li><li>Aviación y combate, normal. Dos Fire Events por unidad.</li></ul></div>
+        <div class="tarjeta snafu-r full"><h3>Full <span class="regla">7 o más</span></h3><ul class="rombos mb0"><li>2 OBJ (dos en el mismo hex forman un Double OBJ).</li><li>MA y artillería completos. Todo permitido.</li></ul></div>
       </div>
+      <div class="rejilla rejilla--2" style="margin-top:16px">
+        <div class="tarjeta"><h3>Lo que sube la tirada</h3><ul class="rombos mb0"><li>Formación Fresh: +1.</li><li>Trenes a la distancia óptima, de 5 a 15 hexes del HQ: +1.</li><li>Algunos modificadores propios de cada juego.</li></ul></div>
+        <div class="tarjeta"><h3>Lo que la hunde</h3><ul class="rombos mb0"><li>Cada nivel de fatiga: −1. Coordination: −1. Formaciones mezcladas: −1.</li><li>Trenes Ghost: −1. MSR por pistas: −1 o −2, según el tiempo.</li><li>Trenes fuera del mapa: −3, y MSR Blocked: −1 o −2 más.</li></ul></div>
+      </div>
+      <div class="botones" style="margin-top:16px"><a class="boton boton--primario" href="utilidades.html#snafu">Calcular probabilidades en la calculadora de SNAFU →</a><a class="boton" href="tablas.html#snafu">Ver la tabla completa</a></div>
     </div>
   </section>
 
@@ -285,93 +273,17 @@
   });
   pintarPaso();
 
-  // ---------- SNAFU ----------
-  const S = { fatiga: 0, coord: false, mixta: false, msr: 'completa', optima: true, ghost: false, cruce: false, pistas: 'no', bloqueo: 0, pd: false, juego: 0 };
-  function op(t, v, act, al, opc) {
+  // ---------- Botones y dados de la Segunda Activación ----------
+  function op(t, v, act, al) {
     const b = document.createElement('button');
-    b.type = 'button'; b.className = 'op' + (opc && opc.def ? ' def' : '');
+    b.type = 'button'; b.className = 'op';
     b.setAttribute('aria-pressed', !!act);
     b.innerHTML = t + (v !== '' ? ` <span class="v">${v}</span>` : '');
     b.addEventListener('click', al);
     return b;
   }
-  function grupo(c, titulo, bs) {
-    const g = document.createElement('div'); g.className = 'grupo-op';
-    g.innerHTML = `<h3>${titulo}</h3>`;
-    const o = document.createElement('div'); o.className = 'opciones';
-    bs.forEach((b) => o.appendChild(b)); g.appendChild(o); c.appendChild(g);
-  }
-  function mods() {
-    const m = [];
-    if (S.fatiga === -1) m.push(['Fresh', 1]); else if (S.fatiga > 0) m.push(['Fatiga ' + S.fatiga, -S.fatiga]);
-    if (S.coord) m.push(['Coordination', -1]);
-    if (S.mixta) m.push(['Formaciones mezcladas', -1]);
-    if (S.juego) m.push(['Del juego', S.juego]);
-    if (S.msr === 'completa') {
-      if (S.optima) m.push(['Distancia óptima', 1]);
-      if (S.ghost) m.push(['Trenes Ghost', -1]);
-      if (S.cruce) m.push(['Crossing the Streams', -1]);
-      if (S.pistas === 'buena') m.push(['MSR por pistas (buen tiempo)', -1]);
-      if (S.pistas === 'mala') m.push(['MSR por pistas (mal tiempo)', -2]);
-    } else {
-      m.push(['Trenes fuera del mapa', -3]);
-      if (S.bloqueo) m.push(['MSR Blocked ' + S.bloqueo, -S.bloqueo]);
-    }
-    return m;
-  }
-  function pintarSnafu(salio) {
-    const c = $('#snafu-mods'); c.innerHTML = '';
-    const set = (k, v) => () => { S[k] = v; pintarSnafu(); };
-    grupo(c, 'Fatiga', [['Fresh', -1, '+1'], ['0', 0, '±0'], ['1', 1, '−1'], ['2', 2, '−2'], ['3', 3, '−3'], ['4', 4, '−4']].map(([t, v, d]) => op(t, d, S.fatiga === v, set('fatiga', v))));
-    grupo(c, 'Siempre', [op('Coordination', '−1', S.coord, set('coord', !S.coord)), op('Formaciones mezcladas', '−1', S.mixta, set('mixta', !S.mixta)), op('Prepared Defense', 'máx. Partial', S.pd, set('pd', !S.pd))]);
-    grupo(c, 'La MSR', [op('Completa', '', S.msr === 'completa', set('msr', 'completa')), op('No completa', '', S.msr === 'rota', set('msr', 'rota'))]);
-    if (S.msr === 'completa') {
-      grupo(c, 'Con la MSR completa', [op('Trenes a 5-15 hexes del HQ', '+1', S.optima, set('optima', !S.optima)), op('Trenes Ghost', '−1', S.ghost, set('ghost', !S.ghost)), op('Crossing the Streams', '−1', S.cruce, set('cruce', !S.cruce))]);
-      grupo(c, 'Pistas (Tracks) en la MSR', [op('No', '', S.pistas === 'no', set('pistas', 'no')), op('Con buen tiempo', '−1', S.pistas === 'buena', set('pistas', 'buena')), op('Con mal tiempo', '−2', S.pistas === 'mala', set('pistas', 'mala'))]);
-    } else {
-      grupo(c, 'Con la MSR rota (trenes fuera: −3)', [op('Sin marcador', '', S.bloqueo === 0, set('bloqueo', 0)), op('MSR Blocked 1', '−1', S.bloqueo === 1, set('bloqueo', 1)), op('MSR Blocked 2', '−2', S.bloqueo === 2, set('bloqueo', 2))]);
-    }
-    grupo(c, 'Modificador del juego', [-2, -1, 0, 1, 2].map((v) => op(v > 0 ? '+' + v : String(v), '', S.juego === v, set('juego', v))));
-    const drm = mods().reduce((s, x) => s + x[1], 0);
-    $('#snafu-drm').textContent = (drm >= 0 ? '+' : '−') + Math.abs(drm);
-    const dist = R.distribucion(R.TABLA_SNAFU, drm);
-    if (S.pd) { dist[1] += dist[2]; dist[2] = 0; }
-    const claves = ['fail', 'partial', 'full'];
-    $('#snafu-res').innerHTML = R.TABLA_SNAFU.map((f, i) => `<div class="sr-caja sr-${claves[i]}${salio === i ? ' salio' : ''}"><small>${f.texto}</small><strong>${(dist[i] * 100).toFixed(0)}%</strong><span>${f.rango}</span></div>`).join('');
-    if (salio === undefined) pintarEfectos(null);
-    return drm;
-  }
-  const EFECTOS = {
-    fail: ['Sin OBJ ni Recon: no hay ataques, choques, ataques por fuego ni bombardeos.', 'Nadie mueve, salvo el HQ en retirada voluntaria.', 'Sí: voltear fichas, mover trenes, Prepared Defense, recuperar apoyo y entrar en Screen.', 'Sin Fire Events. No se tira por fatiga.'],
-    partial: ['1 OBJ y se pueden crear OBJ con Recon.', 'Mitad de MA (sin redondear) y mitad de puntos de artillería (redondeando hacia abajo).', 'Aviación y combate, normal. Dos Fire Events por unidad.'],
-    full: ['2 OBJ (dos en el mismo hex forman un Double OBJ).', 'MA y artillería completos. Todo permitido.']
-  };
-  function pintarEfectos(clave) {
-    const e = $('#snafu-efectos');
-    if (!clave) { e.innerHTML = '<p class="muted mb0" style="font-size:.9rem">Tira para ver qué permite el resultado. <a href="tablas.html#efectos-snafu">Ver el cuadro completo</a>.</p>'; return; }
-    e.innerHTML = `<div class="veredicto"><span class="codigo">SNAFU ${clave.toUpperCase()}</span><ul>${EFECTOS[clave].map((x) => '<li>' + x + '</li>').join('')}</ul></div>`;
-  }
   const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
   const dado = (v, cls) => `<div class="dado ${cls || ''}">${Array.from({ length: 9 }, (_, i) => `<i style="visibility:${PIPS[v].includes(i) ? 'visible' : 'hidden'}"></i>`).join('')}</div>`;
-  $('#snafu-tirar').addEventListener('click', () => {
-    const drm = pintarSnafu();
-    const cont = $('#snafu-dados');
-    let n = 0;
-    const t = setInterval(() => {
-      cont.innerHTML = dado(1 + Math.floor(Math.random() * 6), 'rodando') + dado(1 + Math.floor(Math.random() * 6), 'rodando');
-      if (++n > 9) {
-        clearInterval(t);
-        const [a, b] = R.tirar(2), tot = a + b + drm;
-        const r = R.resultadoSnafu(tot, S.pd);
-        const i = R.TABLA_SNAFU.indexOf(r.fila);
-        cont.innerHTML = dado(a) + dado(b) + `<span class="suma">${a + b} ${drm >= 0 ? '+' : '−'}${Math.abs(drm)} = <strong>${tot}</strong></span>`;
-        pintarSnafu(i);
-        pintarEfectos(r.fila.clave);
-        if (r.rebajado) $('#snafu-efectos .veredicto ul').insertAdjacentHTML('afterbegin', '<li><strong>Habría sido Full, pero la Prepared Defense lo deja en Partial.</strong></li>');
-      }
-    }, 80);
-  });
-  pintarSnafu();
 
   // ---------- Segunda Activación ----------
   let act = 4, fresca = false;

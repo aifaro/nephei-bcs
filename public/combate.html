@@ -15,21 +15,8 @@
   <link rel="stylesheet" href="css/bcs.css">
   <style>
     .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
-    .elegir { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; }
-    @media (max-width: 960px) { .elegir { grid-template-columns: 1fr; } }
-    .elegir h3 { font-size: .78rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
-    .opciones-lista { display: grid; gap: 6px; }
-    .opciones-lista button { display: flex; align-items: center; gap: 12px; text-align: left; padding: 8px 10px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-size: .9rem; cursor: pointer; }
-    .opciones-lista button .ficha { width: 40px; }
-    .opciones-lista button[aria-pressed="true"] { border-color: var(--amber); background: var(--amber-soft); color: var(--heading); }
-    .veredictos { display: grid; gap: 8px; }
-    .vd { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 10px 12px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); }
-    .vd .i { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-weight: 800; font-size: .8rem; }
-    .vd.si .i { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); }
-    .vd.no { opacity: .62; }
-    .vd.no .i { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
-    .vd strong { color: var(--heading); }
-    .vd p { margin: 2px 0 0; font-size: .84rem; color: var(--muted); }
+    table.elegir-t td.si { color: var(--ok); font-weight: 700; }
+    table.elegir-t td.no { color: var(--bad); }
     .ataque { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 28px; }
     @media (max-width: 900px) { .ataque { grid-template-columns: 1fr; } }
     .ficha-tec { position: sticky; top: 90px; align-self: start; }
@@ -82,13 +69,19 @@
     <div class="wrap">
       <div class="seccion__cab">
         <div><span class="antetitulo">Elegir herramienta</span><h2>¿Qué ataque uso?</h2></div>
-        <p>Elige tu unidad y lo que hay en el hex enemigo. Te dice qué puedes hacer y qué no, según el Unit Capabilities Chart y los requisitos de cada ataque.</p>
+        <p>Depende de lo que haya en el hex enemigo y de lo que sea tu unidad. Este cuadro resume cuándo vale cada tipo; el asistente de Utilidades te lo dice para tu caso concreto.</p>
       </div>
-      <div class="elegir">
-        <div class="tarjeta tarjeta--plana"><h3>Mi unidad</h3><div class="opciones-lista" id="el-unidad"></div></div>
-        <div class="tarjeta tarjeta--plana"><h3>El hex enemigo</h3><div class="opciones-lista" id="el-blanco"></div></div>
-        <div class="tarjeta tarjeta--plana"><h3>Puedes…</h3><div class="veredictos" id="el-res"></div></div>
-      </div>
+      <div class="tabla-wrap"><table class="t elegir-t">
+        <thead><tr><th>Tipo de combate</th><th class="num">Hex sin AV</th><th class="num">Hex con apoyo AV</th><th class="num">Unidad AV real</th><th>Quién puede</th></tr></thead>
+        <tbody>
+          <tr><td><a href="#regular">Ataque regular</a></td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td><td>Unidad con flecha de asalto, adyacente</td></tr>
+          <tr><td><a href="#choque">Ataque de choque</a></td><td class="num si">✓</td><td class="num no">✕</td><td class="num no">✕</td><td>MA táctico y flecha, Red AV, Light AV o ruptura</td></tr>
+          <tr><td><a href="#enfrentamiento">Enfrentamiento</a></td><td class="num no">✕</td><td class="num si">✓ al apoyo</td><td class="num si">✓</td><td>Unidad AV real, salvo Light AV; no necesita OBJ</td></tr>
+          <tr><td><a href="#fuego">Ataque por fuego</a></td><td class="num si">✓</td><td class="num no">✕</td><td class="num no">✕</td><td>Unidad AV real, adyacente</td></tr>
+          <tr><td><a href="#bombardeo">Bombardeo</a></td><td class="num si">✓</td><td class="num si">✓</td><td class="num si">✓</td><td>Artillería o aviación, con un observador</td></tr>
+        </tbody>
+      </table></div>
+      <div class="botones" style="margin-top:16px"><a class="boton boton--primario" href="utilidades.html#ataque">Abrir el asistente «¿Qué ataque uso?» →</a></div>
     </div>
   </section>
 
@@ -332,62 +325,5 @@
 <script src="js/fichas.js"></script>
 <script src="js/datos.js"></script>
 <script src="js/comun.js"></script>
-<script>
-(function () {
-  'use strict';
-  const U = Fichas.UNIDADES;
-  const MIAS = [
-    ['inf', 'Infantería a pie', { ac: true, tac: false }, 'inf-us'],
-    ['mec', 'Infantería mecanizada en marcha', { ac: true, tac: true }, 'mec-us', 'm'],
-    ['tq', 'Tanque (Red AV)', { av: 'red', tac: true }, 'tq-us'],
-    ['tiger', 'Tanque de ruptura', { av: 'red', tac: true, ruptura: true }, 'tiger'],
-    ['td', 'Cazacarros (Limited)', { av: 'limited', tac: true }, 'td'],
-    ['flak', 'Cañón Stand Off', { av: 'standoff', tac: false }, 'flak'],
-    ['light', 'Light AV (cifra blanca)', { av: 'light', tac: true }, null],
-    ['recon', 'Reconocimiento (Dual)', { ac: true, av: 'red', tac: true, dual: true }, 'rec-us']
-  ];
-  const BLANCOS = [
-    ['sinav', 'Infantería sin apoyo', null, 'inf-de'],
-    ['apoyo', 'Infantería con apoyo AV', null, 'inf-de'],
-    ['av', 'Una unidad AV real', null, 'panther']
-  ];
-  let mia = 'inf', blanco = 'sinav';
-
-  function lista(id, items, sel, al) {
-    const c = document.getElementById(id);
-    c.innerHTML = '';
-    items.forEach(([k, t, x, f, lado]) => {
-      const b = document.createElement('button');
-      b.type = 'button';
-      b.setAttribute('aria-pressed', k === sel);
-      const img = f ? Fichas.ficha(U[f], lado || 'd', { tam: 40 }) : '<span class="av-muestra light" style="width:40px;height:40px">0</span>';
-      b.innerHTML = img + (k === 'apoyo' ? Fichas.marcador('red', { tam: 28 }) : '') + '<span>' + t + '</span>';
-      b.addEventListener('click', () => al(k));
-      c.appendChild(b);
-    });
-  }
-
-  function evaluar() {
-    const p = MIAS.find((m) => m[0] === mia)[2];
-    const conAv = blanco !== 'sinav';
-    const rs = [];
-    const add = (ok, t, d, href) => rs.push({ ok, t, d, href });
-    add(!!p.ac, 'Ataque regular', p.ac ? 'Con flecha de asalto puedes ser la unidad atacante.' : (p.av ? 'Sin flecha de asalto no puedes atacar, pero sí asistir a otra unidad (+1).' : ''), '#regular');
-    const chq = p.tac && (p.ac || p.av === 'red' || p.av === 'light' || p.ruptura);
-    add(chq && !conAv, 'Ataque de choque', !p.tac ? 'Necesitas MA táctico.' : !chq ? 'Un Limited AV solo hace choques si es de ruptura.' : conAv ? 'El hex tiene AV' + (blanco === 'apoyo' ? ' de apoyo' : '') + ': primero quítaselo con un enfrentamiento.' : 'MA táctico y hex sin AV: adelante, y sigue moviendo después.', '#choque');
-    const enf = p.av && p.av !== 'light';
-    add(enf && conAv, 'Enfrentamiento', !p.av ? 'Hace falta tener AV.' : p.av === 'light' ? 'Los Light AV no pueden iniciar enfrentamientos.' : !conAv ? 'Solo contra blancos con AV, real o de apoyo.' : blanco === 'apoyo' ? 'Contra el apoyo: un Drop le quita el apoyo a todo el hex.' : 'AV + AR contra AV + AR.', '#enfrentamiento');
-    add(!!p.av && !conAv, 'Ataque por fuego', !p.av ? 'Hace falta tener AV.' : conAv ? 'Solo contra hexes sin ningún AV.' : 'Un dado por unidad del hex, columna Attack by Fire.', '#fuego');
-    add(true, 'Observar para un bombardeo', 'Cualquier unidad de la formación puede observar, incluso FINISHED, si empezó la fase en el radio de mando.', '#bombardeo');
-    document.getElementById('el-res').innerHTML = rs.map((r) => `<div class="vd ${r.ok ? 'si' : 'no'}"><span class="i">${r.ok ? '✓' : '✕'}</span><div><strong><a href="${r.href}" style="color:inherit">${r.t}</a></strong><p>${r.d}</p></div></div>`).join('');
-  }
-  function pintar() {
-    lista('el-unidad', MIAS, mia, (k) => { mia = k; pintar(); });
-    lista('el-blanco', BLANCOS, blanco, (k) => { blanco = k; pintar(); });
-    evaluar();
-  }
-  pintar();
-})();
-</script>
 </body>
 </html>

@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tools · BCS Academy</title>
+  <meta name="description" content="Battalion Combat Series tools dashboard: activation cup, orders log, SNAFU calculator, attack-type assistant and attack simulator.">
+  <meta name="theme-color" content="#0d100e">
+  <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/utilidades">
+  <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/utilidades">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/bcs.css">
+  <link rel="stylesheet" href="../css/simulador.css">
+  <link rel="stylesheet" href="../css/partida.css">
+  <style>
+    .pestanas { position: sticky; top: 64px; z-index: 30; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+    .pestanas__fila { display: flex; gap: 6px; padding: 10px 0; overflow-x: auto; scrollbar-width: none; }
+    .pestanas__fila::-webkit-scrollbar { display: none; }
+    .pestana { display: inline-flex; align-items: center; gap: 10px; flex: none; padding: 9px 14px 9px 10px; border-radius: 12px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: 600 .92rem var(--body); cursor: pointer; }
+    .pestana:hover { text-decoration: none; border-color: var(--border-strong); }
+    .pestana .ic { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--amber-soft); color: var(--amber); }
+    .pestana .ic svg { width: 17px; height: 17px; }
+    .pestana small { display: block; font: 500 .72rem var(--body); color: var(--muted); }
+    .pestana[aria-selected="true"] { border-color: var(--amber); background: linear-gradient(120deg, var(--amber-soft), transparent 70%), var(--surface); color: var(--heading); }
+    .pestana--fuera .ic { background: var(--surface-3); }
+    .panel-u { padding: 26px 0 10px; scroll-margin-top: 140px; }
+    .panel-u .herramienta { scroll-margin-top: 140px; }
+    .panel-u[hidden] { display: none; }
+    .panel-u > .wrap > .seccion__cab { margin-bottom: 18px; }
+    .panel-u .herramienta { margin-top: 18px; }
+    .snafu { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+    @media (max-width: 960px) { .snafu { grid-template-columns: 1fr; } }
+    .snafu-res { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 14px; }
+    .sr-caja { border-radius: 12px; padding: 14px; border: 1px solid var(--border); background: var(--surface-2); text-align: center; transition: box-shadow .2s, transform .2s; }
+    .sr-caja strong { display: block; font: 700 1.8rem var(--head); }
+    .sr-caja span { font-size: .8rem; color: var(--muted); }
+    .sr-caja small { display: block; font: 700 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .sr-caja.salio { box-shadow: 0 0 0 3px var(--amber); transform: translateY(-2px); }
+    .sr-fail small, .sr-fail strong { color: var(--bad); }
+    .sr-partial small, .sr-partial strong { color: var(--amber); }
+    .sr-full small, .sr-full strong { color: var(--ok); }
+    .total-drm { display: flex; align-items: baseline; gap: 10px; margin: 6px 0 4px; }
+    .total-drm strong { font: 700 2.2rem var(--head); color: var(--heading); }
+    .elegir { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.2fr); gap: 16px; }
+    @media (max-width: 960px) { .elegir { grid-template-columns: 1fr; } }
+    .elegir h3 { font-size: .78rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+    .opciones-lista { display: grid; gap: 6px; }
+    .opciones-lista button { display: flex; align-items: center; gap: 12px; text-align: left; padding: 8px 10px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font: inherit; font-size: .9rem; cursor: pointer; }
+    .opciones-lista button .ficha { width: 40px; }
+    .opciones-lista button[aria-pressed="true"] { border-color: var(--amber); background: var(--amber-soft); color: var(--heading); }
+    .veredictos { display: grid; gap: 8px; }
+    .vd { display: grid; grid-template-columns: 26px 1fr; gap: 10px; padding: 10px 12px; border-radius: 11px; border: 1px solid var(--border); background: var(--surface-2); }
+    .vd .i { width: 24px; height: 24px; border-radius: 7px; display: grid; place-items: center; font-weight: 800; font-size: .8rem; }
+    .vd.si .i { background: color-mix(in srgb, var(--ok) 20%, transparent); color: var(--ok); }
+    .vd.no { opacity: .62; }
+    .vd.no .i { background: color-mix(in srgb, var(--bad) 18%, transparent); color: var(--bad); }
+    .vd strong { color: var(--heading); }
+    .vd p { margin: 2px 0 0; font-size: .84rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+<main>
+  <section class="hero hero--pagina">
+    <div class="wrap">
+      <span class="antetitulo">Quartermaster</span>
+      <h1>Tools for the table</h1>
+      <p class="lead">Everything you use while playing, in one place: your game with its activation cup and orders log, the SNAFU calculator and the attack-type assistant. The simulator has a page of its own.</p>
+    </div>
+  </section>
+
+  <nav class="pestanas" aria-label="Tools">
+    <div class="wrap pestanas__fila" role="tablist">
+      <a class="pestana" role="tab" href="#partida" data-panel="partida"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 11h-11z"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/></svg></span><span>Game<small>Activation cup · orders</small></span></a>
+      <a class="pestana" role="tab" href="#snafu" data-panel="snafu"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg></span><span>SNAFU<small>Modifiers and odds</small></span></a>
+      <a class="pestana" role="tab" href="#ataque" data-panel="ataque"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg></span><span>Which attack do I use?<small>By your unit and the target</small></span></a>
+      <a class="pestana pestana--fuera" href="simulador.html"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20 20 4M14 4h6v6"/></svg></span><span>Attack simulator<small>Opens its page →</small></span></a>
+    </div>
+  </nav>
+
+  <div class="panel-u" id="partida" role="tabpanel">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Game</span><h2>Your game</h2></div>
+        <p>Enter each side's formations. The activation cup and the orders log both use them. Everything is saved in this browser only, and you can clear it whenever you like.</p>
+      </div>
+      <div class="partida">
+        <div class="bandos" id="bandos"></div>
+        <div class="tarjeta partida__ctl">
+          <div class="turno">
+            <span class="antetitulo">Game turn</span>
+            <div class="turno__fila">
+              <button type="button" class="boton-icono" id="turno-menos" aria-label="Previous turn">−</button>
+              <strong id="turno">1</strong>
+              <button type="button" class="boton-icono" id="turno-mas" aria-label="Next turn">+</button>
+            </div>
+          </div>
+          <div class="botones">
+            <button type="button" class="boton boton--peq" id="ejemplo">Load an example</button>
+            <button type="button" class="boton boton--peq peligro" id="borrar">Clear the game</button>
+          </div>
+          <p class="muted mb0" style="font-size:.82rem" id="guardado">Saved in this browser.</p>
+        </div>
+      </div>
+      <div class="herramienta" id="saco">
+        <div class="herramienta__cab">
+          <div class="herramienta__tit"><div><span class="antetitulo">Tool</span><h3>Activation cup</h3></div><div class="turno-mini" role="group" aria-label="Game turn"><button type="button" data-turno="-1" aria-label="Previous turn">−</button><span>Turn <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Next turn">+</button></div></div>
+          <div class="conmutador" id="saco-modo" role="group" aria-label="Draw mode">
+            <button type="button" data-m="modificada" aria-pressed="true">Three at a time (2.5m)</button>
+            <button type="button" data-m="aleatoria" aria-pressed="false">One at a time (2.5l)</button>
+          </div>
+        </div>
+        <div class="saco">
+          <div class="vaso" id="vaso"></div>
+          <div class="mesa">
+            <div class="mesa__fichas" id="sacadas" aria-live="polite"></div>
+            <div class="mesa__ctl">
+              <button type="button" class="boton boton--primario" id="sacar">Draw from the cup</button>
+              <button type="button" class="boton boton--peq" id="deshacer">Undo the last one</button>
+            </div>
+          </div>
+          <div class="usadas">
+            <h4>Activated this turn</h4>
+            <ol id="usadas"></ol>
+          </div>
+        </div>
+      </div>
+
+      <div class="herramienta" id="cuaderno">
+        <div class="herramienta__cab">
+          <div class="herramienta__tit"><div><span class="antetitulo">Tool</span><h3>Orders log</h3></div><div class="turno-mini" role="group" aria-label="Game turn"><button type="button" data-turno="-1" aria-label="Previous turn">−</button><span>Turn <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Next turn">+</button></div></div>
+          <div class="flex">
+            <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Side"></div>
+            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Secret mode</button>
+            <button type="button" class="boton boton--peq" id="revelar-todas" hidden>Reveal or hide all</button>
+          </div>
+        </div>
+        <p class="muted" style="font-size:.88rem;margin:0 0 14px">If you change nothing, each formation keeps the previous turn's order (shown as <em>in force since turn N</em>). In <strong>secret mode</strong> every order is covered and revealed one at a time: automatically when the formation activates from the activation cup, or by hand with its "Reveal" button. When a new turn starts, they are all covered again.</p>
+        <div id="cuaderno-lista" class="cuaderno"></div>
+        <div class="cuaderno__pie">
+          <button type="button" class="boton boton--peq" id="copiar">Copy this turn's orders</button>
+          <button type="button" class="boton boton--peq peligro" id="vaciar-ordenes">Clear all orders</button>
+        </div>
+        <details class="historial">
+          <summary>Order history by turn</summary>
+          <div class="tabla-wrap"><table class="t" id="historial"></table></div>
+        </details>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel-u" id="snafu" role="tabpanel" hidden>
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">SNAFU Table</span><h2>SNAFU calculator</h2></div>
+        <p>Tick the formation's situation. Each game's rules usually add their own modifiers (weather, campaign…). <span class="regla">3.2</span></p>
+      </div>
+      <div class="snafu">
+        <div class="tarjeta" id="snafu-mods"></div>
+        <div class="tarjeta">
+          <h3>Result</h3>
+          <div class="total-drm"><strong id="snafu-drm">+0</strong><span class="muted">total DRM on 2d6</span></div>
+          <div class="snafu-res" id="snafu-res"></div>
+          <div class="tirar" style="margin-top:18px">
+            <button class="boton boton--primario" type="button" id="snafu-tirar">Roll SNAFU</button>
+            <div class="dados" id="snafu-dados"></div>
+          </div>
+          <div id="snafu-efectos" style="margin-top:16px"></div>
+        </div>
+      </div>
+      <p class="muted" style="font-size:.9rem;margin-top:12px">What SNAFU is and what each result allows: <a href="secuencia.html#snafu">lesson 2</a>.</p>
+    </div>
+  </div>
+
+  <div class="panel-u" id="ataque" role="tabpanel" hidden>
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">Pick your tool</span><h2>Which attack do I use?</h2></div>
+        <p>Pick your unit and what is in the enemy hex. It tells you what you can and cannot do, according to the Unit Capabilities Chart and each attack's requirements.</p>
+      </div>
+      <div class="elegir">
+        <div class="tarjeta tarjeta--plana"><h3>My unit</h3><div class="opciones-lista" id="el-unidad"></div></div>
+        <div class="tarjeta tarjeta--plana"><h3>The enemy hex</h3><div class="opciones-lista" id="el-blanco"></div></div>
+        <div class="tarjeta tarjeta--plana"><h3>You can…</h3><div class="veredictos" id="el-res"></div></div>
+      </div>
+      <p class="muted" style="font-size:.9rem;margin-top:12px">Each combat type, with its requirements and results: <a href="combate.html">lesson 5</a>.</p>
+    </div>
+  </div>
+</main>
+
+<script src="../js/en.js"></script>
+<script src="../js/i18n.js"></script>
+<script src="../js/fichas.js"></script>
+<script src="../js/datos.js"></script>
+<script src="../js/reglas.js"></script>
+<script src="../js/comun.js"></script>
+<script src="../js/partida.js"></script>
+<script>
+// Pestañas del panel: cada una es un ancla, y los enlaces a #saco u #ordenes abren la de la partida
+(function () {
+  'use strict';
+  const PANEL = { partida: 'partida', saco: 'partida', chits: 'partida', ordenes: 'partida', cuaderno: 'partida', snafu: 'snafu', ataque: 'ataque', elegir: 'ataque' };
+  const pestanas = document.querySelectorAll('.pestana[data-panel]');
+  function mostrar(hash, desplazar) {
+    const id = hash.replace('#', '');
+    const panel = PANEL[id] || 'partida';
+    document.querySelectorAll('.panel-u').forEach((p) => { p.hidden = p.id !== panel; });
+    pestanas.forEach((t) => t.setAttribute('aria-selected', t.dataset.panel === panel));
+    const destino = document.getElementById(id === 'ordenes' ? 'cuaderno' : id === 'chits' ? 'saco' : id);
+    if (desplazar && destino && destino.id !== panel) destino.scrollIntoView({ block: 'start' });
+    else if (desplazar) document.querySelector('.pestanas').scrollIntoView({ block: 'start' });
+  }
+  pestanas.forEach((t) => t.addEventListener('click', (e) => { e.preventDefault(); history.replaceState(null, '', t.getAttribute('href')); mostrar(t.getAttribute('href'), false); }));
+  addEventListener('hashchange', () => mostrar(location.hash, true));
+  mostrar(location.hash, !!location.hash);
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  const R = Reglas;
+  const $ = (s) => document.querySelector(s);
+  // ---------- SNAFU ----------
+  const S = { fatiga: 0, coord: false, mixta: false, msr: 'completa', optima: true, ghost: false, cruce: false, pistas: 'no', bloqueo: 0, pd: false, juego: 0 };
+  function op(t, v, act, al, opc) {
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'op' + (opc && opc.def ? ' def' : '');
+    b.setAttribute('aria-pressed', !!act);
+    b.innerHTML = t + (v !== '' ? ` <span class="v">${v}</span>` : '');
+    b.addEventListener('click', al);
+    return b;
+  }
+  function grupo(c, titulo, bs) {
+    const g = document.createElement('div'); g.className = 'grupo-op';
+    g.innerHTML = `<h3>${titulo}</h3>`;
+    const o = document.createElement('div'); o.className = 'opciones';
+    bs.forEach((b) => o.appendChild(b)); g.appendChild(o); c.appendChild(g);
+  }
+  function mods() {
+    const m = [];
+    if (S.fatiga === -1) m.push(['Fresh', 1]); else if (S.fatiga > 0) m.push(['Fatigue ' + S.fatiga, -S.fatiga]);
+    if (S.coord) m.push(['Coordination', -1]);
+    if (S.mixta) m.push(['Mixed formations', -1]);
+    if (S.juego) m.push(['Game-specific', S.juego]);
+    if (S.msr === 'completa') {
+      if (S.optima) m.push(['Optimal Distance', 1]);
+      if (S.ghost) m.push(['Ghost trains', -1]);
+      if (S.cruce) m.push(['Crossing the Streams', -1]);
+      if (S.pistas === 'buena') m.push(['MSR uses Tracks (good weather)', -1]);
+      if (S.pistas === 'mala') m.push(['MSR uses Tracks (bad weather)', -2]);
+    } else {
+      m.push(['Trains off-map', -3]);
+      if (S.bloqueo) m.push(['MSR Blocked ' + S.bloqueo, -S.bloqueo]);
+    }
+    return m;
+  }
+  function pintarSnafu(salio) {
+    const c = $('#snafu-mods'); c.innerHTML = '';
+    const set = (k, v) => () => { S[k] = v; pintarSnafu(); };
+    grupo(c, 'Fatigue', [['Fresh', -1, '+1'], ['0', 0, '±0'], ['1', 1, '−1'], ['2', 2, '−2'], ['3', 3, '−3'], ['4', 4, '−4']].map(([t, v, d]) => op(t, d, S.fatiga === v, set('fatiga', v))));
+    grupo(c, 'Always', [op('Coordination', '−1', S.coord, set('coord', !S.coord)), op('Mixed formations', '−1', S.mixta, set('mixta', !S.mixta)), op('Prepared Defense', 'max. Partial', S.pd, set('pd', !S.pd))]);
+    grupo(c, 'The MSR', [op('Complete', '', S.msr === 'completa', set('msr', 'completa')), op('Not complete', '', S.msr === 'rota', set('msr', 'rota'))]);
+    if (S.msr === 'completa') {
+      grupo(c, 'With a Complete MSR', [op('Trains 5-15 hexes from the HQ', '+1', S.optima, set('optima', !S.optima)), op('Ghost trains', '−1', S.ghost, set('ghost', !S.ghost)), op('Crossing the Streams', '−1', S.cruce, set('cruce', !S.cruce))]);
+      grupo(c, 'Tracks on the MSR', [op('No', '', S.pistas === 'no', set('pistas', 'no')), op('In good weather', '−1', S.pistas === 'buena', set('pistas', 'buena')), op('In bad weather', '−2', S.pistas === 'mala', set('pistas', 'mala'))]);
+    } else {
+      grupo(c, 'With a broken MSR (trains off-map: −3)', [op('No marker', '', S.bloqueo === 0, set('bloqueo', 0)), op('MSR Blocked 1', '−1', S.bloqueo === 1, set('bloqueo', 1)), op('MSR Blocked 2', '−2', S.bloqueo === 2, set('bloqueo', 2))]);
+    }
+    grupo(c, 'Game modifier', [-2, -1, 0, 1, 2].map((v) => op(v > 0 ? '+' + v : String(v), '', S.juego === v, set('juego', v))));
+    const drm = mods().reduce((s, x) => s + x[1], 0);
+    $('#snafu-drm').textContent = (drm >= 0 ? '+' : '−') + Math.abs(drm);
+    const dist = R.distribucion(R.TABLA_SNAFU, drm);
+    if (S.pd) { dist[1] += dist[2]; dist[2] = 0; }
+    const claves = ['fail', 'partial', 'full'];
+    $('#snafu-res').innerHTML = R.TABLA_SNAFU.map((f, i) => `<div class="sr-caja sr-${claves[i]}${salio === i ? ' salio' : ''}"><small>${f.texto}</small><strong>${(dist[i] * 100).toFixed(0)}%</strong><span>${I18N.t(f.rango)}</span></div>`).join('');
+    if (salio === undefined) pintarEfectos(null);
+    return drm;
+  }
+  const EFECTOS = {
+    fail: ['No OBJs or Recon: no Regular or Shock Attacks, Attacks by Fire or Barrages.', 'Nothing moves, except the HQ in a Voluntary Retreat.', 'Allowed: flipping counters, moving trains, Prepared Defense, recovering Support and entering Screen.', 'No Fire Events. No fatigue roll.'],
+    partial: ['1 OBJ, and Recon can create OBJs.', 'Half MA (no rounding) and half Arty Points (rounded down).', 'Air and combat as normal. Two Fire Events per unit.'],
+    full: ['2 OBJs (two in the same hex make a Double OBJ).', 'Full MA and artillery. Everything allowed.']
+  };
+  function pintarEfectos(clave) {
+    const e = $('#snafu-efectos');
+    if (!clave) { e.innerHTML = '<p class="muted mb0" style="font-size:.9rem">Roll to see what the result allows. <a href="tablas.html#efectos-snafu">See the full chart</a>.</p>'; return; }
+    e.innerHTML = `<div class="veredicto"><span class="codigo">SNAFU ${clave.toUpperCase()}</span><ul>${EFECTOS[clave].map((x) => '<li>' + x + '</li>').join('')}</ul></div>`;
+  }
+  const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+  const dado = (v, cls) => `<div class="dado ${cls || ''}">${Array.from({ length: 9 }, (_, i) => `<i style="visibility:${PIPS[v].includes(i) ? 'visible' : 'hidden'}"></i>`).join('')}</div>`;
+  $('#snafu-tirar').addEventListener('click', () => {
+    const drm = pintarSnafu();
+    const cont = $('#snafu-dados');
+    let n = 0;
+    const t = setInterval(() => {
+      cont.innerHTML = dado(1 + Math.floor(Math.random() * 6), 'rodando') + dado(1 + Math.floor(Math.random() * 6), 'rodando');
+      if (++n > 9) {
+        clearInterval(t);
+        const [a, b] = R.tirar(2), tot = a + b + drm;
+        const r = R.resultadoSnafu(tot, S.pd);
+        const i = R.TABLA_SNAFU.indexOf(r.fila);
+        cont.innerHTML = dado(a) + dado(b) + `<span class="suma">${a + b} ${drm >= 0 ? '+' : '−'}${Math.abs(drm)} = <strong>${tot}</strong></span>`;
+        pintarSnafu(i);
+        pintarEfectos(r.fila.clave);
+        if (r.rebajado) $('#snafu-efectos .veredicto ul').insertAdjacentHTML('afterbegin', '<li><strong>It would have been Full, but Prepared Defense caps it at Partial.</strong></li>');
+      }
+    }, 80);
+  });
+  pintarSnafu();
+})();
+</script>
+<script>
+(function () {
+  'use strict';
+  const U = Fichas.UNIDADES;
+  const MIAS = [
+    ['inf', 'Leg infantry', { ac: true, tac: false }, 'inf-us'],
+    ['mec', 'Mechanized infantry on the move', { ac: true, tac: true }, 'mec-us', 'm'],
+    ['tq', 'Tank (Red AV)', { av: 'red', tac: true }, 'tq-us'],
+    ['tiger', 'Breakthrough tank', { av: 'red', tac: true, ruptura: true }, 'tiger'],
+    ['td', 'Tank destroyer (Limited)', { av: 'limited', tac: true }, 'td'],
+    ['flak', 'Stand Off gun', { av: 'standoff', tac: false }, 'flak'],
+    ['light', 'Light AV (white number)', { av: 'light', tac: true }, null],
+    ['recon', 'Reconnaissance (Dual)', { ac: true, av: 'red', tac: true, dual: true }, 'rec-us']
+  ];
+  const BLANCOS = [
+    ['sinav', 'Infantry without Support', null, 'inf-de'],
+    ['apoyo', 'Infantry with AV Support', null, 'inf-de'],
+    ['av', 'A Real AV unit', null, 'panther']
+  ];
+  let mia = 'inf', blanco = 'sinav';
+
+  function lista(id, items, sel, al) {
+    const c = document.getElementById(id);
+    c.innerHTML = '';
+    items.forEach(([k, t, x, f, lado]) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.setAttribute('aria-pressed', k === sel);
+      const img = f ? Fichas.ficha(U[f], lado || 'd', { tam: 40 }) : '<span class="av-muestra light" style="width:40px;height:40px">0</span>';
+      b.innerHTML = img + (k === 'apoyo' ? Fichas.marcador('red', { tam: 28 }) : '') + '<span>' + t + '</span>';
+      b.addEventListener('click', () => al(k));
+      c.appendChild(b);
+    });
+  }
+
+  function evaluar() {
+    const p = MIAS.find((m) => m[0] === mia)[2];
+    const conAv = blanco !== 'sinav';
+    const rs = [];
+    const add = (ok, t, d, href) => rs.push({ ok, t, d, href });
+    add(!!p.ac, 'Regular Attack', p.ac ? 'With the assault arrow you can be the Attack unit.' : (p.av ? 'Without the assault arrow you cannot attack, but you can Assist another unit (+1).' : ''), 'combate.html#regular');
+    const chq = p.tac && (p.ac || p.av === 'red' || p.av === 'light' || p.ruptura);
+    add(chq && !conAv, 'Shock Attack', !p.tac ? 'You need a Tac MA.' : !chq ? 'Limited AV only makes Shock Attacks if it is Breakthrough armor.' : conAv ? 'The hex has ' + (blanco === 'apoyo' ? 'Support ' : '') + 'AV: strip it first with an Engagement.' : 'Tac MA and a hex with no AV: go ahead, and keep moving afterwards.', 'combate.html#choque');
+    const enf = p.av && p.av !== 'light';
+    add(enf && conAv, 'Engagement', !p.av ? 'You need an AV.' : p.av === 'light' ? 'Light AV cannot start Engagements.' : !conAv ? 'Only against targets with AV, Real or Support.' : blanco === 'apoyo' ? 'Against Support: a Drop strips the whole hex of its Support.' : 'AV + AR against AV + AR.', 'combate.html#enfrentamiento');
+    add(!!p.av && !conAv, 'Attack by Fire', !p.av ? 'You need an AV.' : conAv ? 'Only against hexes with no AV at all.' : 'One die per unit in the hex, Attack by Fire column.', 'combate.html#fuego');
+    add(true, 'Spot for a Barrage', 'Any unit of the formation can spot, even when FINISHED, if it began the phase inside Command Radius.', 'combate.html#bombardeo');
+    document.getElementById('el-res').innerHTML = rs.map((r) => `<div class="vd ${r.ok ? 'si' : 'no'}"><span class="i">${r.ok ? '✓' : '✕'}</span><div><strong><a href="${r.href}" style="color:inherit">${r.t}</a></strong><p>${r.d}</p></div></div>`).join('');
+  }
+  function pintar() {
+    lista('el-unidad', MIAS, mia, (k) => { mia = k; pintar(); });
+    lista('el-blanco', BLANCOS, blanco, (k) => { blanco = k; pintar(); });
+    evaluar();
+  }
+  pintar();
+})();
+</script>
+</body>
+</html>

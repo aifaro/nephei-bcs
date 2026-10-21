@@ -13,7 +13,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/bcs.css">
-  <link rel="stylesheet" href="css/partida.css">
+  <style>
+    .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
+    .destacada { border-color: color-mix(in srgb, var(--amber) 45%, var(--border)); background: linear-gradient(150deg, var(--amber-soft), transparent 60%), var(--surface); }
+    .ordenes-tipos .tarjeta { display: flex; flex-direction: column; gap: 4px; }
+    .ordenes-tipos h3 { margin: 6px 0 2px; font-size: 1rem; }
+    .orden-chip { display: inline-flex; align-items: center; padding: 4px 11px; border-radius: 999px; font: 600 .8rem var(--body); align-self: flex-start; color: var(--c); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); background: color-mix(in srgb, var(--c) 14%, transparent); }
+    .orden-chip.hq { --c: var(--amber); } .orden-chip.no { --c: var(--muted); } .orden-chip.pd { --c: var(--olive); } .orden-chip.rec { --c: var(--blue); }
+  </style>
 </head>
 <body>
 <main>
@@ -21,40 +28,12 @@
     <div class="wrap">
       <span class="antetitulo">Capítulo 6 · Reglas opcionales</span>
       <h1>Reglas opcionales y utilidades de partida</h1>
-      <p class="lead">Las <em>Series Rules</em> marcan como <span class="en">[Optional]</span> varias reglas que añaden detalle o niebla de guerra. Se pactan antes de empezar. Las que piden papel, lápiz o dados tienen aquí su utilidad: un <strong>saco de activaciones</strong>, un <strong>cuaderno de órdenes</strong> y la tirada del <strong>salto suave</strong>.</p>
+      <p class="lead">Las <em>Series Rules</em> marcan como <span class="en">[Optional]</span> varias reglas que añaden detalle o niebla de guerra. Se pactan antes de empezar. Dos de ellas piden papel y lápiz, y tienen su herramienta en el <a href="utilidades.html#partida">panel de Utilidades</a>: un <strong>saco de activaciones</strong> y un <strong>cuaderno de órdenes</strong>.</p>
       <div class="indice">
-        <a class="chip" href="#partida">Tu partida</a>
         <a class="chip" href="#chits">Chits de activación</a>
         <a class="chip" href="#ordenes">Órdenes</a>
         <a class="chip" href="#soft-jump">Soft Jumps</a>
         <a class="chip" href="#otras">Otras reglas opcionales</a>
-      </div>
-    </div>
-  </section>
-
-  <section class="seccion" id="partida">
-    <div class="wrap">
-      <div class="seccion__cab">
-        <div><span class="antetitulo">Antes de empezar</span><h2>Tu partida</h2></div>
-        <p>Escribe las formaciones de cada bando. Las usan el saco de activaciones y el cuaderno de órdenes. Todo se guarda solo en este navegador, y lo puedes borrar cuando quieras.</p>
-      </div>
-      <div class="partida">
-        <div class="bandos" id="bandos"></div>
-        <div class="tarjeta partida__ctl">
-          <div class="turno">
-            <span class="antetitulo">Turno de juego</span>
-            <div class="turno__fila">
-              <button type="button" class="boton-icono" id="turno-menos" aria-label="Turno anterior">−</button>
-              <strong id="turno">1</strong>
-              <button type="button" class="boton-icono" id="turno-mas" aria-label="Turno siguiente">+</button>
-            </div>
-          </div>
-          <div class="botones">
-            <button type="button" class="boton boton--peq" id="ejemplo">Cargar un ejemplo</button>
-            <button type="button" class="boton boton--peq peligro" id="borrar">Borrar la partida</button>
-          </div>
-          <p class="muted mb0" style="font-size:.82rem" id="guardado">Guardado en este navegador.</p>
-        </div>
       </div>
     </div>
   </section>
@@ -71,28 +50,7 @@
         <div class="tarjeta"><h3>Suavizado <span class="regla">2.5n</span></h3><p class="muted mb0">Sin vaso común. El bando con más formaciones («Large») saca un chit numerado cada vez que le toca: con un 1 activa una formación; con un 2, dos seguidas. Hay tantos chits como formaciones tiene el otro bando, y tantos «2» como la diferencia entre ambos.</p></div>
       </div>
 
-      <div class="herramienta" id="saco">
-        <div class="herramienta__cab">
-          <div class="herramienta__tit"><div><span class="antetitulo">Utilidad</span><h3>Saco de activaciones</h3></div><div class="turno-mini" role="group" aria-label="Turno de juego"><button type="button" data-turno="-1" aria-label="Turno anterior">−</button><span>Turno <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Turno siguiente">+</button></div></div>
-          <div class="conmutador" id="saco-modo" role="group" aria-label="Modo de sorteo">
-            <button type="button" data-m="modificada" aria-pressed="true">De 3 en 3 (2.5m)</button>
-            <button type="button" data-m="aleatoria" aria-pressed="false">De 1 en 1 (2.5l)</button>
-          </div>
-        </div>
-        <div class="saco">
-          <div class="vaso" id="vaso"></div>
-          <div class="mesa">
-            <div class="mesa__fichas" id="sacadas" aria-live="polite"></div>
-            <div class="mesa__ctl">
-              <button type="button" class="boton boton--primario" id="sacar">Sacar del vaso</button>
-              <button type="button" class="boton boton--peq" id="deshacer">Deshacer la última</button>
-            </div>
-          </div>
-          <div class="usadas">
-            <h4>Activadas este turno</h4>
-            <ol id="usadas"></ol>
-          </div>
-        </div>
+      <a class="ir-util" href="utilidades.html#saco"><span class="antetitulo">Utilidad</span><strong>Saco de activaciones</strong><span>Saca los chits de 3 en 3 o de 1 en 1 con las formaciones de tu partida. Está en el panel de Utilidades, junto al cuaderno de órdenes.</span><span class="ir-util__f">→</span></a>
       </div>
     </div>
   </section>
@@ -115,25 +73,7 @@
         <div class="tarjeta"><h3>Ruta de marcha <span class="chip chip--amber" style="font-size:.7rem">opcional</span></h3><p class="muted mb0">Un extra de realismo dentro de las órdenes: el propio diseñador pide no usarla si vas a aprovecharla para «recoger» unidades por el camino. Si el March OBJ queda más allá del radio de mando, las unidades solo pueden entrar en hexes a 2 o menos de la ruta, salvo que ya estén dentro del radio, sigan la ruta hasta el final, se retiren, avancen tras combatir o sean refuerzos. <span class="regla">2.4h</span></p></div>
       </div>
 
-      <div class="herramienta" id="cuaderno">
-        <div class="herramienta__cab">
-          <div class="herramienta__tit"><div><span class="antetitulo">Utilidad</span><h3>Cuaderno de órdenes</h3></div><div class="turno-mini" role="group" aria-label="Turno de juego"><button type="button" data-turno="-1" aria-label="Turno anterior">−</button><span>Turno <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Turno siguiente">+</button></div></div>
-          <div class="flex">
-            <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Bando"></div>
-            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Modo secreto</button>
-            <button type="button" class="boton boton--peq" id="revelar-todas" hidden>Revelar u ocultar todas</button>
-          </div>
-        </div>
-        <p class="muted" style="font-size:.88rem;margin:0 0 14px">Si no cambias nada, cada formación conserva la orden del turno anterior (aparece como <em>vigente desde el turno N</em>). Con el <strong>modo secreto</strong> cada orden queda tapada y se revela por separado: sola, cuando la formación se activa en el saco de activaciones, o a mano con su botón «Revelar». Al empezar otro turno se tapan todas de nuevo.</p>
-        <div id="cuaderno-lista" class="cuaderno"></div>
-        <div class="cuaderno__pie">
-          <button type="button" class="boton boton--peq" id="copiar">Copiar las órdenes del turno</button>
-          <button type="button" class="boton boton--peq peligro" id="vaciar-ordenes">Borrar todas las órdenes</button>
-        </div>
-        <details class="historial">
-          <summary>Historial de órdenes por turno</summary>
-          <div class="tabla-wrap"><table class="t" id="historial"></table></div>
-        </details>
+      <a class="ir-util" href="utilidades.html#ordenes"><span class="antetitulo">Utilidad</span><strong>Cuaderno de órdenes</strong><span>Anota la orden de cada formación en cada turno, con modo secreto para revelarlas una a una. Está en el panel de Utilidades.</span><span class="ir-util__f">→</span></a>
       </div>
     </div>
   </section>
@@ -162,12 +102,7 @@
           </ul>
         </div>
       </div>
-      <div class="herramienta" id="salto">
-        <div class="herramienta__cab">
-          <div><span class="antetitulo">Utilidad</span><h3>¿Salto suave o salto normal?</h3></div>
-          <button type="button" class="boton boton--primario" id="salto-tirar">Tirar el dado</button>
-        </div>
-        <div class="salto" id="salto-res"><p class="muted mb0">Cuando el enemigo entre en el hex de un HQ o de unos trenes, tira aquí antes de resolver las retiradas.</p></div>
+
       </div>
     </div>
   </section>
@@ -208,20 +143,5 @@
 <script src="js/fichas.js"></script>
 <script src="js/datos.js"></script>
 <script src="js/comun.js"></script>
-<script src="js/partida.js"></script>
-<script>
-(function () {
-  'use strict';
-  const t = I18N.t;
-  const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
-  const dado = (v) => `<div class="dado">${Array.from({ length: 9 }, (_, i) => `<i style="visibility:${PIPS[v].includes(i) ? 'visible' : 'hidden'}"></i>`).join('')}</div>`;
-  document.getElementById('salto-tirar').addEventListener('click', () => {
-    const v = 1 + Math.floor(Math.random() * 6), suave = v <= 4;
-    document.getElementById('salto-res').innerHTML = `<div class="salto__fila">${dado(v)}<div><strong class="${suave ? 'suave' : 'duro'}">${suave ? t('Salto suave') : t('Salto normal')}</strong><p class="mb0">${suave
-      ? t('El HQ nunca estuvo ahí: recoloca el HQ y sus trenes donde quieras (sin enemigos, EZOC ni zonas de enfrentamiento), con los mismos marcadores.')
-      : t('Lo han pillado: el HQ se retira 3 hexes o más, sus trenes pasan a Ghost, pierde la Prepared Defense y recibe Coordination.')}</p></div></div>`;
-  });
-})();
-</script>
 </body>
 </html>
