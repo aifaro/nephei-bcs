@@ -135,7 +135,8 @@
     ['Reglas opcionales', 'opcionales.html', 'Opcionales'],
     ['Saco de activaciones (chits de 3 en 3)', 'opcionales.html#chits', 'Opcionales'],
     ['Cuaderno de órdenes', 'opcionales.html#ordenes', 'Opcionales'],
-    ['Planned Fatigue, Soft Jumps y otras reglas opcionales', 'opcionales.html#otras', 'Opcionales'],
+    ['Saltos suaves (Soft Jumps)', 'opcionales.html#soft-jump', 'Opcionales'],
+    ['Planned Fatigue y otras reglas opcionales', 'opcionales.html#otras', 'Opcionales'],
     ['Secuencia del turno', 'secuencia.html#turno', 'Secuencia'],
     ['Secuencia de activación de una formación', 'secuencia.html#activacion', 'Secuencia'],
     ['Calculadora de SNAFU', 'secuencia.html#snafu', 'Secuencia'],
@@ -240,7 +241,7 @@
     'March OBJ': 'opcionales.html#ordenes',
     'Orders': 'opcionales.html#ordenes',
     'Planned Fatigue': 'opcionales.html#otras',
-    'Soft Jump': 'opcionales.html#otras',
+    'Soft Jump': 'opcionales.html#soft-jump',
     'Unit Traffic': 'opcionales.html#otras'
   };
   const VER = {

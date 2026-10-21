@@ -21,11 +21,12 @@
     <div class="wrap">
       <span class="antetitulo">Chapter 6 · Optional rules</span>
       <h1>Optional rules and game tools</h1>
-      <p class="lead">The <em>Series Rules</em> mark several rules as <span class="en">[Optional]</span>: they add detail or fog of war, and players agree on them before starting. Two of them call for pencil and paper, so here you have an <strong>activation cup</strong> and an <strong>orders log</strong> that do it for you.</p>
+      <p class="lead">The <em>Series Rules</em> mark several rules as <span class="en">[Optional]</span>: they add detail or fog of war, and players agree on them before starting. The ones that call for pencil, paper or dice have their tool here: an <strong>activation cup</strong>, an <strong>orders log</strong> and the <strong>Soft Jump</strong> roll.</p>
       <div class="indice">
         <a class="chip" href="#partida">Your game</a>
         <a class="chip" href="#chits">Activation chits</a>
         <a class="chip" href="#ordenes">Orders</a>
+        <a class="chip" href="#soft-jump">Soft Jumps</a>
         <a class="chip" href="#otras">Other optional rules</a>
       </div>
     </div>
@@ -111,7 +112,7 @@
       <div class="rejilla rejilla--3" style="margin-top:16px">
         <div class="tarjeta"><h3>Changing orders</h3><p class="muted mb0">Only in the Orders Phase, and free: cross it out and write the new one. Orders stay in force for as many turns as you like. Exception: if the MSR is blocked this turn, you can give the HQ a new HQ Move order at that moment. <span class="regla">2.4f</span></p></div>
         <div class="tarjeta"><h3>March OBJ</h3><p class="muted mb0">It goes in any road hex, even with enemy units in it. It creates no OBJ Zone and triggers no fatigue roll, and Recon units cannot create one. <span class="regla">2.4g</span></p></div>
-        <div class="tarjeta"><h3>March Routing</h3><p class="muted mb0">If the March OBJ lies beyond Command Radius, units can only enter hexes within 2 of the route, unless they are already inside the radius, follow the route to its end, retreat, advance after combat or are reinforcements. <span class="regla">2.4h</span></p></div>
+        <div class="tarjeta"><h3>March Routing <span class="chip chip--amber" style="font-size:.7rem">optional</span></h3><p class="muted mb0">Extra realism within the Orders rules: the designer himself asks you not to use it if you would play the route to "pick up" units along the way. If the March OBJ lies beyond Command Radius, units can only enter hexes within 2 of the route, unless they are already inside the radius, follow the route to its end, retreat, advance after combat or are reinforcements. <span class="regla">2.4h</span></p></div>
       </div>
 
       <div class="herramienta" id="cuaderno">
@@ -133,6 +134,40 @@
           <summary>Order history by turn</summary>
           <div class="tabla-wrap"><table class="t" id="historial"></table></div>
         </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="soft-jump">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">4.7i · Soft Jumps</span><h2>Soft Jumps</h2></div>
+        <p>Without this rule, every Jump on an HQ is a sure disaster. With it, sometimes the enemy reaches where it thought the HQ was… and finds nobody: its situation map was wrong. Roll one die per Jumped hex, before resolving any retreats. <span class="regla">4.7i</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta">
+          <h3>1-4 · Soft Jump</h3>
+          <ul class="rombos mb0">
+            <li>The owner moves the HQ and its trains (whichever was Jumped) wherever desired, with no path or minimum distance.</li>
+            <li>The hexes must have suitable terrain, no enemy units, EZOCs or Engagement Zones, and must not block an enemy MSR. They need not be Legal at that moment.</li>
+            <li>It keeps its markers (Prepared Defense, Coordination) without adding any, and the trains stay Ghost or not, as they were.</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>5-6 · Hard Jump</h3>
+          <ul class="rombos mb0">
+            <li>The HQ goes 3 or more hexes away, to a Legal hex outside any Engagement Zone.</li>
+            <li>Its trains flip to Ghost; it loses its Prepared Defense and gets Coordination.</li>
+            <li>Jumped trains go back 10 hexes along their MSR. See <a href="mando.html#saltos">lesson 3</a>.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="herramienta" id="salto">
+        <div class="herramienta__cab">
+          <div><span class="antetitulo">Utilidad</span><h3>Soft Jump or Hard Jump?</h3></div>
+          <button type="button" class="boton boton--primario" id="salto-tirar">Roll the die</button>
+        </div>
+        <div class="salto" id="salto-res"><p class="muted mb0">When the enemy enters the hex of an HQ or trains, roll here before resolving retreats.</p></div>
       </div>
     </div>
   </section>
@@ -159,7 +194,6 @@
           <p class="muted mb0" style="font-size:.9rem;margin-top:10px">SNAFU only counts Fresh (+1) and Fat-4 (-1). A Full result gives a single free OBJ; Partial and Fail give none. At Fat-4 nothing can be bought and the formation must recover.</p>
         </div>
         <div class="rejilla">
-          <div class="tarjeta"><h3>Soft Jumps <span class="regla">4.7i</span></h3><p class="muted mb0">When an HQ or trains are Jumped, roll a die. On 1-4 the Jump is soft: the owner relocates the HQ and trains wherever desired (suitable terrain, no enemy units, EZOCs or Engagement Zones), with no new markers. On 5-6, a normal Jump. It represents the enemy not really knowing where the HQ was.</p></div>
           <div class="tarjeta"><h3>Unit Traffic <span class="regla">4.0e</span></h3><p class="muted mb0">Any hex with units that are not deployed and active (and always one with an HQ) negates roads for whoever enters: they pay the normal terrain cost. Very realistic and very slow; the designer suggests adding it later.</p></div>
           <div class="tarjeta"><h3>Realistic Movement <span class="regla">4.9</span></h3><p class="muted mb0">No moving, undoing and trying again: if a counter enters a hex, it really did. Honest mistakes are put right by talking it through with your opponent.</p></div>
           <div class="tarjeta"><h3>Long-range Engagements <span class="regla">5.2f</span></h3><p class="muted mb0">Beyond one hex, a "Both Loss" result becomes "No Effect".</p></div>
@@ -176,5 +210,19 @@
 <script src="../js/datos.js"></script>
 <script src="../js/comun.js"></script>
 <script src="../js/partida.js"></script>
+<script>
+(function () {
+  'use strict';
+  const t = I18N.t;
+  const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+  const dado = (v) => `<div class="dado">${Array.from({ length: 9 }, (_, i) => `<i style="visibility:${PIPS[v].includes(i) ? 'visible' : 'hidden'}"></i>`).join('')}</div>`;
+  document.getElementById('salto-tirar').addEventListener('click', () => {
+    const v = 1 + Math.floor(Math.random() * 6), suave = v <= 4;
+    document.getElementById('salto-res').innerHTML = `<div class="salto__fila">${dado(v)}<div><strong class="${suave ? 'suave' : 'duro'}">${suave ? t('Salto suave') : t('Salto normal')}</strong><p class="mb0">${suave
+      ? t('El HQ nunca estuvo ahí: recoloca el HQ y sus trenes donde quieras (sin enemigos, EZOC ni zonas de enfrentamiento), con los mismos marcadores.')
+      : t('Lo han pillado: el HQ se retira 3 hexes o más, sus trenes pasan a Ghost, pierde la Prepared Defense y recibe Coordination.')}</p></div></div>`;
+  });
+})();
+</script>
 </body>
 </html>

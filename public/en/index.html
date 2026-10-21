@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>BCS Academy · Battalion Combat Series</title>
-  <meta name="description" content="BCS Academy: step-by-step training and a reference for MMP's Battalion Combat Series v2.0, with real counters, charts, an attack simulator, an activation cup and an orders log.">
+  <meta name="description" content="BCS Academy: step-by-step training and a reference for The Gamers' Battalion Combat Series v2.0, with real counters, charts, an attack simulator, an activation cup and an orders log.">
   <meta name="theme-color" content="#0d100e">
   <link rel="alternate" hreflang="es" href="https://bcs.nephei.org/">
   <link rel="alternate" hreflang="en" href="https://bcs.nephei.org/en/">
@@ -66,14 +66,15 @@
     .lecciones .premio { font: 600 .7rem var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
     .lecciones .hecha .premio { color: var(--ok); }
     .lecciones .siguiente .premio { color: var(--amber); }
-    .consejos { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .consejos { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+    @media (max-width: 1100px) { .consejos { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
     @media (max-width: 900px) { .consejos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     @media (max-width: 600px) { .consejos { grid-template-columns: minmax(0, 1fr); } }
     .consejo { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 14px; padding: 16px 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--olive); }
     .consejo__n { font: 700 1.3rem var(--head); color: var(--olive); }
     .consejo p { margin: 0; font-size: .92rem; }
     .consejo strong { display: block; color: var(--heading); margin-bottom: 2px; }
-    .consejo a:not(.g) { font: 600 .74rem var(--mono); letter-spacing: .04em; white-space: nowrap; }
+    .consejo a:not(.g):not(.no-glosario) { font: 600 .74rem var(--mono); letter-spacing: .04em; white-space: nowrap; }
   </style>
 </head>
 <body>
@@ -84,7 +85,7 @@
         <span class="antetitulo">Battalion Combat Series · v2.0</span>
         <h1>BCS Academy</h1>
         <p class="hero__lema">Training for recruits. A quick reference for veterans.</p>
-        <p class="lead">Welcome to the ranks. Here you will learn MMP's BCS system counter by counter, from what each number means to when a Shock Attack pays off, with the charts, an attack simulator and the tools you need at the table close at hand.</p>
+        <p class="lead">Welcome to the ranks. Here you will learn the <em>Battalion Combat Series</em> (BCS) system counter by counter, from what each number means to when a Shock Attack pays off, with the charts, an attack simulator and the tools you need at the table close at hand.</p>
         <div class="botones" style="margin-top:26px">
           <a class="boton boton--primario" href="#instruccion" id="cta-instruccion">Start training</a>
           <a class="boton" href="#utilidades">Go to the tools</a>
@@ -177,6 +178,8 @@
         <div class="consejo"><span class="consejo__n">04</span><p><strong>Three is a crowd.</strong> Stacking more than 2 units in one hex is legal, but it gives adverse modifiers and extra rolls to the enemy artillery. <a href="movimiento.html#apilamiento">Lesson 4</a></p></div>
         <div class="consejo"><span class="consejo__n">05</span><p><strong>Count your Fire Events.</strong> Each unit has two per activation, and spending the last one STOPs it, even with MA left. <a href="fichas.html">Lesson 1</a></p></div>
         <div class="consejo"><span class="consejo__n">06</span><p><strong>Not every ZOC stops everyone.</strong> Tanks ignore normal ZOCs; trucks stop even in an Engagement Zone. <a href="movimiento.html#zoc">Lesson 4</a></p></div>
+        <div class="consejo"><span class="consejo__n">07</span><p><strong>The Second Activation is optional.</strong> Each one with a Partial or Full result rolls for fatigue, a tired formation rolls worse SNAFUs and at Fat-4 it cannot go again. Go again when you need to, not out of habit. <a href="secuencia.html#segunda">Lesson 2</a></p></div>
+        <div class="consejo"><span class="consejo__n">08</span><p><strong>Keep the rulebook handy.</strong> This academy summarises; the complete rules are in the <a class="no-glosario" href="https://mmpgamers.com/support/gamersarchive/bcs/BCSRulesv2.0.pdf" rel="noopener">series rulebook (PDF)</a>, and each game's rules override it. <a href="intro.html#que-es">Lesson 0</a></p></div>
       </div>
     </div>
   </section>

@@ -62,8 +62,6 @@ PARES = [
     ('aria-label="Mapa de hexes con la zona de control de la unidad elegida"', 'aria-label="Hex map with the chosen unit\'s zone of control"'),
     ('<h3 style="margin-top:30px">Resumen: qué le pasa a quien entra</h3>', '<h3 style="margin-top:30px">Summary: what happens to whoever enters</h3>'),
     ('<thead><tr><th>Quien entra</th><th>Non-AV ZOC</th>', '<thead><tr><th>Moving unit</th><th>Non-AV ZOC</th>'),
-    ('8px;font-size:.9rem">4</span> A pie</td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td><td><span class="sin">Sin efecto</span></td></tr>',
-     '8px;font-size:.9rem">4</span> Leg</td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td><td><span class="stop">STOP</span></td><td><span class="sin">No effect</span></td></tr>'),
     ('<span class="ma-muestra leg" style="min-width:24px;height:24px;font-size:.9rem">4</span> A pie</td>', '<span class="ma-muestra leg" style="min-width:24px;height:24px;font-size:.9rem">4</span> Leg</td>'),
     ('<span class="ma-muestra truck" style="min-width:24px;height:24px;font-size:.9rem">8</span> Camión</td>', '<span class="ma-muestra truck" style="min-width:24px;height:24px;font-size:.9rem">8</span> Truck</td>'),
     ('<span class="ma-muestra tac" style="min-width:24px;height:24px;font-size:.9rem">16</span> Táctico</td><td><span class="sin">Sin efecto</span></td><td><span class="stop">STOP</span>. Stopping Engagement opcional (obligatorio si el apoyo es Stand Off)</td><td><span class="stop">STOP</span>. Stopping Engagement obligatorio: si no lo gana, se queda</td><td><span class="sin">Sin efecto</span></td>',

@@ -21,11 +21,12 @@
     <div class="wrap">
       <span class="antetitulo">Capítulo 6 · Reglas opcionales</span>
       <h1>Reglas opcionales y utilidades de partida</h1>
-      <p class="lead">Las <em>Series Rules</em> marcan como <span class="en">[Optional]</span> varias reglas que añaden detalle o niebla de guerra. Se pactan antes de empezar. Dos de ellas piden papel y lápiz: aquí tienes un <strong>saco de activaciones</strong> y un <strong>cuaderno de órdenes</strong> que lo hacen por ti.</p>
+      <p class="lead">Las <em>Series Rules</em> marcan como <span class="en">[Optional]</span> varias reglas que añaden detalle o niebla de guerra. Se pactan antes de empezar. Las que piden papel, lápiz o dados tienen aquí su utilidad: un <strong>saco de activaciones</strong>, un <strong>cuaderno de órdenes</strong> y la tirada del <strong>salto suave</strong>.</p>
       <div class="indice">
         <a class="chip" href="#partida">Tu partida</a>
         <a class="chip" href="#chits">Chits de activación</a>
         <a class="chip" href="#ordenes">Órdenes</a>
+        <a class="chip" href="#soft-jump">Soft Jumps</a>
         <a class="chip" href="#otras">Otras reglas opcionales</a>
       </div>
     </div>
@@ -111,7 +112,7 @@
       <div class="rejilla rejilla--3" style="margin-top:16px">
         <div class="tarjeta"><h3>Cambiar órdenes</h3><p class="muted mb0">Solo en la fase de órdenes, y gratis: se tacha y se escribe la nueva. Las órdenes siguen vigentes los turnos que quieras. Excepción: si la MSR se bloquea este turno, puedes darle al HQ otra orden de movimiento en ese momento. <span class="regla">2.4f</span></p></div>
         <div class="tarjeta"><h3>March OBJ</h3><p class="muted mb0">Se pone en cualquier hex de carretera, aunque haya enemigos. No crea zona de OBJ ni hace tirar fatiga, y las unidades de Recon no pueden crearlo. <span class="regla">2.4g</span></p></div>
-        <div class="tarjeta"><h3>Ruta de marcha</h3><p class="muted mb0">Si el March OBJ queda más allá del radio de mando, las unidades solo pueden entrar en hexes a 2 o menos de la ruta, salvo que ya estén dentro del radio, sigan la ruta hasta el final, se retiren, avancen tras combatir o sean refuerzos. <span class="regla">2.4h</span></p></div>
+        <div class="tarjeta"><h3>Ruta de marcha <span class="chip chip--amber" style="font-size:.7rem">opcional</span></h3><p class="muted mb0">Un extra de realismo dentro de las órdenes: el propio diseñador pide no usarla si vas a aprovecharla para «recoger» unidades por el camino. Si el March OBJ queda más allá del radio de mando, las unidades solo pueden entrar en hexes a 2 o menos de la ruta, salvo que ya estén dentro del radio, sigan la ruta hasta el final, se retiren, avancen tras combatir o sean refuerzos. <span class="regla">2.4h</span></p></div>
       </div>
 
       <div class="herramienta" id="cuaderno">
@@ -133,6 +134,40 @@
           <summary>Historial de órdenes por turno</summary>
           <div class="tabla-wrap"><table class="t" id="historial"></table></div>
         </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="seccion" id="soft-jump">
+    <div class="wrap">
+      <div class="seccion__cab">
+        <div><span class="antetitulo">4.7i · Soft Jumps</span><h2>Saltos suaves</h2></div>
+        <p>Sin esta regla, cada salto a un HQ es un desastre seguro. Con ella, a veces el enemigo llega donde creía que estaba el HQ… y no hay nadie: su mapa de situación estaba mal. Se tira un dado por hex saltado, antes de resolver las retiradas. <span class="regla">4.7i</span></p>
+      </div>
+      <div class="rejilla rejilla--2">
+        <div class="tarjeta">
+          <h3>1-4 · Salto suave</h3>
+          <ul class="rombos mb0">
+            <li>El dueño mueve el HQ y sus trenes (salten a uno o a los dos) a donde quiera, sin camino ni distancia mínima.</li>
+            <li>Los hexes deben tener terreno adecuado, ni enemigos ni EZOC ni zonas de enfrentamiento, y no cortar una MSR enemiga. No hace falta que sean legales en ese momento.</li>
+            <li>Conserva sus marcadores (Prepared Defense, Coordination) sin añadir ninguno, y los trenes siguen Ghost o no, como estuvieran.</li>
+          </ul>
+        </div>
+        <div class="tarjeta">
+          <h3>5-6 · Salto normal</h3>
+          <ul class="rombos mb0">
+            <li>HQ a 3 hexes o más, en un hex legal fuera de zonas de enfrentamiento.</li>
+            <li>Sus trenes pasan a Ghost; pierde la Prepared Defense y recibe Coordination.</li>
+            <li>Los trenes saltados retroceden 10 hexes por su MSR. Lo explica la <a href="mando.html#saltos">lección 3</a>.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="herramienta" id="salto">
+        <div class="herramienta__cab">
+          <div><span class="antetitulo">Utilidad</span><h3>¿Salto suave o salto normal?</h3></div>
+          <button type="button" class="boton boton--primario" id="salto-tirar">Tirar el dado</button>
+        </div>
+        <div class="salto" id="salto-res"><p class="muted mb0">Cuando el enemigo entre en el hex de un HQ o de unos trenes, tira aquí antes de resolver las retiradas.</p></div>
       </div>
     </div>
   </section>
@@ -159,7 +194,6 @@
           <p class="muted mb0" style="font-size:.9rem;margin-top:10px">El SNAFU solo cuenta Fresh (+1) y Fat-4 (-1). Un Full da un único OBJ gratis; Partial y Fail, ninguno. En Fat-4 no se puede pagar nada y hay que recuperarse.</p>
         </div>
         <div class="rejilla">
-          <div class="tarjeta"><h3>Soft Jumps <span class="regla">4.7i</span></h3><p class="muted mb0">Al saltar un HQ o unos trenes se tira un dado. Con 1-4 el salto es suave: el dueño recoloca HQ y trenes donde quiera (terreno adecuado, sin enemigos, EZOC ni zonas de enfrentamiento), sin ganar marcadores. Con 5-6, salto normal. Representa que el enemigo no sabía dónde estaba de verdad el HQ.</p></div>
           <div class="tarjeta"><h3>Unit Traffic <span class="regla">4.0e</span></h3><p class="muted mb0">Cualquier hex con unidades que no estén desplegadas y activas (y siempre con un HQ) anula las carreteras para quien entra: paga el terreno normal. Muy realista y muy lento; el diseñador aconseja añadirla más adelante.</p></div>
           <div class="tarjeta"><h3>Movimiento realista <span class="regla">4.9</span></h3><p class="muted mb0">Nada de mover, deshacer y probar otra vez: si una ficha entra en un hex, entró. Los errores honestos se corrigen hablándolo con el rival.</p></div>
           <div class="tarjeta"><h3>Enfrentamientos a distancia <span class="regla">5.2f</span></h3><p class="muted mb0">A más de un hex, el resultado «Both Loss» se convierte en «sin efecto».</p></div>
@@ -175,5 +209,19 @@
 <script src="js/datos.js"></script>
 <script src="js/comun.js"></script>
 <script src="js/partida.js"></script>
+<script>
+(function () {
+  'use strict';
+  const t = I18N.t;
+  const PIPS = { 1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8] };
+  const dado = (v) => `<div class="dado">${Array.from({ length: 9 }, (_, i) => `<i style="visibility:${PIPS[v].includes(i) ? 'visible' : 'hidden'}"></i>`).join('')}</div>`;
+  document.getElementById('salto-tirar').addEventListener('click', () => {
+    const v = 1 + Math.floor(Math.random() * 6), suave = v <= 4;
+    document.getElementById('salto-res').innerHTML = `<div class="salto__fila">${dado(v)}<div><strong class="${suave ? 'suave' : 'duro'}">${suave ? t('Salto suave') : t('Salto normal')}</strong><p class="mb0">${suave
+      ? t('El HQ nunca estuvo ahí: recoloca el HQ y sus trenes donde quieras (sin enemigos, EZOC ni zonas de enfrentamiento), con los mismos marcadores.')
+      : t('Lo han pillado: el HQ se retira 3 hexes o más, sus trenes pasan a Ghost, pierde la Prepared Defense y recibe Coordination.')}</p></div></div>`;
+  });
+})();
+</script>
 </body>
 </html>

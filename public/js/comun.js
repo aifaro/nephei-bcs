@@ -21,7 +21,8 @@
     ['combate.html#elegir', tr('¿Qué ataque uso?'), tr('Elige tu unidad y el blanco, y te dice qué puedes hacer')],
     ['secuencia.html#snafu', tr('Calculadora de SNAFU'), tr('Modificadores y probabilidad de Full, Partial y Fail')],
     ['opcionales.html#chits', tr('Saco de activaciones'), tr('Saca chits de 3 en 3: el bando con mayoría elige')],
-    ['opcionales.html#ordenes', tr('Cuaderno de órdenes'), tr('Anota las órdenes de cada formación, turno a turno')]
+    ['opcionales.html#ordenes', tr('Cuaderno de órdenes'), tr('Anota las órdenes de cada formación, turno a turno')],
+    ['opcionales.html#soft-jump', tr('Salto suave'), tr('¿Te han saltado el HQ? Tira y mira si de verdad estaba ahí')]
   ];
   const PAGINAS = [
     ['index.html', tr('Inicio')],
@@ -257,13 +258,13 @@
     f.innerHTML = EN ? `<div class="wrap pie__fila">
       <div>
         <p><strong>BCS Academy</strong> is an unofficial, fan-made play aid: basic training for recruits and a quick reference for veterans. It summarises the series rules (v2.0) and leaves out each game's own rules.</p>
-        <p><em>Battalion Combat Series</em>, its rules, charts and counters are © Multi-Man Publishing / The Gamers. The complete, current rules are at <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. The counters shown come from the VASSAL modules for <em>Arracourt</em>, <em>Danger Forward</em> and <em>Valley of Tears</em>.</p>
+        <p>The <em>Battalion Combat Series</em> is a series by The Gamers, designed by Dean Essig and published by Multi-Man Publishing (MMP), which owns The Gamers label. Its rules, charts and counters are © MMP. The complete series rules are in the <a href= + PDF +  rel="noopener">official BCS v2.0 rulebook (PDF)</a>, and the games are at <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. The counters shown come from the VASSAL modules for <em>Arracourt</em>, <em>Danger Forward</em> and <em>Valley of Tears</em>.</p>
       </div>
       <div><p><a href="https://nephei.org">nephei.org</a> · <a href="https://rpg.nephei.org">rpg.nephei.org</a></p></div>
     </div>` : `<div class="wrap pie__fila">
       <div>
         <p><strong>Academia BCS</strong> es una ayuda de juego no oficial, hecha por un aficionado: instrucción para reclutas y consulta para veteranos. Resume las reglas de la serie (v2.0) sin entrar en las reglas propias de cada juego.</p>
-        <p><em>Battalion Combat Series</em>, sus reglas, tablas y fichas son © Multi-Man Publishing / The Gamers. Las reglas completas y vigentes están en <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. Las fichas que se muestran vienen de los módulos de VASSAL de <em>Arracourt</em>, <em>Danger Forward</em> y <em>Valley of Tears</em>.</p>
+        <p>El <em>Battalion Combat Series</em> es una serie de The Gamers, diseñada por Dean Essig y publicada por la editorial Multi-Man Publishing (MMP), dueña del sello The Gamers. Sus reglas, tablas y fichas son © MMP. Las reglas de serie completas están en el <a href= + PDF +  rel="noopener">manual oficial BCS v2.0 (PDF, en inglés)</a>, y los juegos, en <a href="https://www.multimanpublishing.com/" rel="noopener">multimanpublishing.com</a>. Las fichas que se muestran vienen de los módulos de VASSAL de <em>Arracourt</em>, <em>Danger Forward</em> y <em>Valley of Tears</em>.</p>
       </div>
       <div><p><a href="https://nephei.org">nephei.org</a> · <a href="https://rpg.nephei.org">rpg.nephei.org</a></p></div>
     </div>`;
