@@ -196,3 +196,8 @@
   .mapa-wrap::after { display: none; }
   .panel__cuerpo { padding: 14px; }
 }
+
+/* Juego del que salen las fichas */
+.juego-sel { display: flex; align-items: center; gap: 8px; font-size: .82rem; min-width: 0; }
+.juego-sel select { height: 32px; max-width: 220px; border-radius: 9px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--heading); font: inherit; padding: 0 8px; }
+@media (max-width: 560px) { .juego-sel .muted { display: none; } }

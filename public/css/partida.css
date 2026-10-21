@@ -23,6 +23,8 @@
 .anadir input, .orden__campos input { flex: 1; min-width: 0; height: 36px; padding: 0 10px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2); color: var(--heading); font: inherit; font-size: .9rem; }
 .anadir input:focus, .orden__campos input:focus { outline: none; border-color: var(--amber); }
 .partida__ctl { display: grid; gap: 14px; padding: 16px; }
+.escenario { display: grid; gap: 6px; }
+.escenario select { height: 36px; border-radius: 9px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--heading); font: inherit; font-size: .88rem; padding: 0 8px; max-width: 100%; }
 .turno .antetitulo { margin-bottom: 8px; }
 .turno__fila { display: flex; align-items: center; gap: 12px; }
 .turno__fila strong { font: 700 2.2rem var(--head); color: var(--heading); min-width: 2ch; text-align: center; }

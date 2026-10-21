@@ -22,26 +22,42 @@
       explica: t('Artillería o aviación contra un hex en una OBJ Zone, con un observador. Bombardeo de destrucción: un dado por cada punto y por cada unidad del hex.') }
   };
 
-  const ROL_AV = ['tq-us', 'tq-de', 'panther', 'tiger', 'td', 'flak', 'rec-us', 'rec-de'];
-  const HOSTS = ['inf-us', 'inf-de', 'mec-us', 'mec-de'];
-  const TODAS = Object.keys(U);
+  // Juego del que salen las fichas: '' son las de ejemplo; los demás vienen de juegos.js
+  const JG = window.Juegos ? Juegos.JUEGOS : {};
+  const EJEMPLO = Object.keys(U).filter((k) => !U[k].juego);
+  const ROL_AV_EJ = ['tq-us', 'tq-de', 'panther', 'tiger', 'td', 'flak', 'rec-us', 'rec-de'];
+  const HOSTS_EJ = ['inf-us', 'inf-de', 'mec-us', 'mec-de'];
+  // Equivalentes en cada juego de las fichas de ejemplo que usan los valores iniciales
+  const EQUIV = {
+    ip: { 'inf-us': 'ip-132', 'tq-us': 'ip-126', 'mec-us': 'ip-126', 'inf-de': 'ip-31', panther: 'ip-10', flak: 'ip-289' }
+  };
+  let juego = '';
+  const eq = (k) => (juego && EQUIV[juego] && EQUIV[juego][k]) || k;
+  function rol(nombre) {
+    if (!juego) return nombre === 'av' ? ROL_AV_EJ : nombre === 'host' ? HOSTS_EJ : EJEMPLO;
+    const ks = JG[juego].unidades;
+    if (nombre === 'av') return ks.filter((k) => R.tieneAv(U[k].d) || R.tieneAv(U[k].m));
+    if (nombre === 'host') return ks.filter((k) => R.puedeSerHost(U[k].d));
+    return ks;
+  }
 
-  function nueva(k, lado) { return { k, lado: lado || 'd', pasos: U[k].pasos }; }
+  function nueva(k, lado) { k = eq(k); return { k, lado: lado || 'd', pasos: U[k].pasos }; }
 
   function estadoInicial(modo) {
-    const base = { modo, terreno: 'abierto', claveTerreno: false, ladoHex: false, pdDef: false, pdAtt: false, msrAtt: false, msrDef: false,
+    const base = { modo, juego, terreno: 'abierto', claveTerreno: false, ladoHex: false, pdDef: false, pdAtt: false, msrAtt: false, msrDef: false,
       dobleObj: false, bombardeo: 'ninguno', puntos: 1, desdeFuera: false, fuegoPrevio: false, costeMp: true, arDef: 0,
       apoyoAtt: null, apoyoDef: null, asistente: null };
     switch (modo) {
       case 'regular': return Object.assign(base, { atacante: nueva('inf-us'), apoyoAtt: 'red', asistente: nueva('tq-us'), defensores: [nueva('inf-de')], apoyoDef: null, bombardeo: 'supresion' });
       case 'shock': return Object.assign(base, { atacante: nueva('mec-us', 'm'), apoyoAtt: 'red', defensores: [nueva('inf-de', 'm')] });
-      case 'enfrentamiento': return Object.assign(base, { tirador: nueva('tq-us'), blancoTipo: 'real', blanco: nueva('panther'), host: nueva('inf-de'), apoyoBlanco: 'standoff', distancia: 2, variosApoyos: false, pantalla: false, opcionalLejos: false });
+      case 'enfrentamiento': return Object.assign(base, { tirador: nueva('tq-us'), blancoTipo: 'real', blanco: nueva('panther'), host: nueva('inf-de'), apoyoBlanco: 'standoff', distancia: Math.min(2, U[eq('tq-us')].d.alcance), variosApoyos: false, pantalla: false, opcionalLejos: false });
       case 'fuego': return Object.assign(base, { tirador: nueva('tq-us'), defensores: [nueva('inf-de'), nueva('inf-de', 'm')] });
       case 'bombardeo': return Object.assign(base, { defensores: [nueva('inf-de'), nueva('flak')], puntos: 1, enAtaque: false });
     }
   }
 
   let S = cargar() || estadoInicial('regular');
+  juego = JG[S.juego] ? S.juego : '';
   let resultado = null;     // efectos de la última tirada sobre el mapa
   let animando = false;
   let historial = [];
@@ -330,7 +346,10 @@
   // ---------- Editor de unidades ----------
   function selectorUnidad(valor, opciones, al) {
     const sel = document.createElement('select');
-    sel.innerHTML = opciones.map((k) => `<option value="${k}"${k === valor ? ' selected' : ''}>${esc(F.etiqueta(U[k]))}</option>`).join('');
+    const opt = (k) => `<option value="${k}"${k === valor ? ' selected' : ''}>${esc(F.etiqueta(U[k]))}</option>`;
+    const fuera = opciones.includes(valor) ? '' : opt(valor);      // la unidad actual, aunque sea de otro juego
+    if (!juego) sel.innerHTML = fuera + opciones.map(opt).join('');
+    else sel.innerHTML = fuera + Juegos.grupos(juego, (u, k) => opciones.includes(k)).map(([g, ks]) => `<optgroup label="${esc(g)}">${ks.map(opt).join('')}</optgroup>`).join('');
     sel.addEventListener('change', () => al(sel.value));
     return sel;
   }
@@ -384,19 +403,33 @@
     return d;
   }
 
+  function pintarJuego() {
+    const sel = $('#juego');
+    if (!sel) return;
+    sel.innerHTML = `<option value="">${t('Fichas de ejemplo (Arracourt, Danger Forward)')}</option>` +
+      Object.values(JG).map((j) => `<option value="${j.id}"${j.id === juego ? ' selected' : ''}>${esc(j.nombre)}</option>`).join('');
+    sel.value = juego;
+  }
+  if ($('#juego')) $('#juego').addEventListener('change', (e) => {
+    if (animando) { e.target.value = juego; return; }
+    juego = e.target.value;
+    S = estadoInicial(S.modo); resultado = null; limpiarTirada(); pintarTodo();
+  });
+
   function pintarSlots() {
+    pintarJuego();
     const c = $('#slots');
     c.innerHTML = '';
     const m = S.modo;
     if (m === 'regular' || m === 'shock') {
-      c.appendChild(slot(t('Atacante'), 'a', S.atacante, TODAS, { apoyo: { valor: S.apoyoAtt, al: (v) => { S.apoyoAtt = v; cambio(); } } }));
+      c.appendChild(slot(t('Atacante'), 'a', S.atacante, rol('todas'), { apoyo: { valor: S.apoyoAtt, al: (v) => { S.apoyoAtt = v; cambio(); } } }));
       if (m === 'regular') {
-        if (S.asistente) c.appendChild(slot(t('Asistente'), 'a', S.asistente, TODAS, { quitar: () => { S.asistente = null; cambio(); } }));
+        if (S.asistente) c.appendChild(slot(t('Asistente'), 'a', S.asistente, rol('todas'), { quitar: () => { S.asistente = null; cambio(); } }));
         else c.appendChild(botonAnadir(t('+ Añadir asistencia'), () => { S.asistente = nueva('tq-us'); cambio(); }));
       }
     }
     if (m === 'enfrentamiento') {
-      c.appendChild(slot(t('Tirador'), 'a', S.tirador, ROL_AV));
+      c.appendChild(slot(t('Tirador'), 'a', S.tirador, rol('av')));
       const tipo = document.createElement('div'); tipo.className = 'campo';
       tipo.innerHTML = `<span class="muted">${t('El blanco es')}</span>`;
       const mini = document.createElement('div'); mini.className = 'mini';
@@ -405,9 +438,9 @@
         b.addEventListener('click', () => { S.blancoTipo = v; cambio(); }); mini.appendChild(b);
       });
       tipo.appendChild(mini); c.appendChild(tipo);
-      if (S.blancoTipo === 'real') c.appendChild(slot(t('Blanco'), 'd', S.blanco, ROL_AV));
+      if (S.blancoTipo === 'real') c.appendChild(slot(t('Blanco'), 'd', S.blanco, rol('av')));
       else {
-        c.appendChild(slot(t('Host'), 'd', S.host, HOSTS));
+        c.appendChild(slot(t('Host'), 'd', S.host, rol('host')));
         const sa = document.createElement('div'); sa.className = 'campo';
         sa.innerHTML = `<span class="muted">${t('Apoyo de la formación del host:')}</span>`;
         const sel = selectorApoyo(S.apoyoBlanco, (v) => { S.apoyoBlanco = v || 'red'; cambio(); });
@@ -415,7 +448,7 @@
         sa.appendChild(sel); c.appendChild(sa);
       }
     }
-    if (m === 'fuego') c.appendChild(slot(t('Tirador'), 'a', S.tirador, ROL_AV));
+    if (m === 'fuego') c.appendChild(slot(t('Tirador'), 'a', S.tirador, rol('av')));
     if (m !== 'enfrentamiento') {
       const etiqueta = m === 'fuego' || m === 'bombardeo' ? t('Objetivo') : t('Defensor');
       S.defensores.forEach((inst, i) => {
@@ -424,7 +457,7 @@
           extra.ar = { marcado: S.arDef === i, al: () => { S.arDef = i; cambio(); } };
           if (i === S.arDef) extra.apoyo = { valor: S.apoyoDef, al: (v) => { S.apoyoDef = v; cambio(); } };
         }
-        c.appendChild(slot(etiqueta + (S.defensores.length > 1 ? ' ' + (i + 1) : ''), 'd', inst, TODAS, extra));
+        c.appendChild(slot(etiqueta + (S.defensores.length > 1 ? ' ' + (i + 1) : ''), 'd', inst, rol('todas'), extra));
       });
       if (S.defensores.length < 3) c.appendChild(botonAnadir(t('+ Añadir otra unidad al hex') + (S.defensores.length === 2 ? ' ' + t('(sobreapilar)') : ''), () => { S.defensores.push(nueva('inf-de')); cambio(); }));
     }

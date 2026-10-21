@@ -1,0 +1,391 @@
+# n: cara d | cara m | rasgos     (A flecha, R/L/S/W AV rojo/limited/standoff/light, a AR, r alcance, T/K/P MA tac/truck/pie, SUP apoyo, - sin reverso; H hard, B ruptura, X sin reemplazos)
+0: A R1 a5 T16 | - |
+1: R3 a5 T4 | R2 a5 T14 | H
+2: A a4 P4 | A a3 K12 |
+3: A a4 P4 | A a3 K12 |
+4: A a4 P4 | A a3 K12 |
+5: A a4 P4 | A a3 K12 |
+6: A a4 P4 | A a3 K12 |
+7: A a4 P4 | A a3 K12 |
+8: SUP L2 | L1 a4 K12 |
+9: A a4 P4 | a3 K12 |
+10: R3 a5 T4 | R2 a5 T14 | H
+11: R3 a5 T4 | R2 a5 T14 | H
+12: A a4 P4 | A a3 K12 |
+13: A a4 P4 | A a3 K12 |
+14: A a4 P4 | A a3 K12 |
+15: A a4 P4 | A a3 K12 |
+16: SUP L2 | L1 a4 K12 |
+17: A a4 P4 | a3 K12 |
+18: A R1 a5 T16 | - |
+19: A a5 P4 | A a5 T16 |
+20: A R1 a5 T16 | - |
+21: R3 a5 T4 | R2 a5 T14 | H
+22: R3 a5 T4 | R2 a5 T14 | H
+23: R3 a5 T4 | R2 a5 T14 | H
+24: A a4 P4 | A a3 K12 |
+25: A a4 P4 | A a3 K12 |
+26: A a5 P4 | A a5 T16 |
+27: A a4 P4 | A a3 K12 |
+28: SUP L2 | L1 a4 K12 |
+29: A a4 P4 | a3 K12 |
+30: A a4 P4 | A a3 P10 |
+31: A a4 P4 | a3 P8 |
+32: A a4 P4 | a3 P8 |
+33: A a4 P4 | a3 P8 |
+34: A a4 P4 | a3 P8 |
+35: A a4 P4 | a3 P8 |
+36: A a4 P4 | a3 P8 |
+37: A a4 P4 | a3 P8 |
+38: A a4 P4 | a3 P8 |
+39: A a4 P4 | a3 P8 |
+40: SUP L3 | - |
+41: A a4 P4 | a3 P8 |
+42: A R1 a5 T16 | - |
+43: R3 a5 T4 | R2 a5 T14 | H
+44: A a4 P4 | A a3 K12 |
+45: A a4 P4 | A a3 K12 |
+46: A a4 P4 | A a3 K12 |
+47: A a4 P4 | A a3 K12 |
+48: A a3 P2 | a2 K12 |
+49: SUP L2 | L1 a4 K12 |
+50: A a4 P4 | a3 K12 |
+51: A a4 P4 | A a3 P10 |
+52: A a4 P4 | a3 P8 |
+53: A a4 P4 | a3 P8 |
+54: A a4 P4 | a3 P8 |
+55: A a4 P4 | a3 P8 |
+56: A a4 P4 | a3 P8 |
+57: A a4 P4 | a3 P8 |
+58: A a4 P4 | a3 P8 |
+59: A a4 P4 | a3 P8 |
+60: A a4 P4 | a3 P8 |
+61: SUP L2 | - |
+62: A a4 P4 | a3 P8 |
+63: A a4 P4 | A a3 P10 |
+64: A a4 P4 | a3 P8 |
+65: A a4 P4 | a3 P8 |
+66: A a4 P4 | a3 P8 |
+67: A a4 P4 | a3 P8 |
+68: A a4 P4 | a3 P8 |
+69: A a4 P4 | a3 P8 |
+70: A a4 P4 | a3 P8 |
+71: SUP L2 | - |
+72: A a4 P4 | a3 P8 |
+73: A a4 P4 | A a3 P10 |
+74: A a4 P4 | a3 P8 |
+75: A a4 P4 | a3 P8 |
+76: A a4 P4 | a3 P8 |
+77: A a4 P4 | a3 P8 |
+78: A a4 P4 | a3 P8 |
+79: A a4 P4 | a3 P8 |
+80: A a4 P4 | a3 P8 |
+81: A a4 P4 | a3 P8 |
+82: SUP L3 | - |
+83: A a4 P4 | a3 P8 |
+84: A a4 P4 | A a3 P10 |
+85: A a4 P4 | a3 P8 |
+86: A a4 P4 | a3 P8 |
+87: A a4 P4 | a3 P8 |
+88: A a4 P4 | a3 P8 |
+89: A a4 P4 | a3 P8 |
+90: A a4 P4 | a3 P8 |
+91: A a4 P4 | a3 P8 |
+92: A a4 P4 | a3 P8 |
+93: A a4 P4 | a3 P8 |
+94: SUP L3 | - |
+95: A a4 P4 | a3 P8 |
+96: A a3 P4 | a2 P8 |
+97: A a3 P4 | a2 P8 |
+98: A a3 P4 | a2 P8 |
+99: A a3 P4 | a2 P8 |
+100: A a3 P4 | a2 P8 |
+101: A a3 P4 | a2 P8 |
+102: A a3 P4 | a2 P8 |
+103: A a3 P4 | a2 P8 |
+104: A a3 P4 | a2 P8 |
+105: SUP L2 | - |
+106: A a3 P4 | a2 P8 |
+107: S4 a5 r2 T3 | S3 a5 T12 |
+108: SUP R3 | R2 a4 T14 | H
+109: SUP R3 | R2 a4 T14 | H
+110: SUP R3 | R2 a4 T14 | H
+111: A R3 a2 T5 | A R2 a2 T16 | H
+112: A R3 a2 T5 | A R2 a2 T16 | H
+113: A R3 a2 T5 | A R2 a2 T16 | H
+114: A a2 P4 | A a1 K12 |
+115: A a3 P4 | A a2 K16 |
+116: R4 a3 T4 | R3 a3 T12 | HB
+117: A R3 a3 T5 | A R2 a3 T16 | H
+118: A R3 a3 T5 | A R2 a3 T16 | H
+119: A R3 a3 T5 | A R2 a3 T16 | H
+120: A a3 P4 | A a2 K12 |
+121: L2 a2 P2 | a1 K12 |
+122: A R3 a3 T5 | A R2 a3 T16 | H
+123: A R3 a3 T5 | A R2 a3 T16 | H
+124: A a3 P4 | A a2 K12 |
+125: L2 a2 P2 | a1 K12 |
+126: A R3 a3 T5 | A R2 a3 T16 | H
+127: A R3 a3 T5 | A R2 a3 T16 | H
+128: A R3 a3 T5 | A R2 a3 T16 | H
+129: A a3 P4 | A a2 K12 |
+130: L2 a2 P2 | a1 K12 |
+131: R3 a2 T5 | R2 a2 T16 | H
+132: A a3 P4 | a2 P8 |
+133: A a3 P4 | a2 P8 |
+134: A a3 P4 | a2 P8 |
+135: A a2 P4 | a1 P8 |
+136: A a2 P4 | a1 P8 |
+137: A a3 P4 | a2 P8 |
+138: A a3 P4 | a2 P8 |
+139: A a3 P4 | a2 P8 |
+140: A a2 P4 | a1 P8 |
+141: A a2 P4 | a1 P8 |
+142: A a2 P4 | a1 P8 |
+143: L2 a2 P2 | a1 K12 |
+144: SUP L2 | - |
+145: A a3 P4 | a2 P8 |
+146: A a3 P4 | a2 P8 |
+147: A a3 P4 | a2 P8 |
+148: A a2 P4 | a1 P8 |
+149: A a2 P4 | a1 P8 |
+150: A a2 P4 | a1 P8 |
+151: A a2 P4 | a1 P8 |
+152: A a2 P4 | a1 P8 |
+153: A a2 P4 | a1 P8 |
+154: A a2 P4 | a1 P8 |
+155: A a2 P4 | a1 P8 |
+156: A a2 P4 | a1 P8 |
+157: SUP L2 | - |
+158: A a2 P2 | a1 P6 |
+159: A a2 P2 | a1 P6 |
+160: A a2 P2 | a1 P6 |
+161: A a2 P2 | a1 P6 |
+162: A a2 P2 | a1 P6 |
+163: A a2 P2 | a1 P6 |
+164: R4 a3 T4 | R3 a3 T12 | HB
+165: A a2 P4 | a1 P8 |
+166: A a2 P4 | a1 P8 |
+167: A a2 P4 | a1 P8 |
+168: A a2 P4 | a1 P8 |
+169: A a2 P4 | a1 P8 |
+170: A a2 P4 | a1 P8 |
+171: A a2 P4 | a1 P8 |
+172: A a2 P4 | a1 P8 |
+173: A a2 P4 | a1 P8 |
+174: A a2 P2 | a1 P6 |
+175: L2 a2 P2 | a1 K12 |
+176: SUP L2 | - |
+177: R3 a2 T5 | R2 a2 T16 | H
+178: A a2 P4 | a1 P8 |
+179: A a2 P4 | a1 P8 |
+180: A a2 P4 | a1 P8 |
+181: A a2 P4 | a1 P8 |
+182: A a2 P4 | a1 P8 |
+183: A a2 P4 | a1 P8 |
+184: A a2 P4 | a1 P8 |
+185: L2 a2 P2 | a1 K12 |
+186: SUP L2 | - |
+187: R3 a2 T5 | R2 a2 T16 | H
+188: A a2 P4 | a1 P8 |
+189: A a2 P4 | a1 P8 |
+190: A a2 P4 | a1 P8 |
+191: A a2 P4 | a1 P8 |
+192: A a2 P4 | a1 P8 |
+193: A a2 P4 | a1 P8 |
+194: A a2 P4 | a1 P8 |
+195: L2 a2 P2 | a1 K12 |
+196: SUP L2 | - |
+197: A a2 P4 | a1 P8 |
+198: A a2 P4 | a1 P8 |
+199: A a2 P4 | a1 P8 |
+200: A a2 P4 | a1 P8 |
+201: A a2 P4 | a1 P8 |
+202: A a2 P4 | a1 P8 |
+203: A a2 P4 | a1 P8 |
+204: A a2 P4 | a1 P8 |
+205: A a2 P4 | a1 P8 |
+206: L2 a2 P2 | a1 K12 |
+207: SUP L2 | - |
+208: R3 a2 T5 | R2 a2 T16 | H
+209: A a2 P4 | a1 P8 |
+210: A a2 P4 | a1 P8 |
+211: A a2 P4 | a1 P8 |
+212: A a2 P4 | a1 P8 |
+213: A a2 P4 | a1 P8 |
+214: A a2 P4 | a1 P8 |
+215: A a2 P4 | a1 P8 |
+216: L2 a2 P2 | a1 K12 |
+217: SUP L2 | - |
+218: A a2 P4 | a1 P8 |
+219: A a2 P4 | a1 P8 |
+220: A a2 P4 | a1 P8 |
+221: A a2 P4 | a1 P8 |
+222: A a2 P4 | a1 P8 |
+223: A a2 P4 | a1 P8 |
+224: A a2 P4 | a1 P8 |
+225: A a2 P4 | a1 P8 |
+226: A a2 P4 | a1 P8 |
+227: L2 a2 P2 | a1 K12 |
+228: SUP L2 | - |
+229: A a3 P4 | a2 P8 |
+230: A a3 P4 | a2 P8 |
+231: A a3 P4 | a2 P8 |
+232: A a3 P4 | a2 P8 |
+233: A a3 P4 | a2 P8 |
+234: A a3 P4 | a2 P8 |
+235: A a3 P4 | a2 P8 |
+236: A a3 P4 | a2 P8 |
+237: A a3 P4 | a2 P8 |
+238: SUP L2 | - |
+239: A a3 P4 | a2 P8 |
+240: A a3 P4 | a2 P8 |
+241: A a3 P4 | a2 P8 |
+242: A a3 P4 | a2 P8 |
+243: A a3 P4 | a2 P8 |
+244: A a3 P4 | a2 P8 |
+245: A a3 P4 | a2 P8 |
+246: A a3 P4 | a2 P8 |
+247: A a3 P4 | a2 P8 |
+248: A a3 P4 | a2 P8 |
+249: A a3 P4 | a2 P8 |
+250: A a3 P4 | a2 P8 |
+251: L2 a2 P2 | a1 K12 |
+252: SUP L2 | - |
+253: A a2 P4 | a1 P8 |
+254: A a2 P4 | a1 P8 |
+255: A a2 P4 | a1 P8 |
+256: A a2 P4 | a1 P8 |
+257: A a2 P4 | a1 P8 |
+258: A a2 P4 | a1 P8 |
+259: A a2 P4 | a1 P8 |
+260: A a2 P4 | a1 P8 |
+261: A a2 P4 | a1 P8 |
+262: L2 a2 P2 | a1 K12 |
+263: SUP L2 | - |
+264: A a2 P4 | a1 P8 |
+265: A a2 P4 | a1 P8 |
+266: A a2 P4 | a1 P8 |
+267: A a2 P4 | a1 P8 |
+268: A a2 P4 | a1 P8 |
+269: A a2 P4 | a1 P8 |
+270: A a2 P4 | a1 P8 |
+271: A a2 P4 | a1 P8 |
+272: A a2 P4 | a1 P8 |
+273: SUP L2 | - |
+274: R3 a4 T4 | R2 a4 T14 | H
+275: R3 a4 T4 | R2 a4 T14 | H
+276: R3 a4 T4 | R2 a4 T14 | H
+277: R3 a2 T5 | R2 a2 T16 | H
+278: R3 a2 T5 | R2 a2 T16 | H
+279: L2 a2 P2 | a1 K12 |
+280: L2 a2 P2 | a1 K12 |
+281: L2 a2 P2 | a1 K12 |
+282: A R1 a5 T16 | - |
+283: R3 a5 T4 | R2 a5 T14 | H
+284: R3 a5 T4 | R2 a5 T14 | H
+285: A a5 P4 | A a5 T16 |
+286: A a4 P4 | A a3 K12 |
+287: A a4 P4 | A a3 K12 |
+288: A a4 P4 | A a3 K12 |
+289: S4 a4 r2 K2 | a3 K12 |
+290: SUP L2 | L1 a4 K12 |
+291: A a4 P4 | a3 K12 |
+292: A a3 P4 | a2 P8 |
+293: A a3 P4 | a2 P8 |
+294: A a3 P4 | a2 P8 |
+295: A a3 P4 | a2 P8 |
+296: A a3 P4 | a2 P8 |
+297: A a3 P4 | a2 P8 |
+298: A a3 P4 | a2 P8 |
+299: A a3 P4 | a2 P8 |
+300: A a3 P4 | a2 P8 |
+301: SUP L3 | - |
+302: A a2 P4 | a1 P8 |
+303: A a2 P4 | a1 P8 |
+304: A a3 P4 | a2 P8 |
+305: A a3 P4 | a2 P8 |
+306: A a3 P4 | a2 P8 |
+307: A a3 P4 | a2 P8 |
+308: A a3 P4 | a2 P8 |
+309: A a2 P4 | a1 P8 |
+310: A a3 P4 | a2 P8 |
+311: A a3 P4 | a2 P8 |
+312: A a2 P4 | a1 P8 |
+313: A a2 P4 | a1 P8 |
+314: A a3 P4 | a2 P8 |
+315: A a3 P4 | a2 P8 |
+316: A a3 P4 | a2 P8 |
+317: A a3 P4 | a2 P8 |
+318: A a3 P4 | a2 P8 |
+319: A a3 P4 | a2 P8 |
+320: A a3 P4 | a2 P8 |
+321: A a3 P4 | a2 P8 |
+322: A a3 P4 | a2 P8 |
+323: A a3 P4 | a2 P8 |
+324: A a3 P4 | a2 P8 |
+325: A a2 P4 | a1 P8 |
+326: A a2 P4 | a1 P8 |
+327: A a2 P4 | a1 P8 |
+328: A a2 P4 | a1 P8 |
+329: SUP L2 | - |
+330: R3 a4 T4 | R2 a4 T14 | H
+331: A a3 P4 | A a2 K16 |
+332: A a3 P4 | A a3 T16 |
+333: A R3 a3 T5 | A R2 a3 T16 | H
+334: A R3 a4 T5 | A R2 a4 T16 | H
+335: A R3 a3 T5 | A R2 a3 T16 | H
+336: A R3 a4 T5 | A R2 a4 T16 | H
+337: A R4 a3 T4 | A R3 a3 T12 | HB
+338: A a3 P4 | A a2 K12 |
+339: L2 a3 P2 | a2 K12 |
+340: L2 a3 P2 | a2 K12 |
+341: A a4 P4 | a3 K12 |
+342: A a4 P4 | a3 K12 |
+343: A a3 P4 | a2 K12 |
+344: A a3 P4 | A a3 T16 |
+345: A a3 P4 | A a2 K16 |
+346: R3 a3 T2 | R2 a3 T10 | H
+347: R3 a3 T3 | R2 a3 T10 | H
+348: A R2 a3 T3 | A R1 a3 K10 |
+349: A R2 a3 T3 | A R1 a3 K10 |
+350: A R2 a3 T2 | A R1 a3 K10 |
+351: A R3 a4 T5 | A R2 a4 T16 | H
+352: A R3 a3 T5 | A R2 a3 T16 | H
+353: A R3 a3 T5 | A R2 a3 T16 | H
+354: A a3 P4 | A a2 K12 |
+355: A a4 P4 | a3 P8 |
+356: A a4 P4 | a3 P8 |
+357: A a4 P4 | a3 P8 |
+358: SUP L2 | - |
+359: L2 a3 P2 | a2 K12 |
+360: A a4 P4 | a3 P8 |
+361: A a4 P4 | a3 P8 |
+362: A a4 P4 | a3 P8 |
+363: SUP L2 | - |
+364: A a3 P4 | a2 P8 |
+365: A a3 P4 | a2 P8 |
+366: A a3 P4 | a2 P8 |
+367: A a3 P4 | a2 P8 |
+368: A a3 P4 | a2 P8 |
+369: A a3 P4 | a2 P8 |
+370: A a3 P4 | a2 P8 |
+371: A a3 P4 | a2 P8 |
+372: A a3 P4 | a2 P8 |
+373: SUP L2 | - |
+374: A a3 P4 | a2 P8 |
+375: A a3 P4 | a2 P8 |
+376: A a3 P4 | a2 P8 |
+377: SUP L2 | - |
+378: A a3 P4 | a2 P8 |
+379: A a3 P4 | a2 P8 |
+380: A a3 P4 | a2 P8 |
+381: A a3 P4 | a2 P8 |
+382: A a3 P4 | a2 P8 |
+383: A a3 P4 | a2 P8 |
+384: A a3 P4 | a2 P8 |
+385: A a3 P4 | a2 P8 |
+386: A a3 P4 | a2 P8 |
+387: A a2 P4 | a1 P8 |
+388: SUP L2 | - |
+389: R4 a4 T4 | R3 a4 T12 | HB

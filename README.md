@@ -14,6 +14,7 @@ La instrucción empieza por la **lección 0** (`intro.html`: qué es el BCS, esc
 Además:
 
 - **Simulador.** Se colocan las fichas en un mapa de hexes, se marcan las circunstancias y calcula los modificadores, los requisitos y la probabilidad de cada resultado. Al tirar, aplica el resultado sobre las fichas: bajas, retiradas, avance y tráfico.
+- **Fichas de un juego.** El simulador puede usar las fichas de ejemplo o todas las de *Inflection Point*, agrupadas por mapa, bando y formación, y la partida carga las formaciones de cada escenario del juego para el saco y el cuaderno.
 - **Tablas y glosario.** Las tablas de la serie para consultar o imprimir, y más de setenta términos en inglés y castellano. Los términos del texto enlazan al glosario y muestran su definición al pasar por encima; cada entrada del glosario dice en qué lección se explica (`DONDE` en `datos.js`) y qué términos conviene ver con ella (`VER`).
 
 Sitio estático, sin dependencias ni paso de compilación. En castellano en la raíz y en inglés en `/en/`, con un conmutador ES/EN en la cabecera que lleva a la misma página en el otro idioma.
@@ -33,6 +34,8 @@ Sitio estático, sin dependencias ni paso de compilación. En castellano en la r
 | `public/js/reglas.js` | El motor: tablas transcritas y cálculo de modificadores. No toca el DOM. |
 | `public/js/fichas.js` | Las unidades de ejemplo con los valores impresos en sus fichas reales, y cómo se pintan. |
 | `public/js/simulador.js` | El simulador. |
+| `public/js/juegos.js` | Registra las fichas de cada juego en `Fichas.UNIDADES` y da sus escenarios a la partida. |
+| `public/js/juegos-ip.js`, `public/fichas/ip/` | *Inflection Point*: escenarios, formaciones y fichas. Generados con `python tools/vassal-ip.py "<ruta>/BCS Inflection Point-1.0.3.vmod"`; los valores impresos de cada ficha se leyeron a ojo y están en `tools/ip-valores.txt`. |
 | `public/js/partida.js`, `public/css/partida.css` | Saco de activaciones y cuaderno de órdenes. |
 | `public/js/datos.js` | El glosario y el índice del buscador (Ctrl+K). |
 | `public/js/i18n.js`, `public/js/en.js` | Idioma de la página y textos en inglés. |
@@ -40,11 +43,13 @@ Sitio estático, sin dependencias ni paso de compilación. En castellano en la r
 | `public/js/comun.js` | Cabecera con el menú del reglamento, capítulos, pie, tema, buscador y enlaces al glosario. |
 | `public/fichas/` | Fichas reales: `u/` las unidades por cara (`-d` desplegada, `-m` movimiento), `m/` los marcadores, `t/` los hexes de terreno del mapa de *Arracourt* y en la raíz las de la galería. |
 | `tests/reglas.test.js` | Pruebas del motor. |
+| `tests/juegos.test.js` | Pruebas de los datos de los juegos (valores, imágenes y escenarios). |
 
 ## Pruebas
 
 ```
 node tests/reglas.test.js
+node tests/juegos.test.js
 ```
 
 Comprueban los modificadores del Combat y del Engagement Table, las filas del Barrage Table, los resultados y las distribuciones de probabilidad contra casos calculados a mano.

@@ -9,7 +9,7 @@ PARES = [
     ('<span class="paso">1</span> El campo y la tirada</h2><button class="boton boton--peq" type="button" id="btn-reiniciar">Recolocar fichas</button>', '<span class="paso">1</span> The field and the roll</h2><button class="boton boton--peq" type="button" id="btn-reiniciar">Reset counters</button>'),
     ('</svg>Tirar los dados</button>', '</svg>Roll the dice</button>'),
     ('<h2 id="t-hist">Historial</h2><button class="boton boton--peq" type="button" id="btn-borrar-hist">Borrar</button>', '<h2 id="t-hist">History</h2><button class="boton boton--peq" type="button" id="btn-borrar-hist">Clear</button>'),
-    ('<span class="paso">2</span> Unidades</h2><span class="muted" style="font-size:.82rem">Fichas reales de Arracourt y Danger Forward</span>', '<span class="paso">2</span> Units</h2><span class="muted" style="font-size:.82rem">Real counters from Arracourt and Danger Forward</span>'),
+    ('<span class="paso">2</span> Unidades</h2><label class="juego-sel"><span class="muted">Fichas de</span> <select id="juego" aria-label="Juego del que salen las fichas"></select></label>', '<span class="paso">2</span> Units</h2><label class="juego-sel"><span class="muted">Counters from</span> <select id="juego" aria-label="Game the counters come from"></select></label>'),
     ('<span class="paso">3</span> Circunstancias</h2>', '<span class="paso">3</span> Circumstances</h2>'),
     ('<span id="t-mod-txt">Modificadores</span>', '<span id="t-mod-txt">Modifiers</span>'),
     ('<h3 style="font-size:.95rem;margin-bottom:8px">Requisitos</h3>', '<h3 style="font-size:.95rem;margin-bottom:8px">Requirements</h3>'),

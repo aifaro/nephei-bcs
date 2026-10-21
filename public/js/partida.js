@@ -17,6 +17,15 @@
     { nombre: tr('EE. UU.'), formaciones: ['CCA / 4th Armored', 'CCB / 4th Armored', '35th Infantry'] },
     { nombre: tr('Alemania'), formaciones: ['11. Panzer', '21. Panzer', '15. Panzergrenadier', '559. Volksgrenadier'] }
   ];
+  // Escenarios de los juegos (juegos.js): las formaciones con chit de activación que juegan en cada uno
+  const ESCENARIOS = { ejemplo: { nombre: tr('Ejemplo: Arracourt, septiembre de 1944'), bandos: EJEMPLO } };
+  Object.values(window.Juegos ? Juegos.JUEGOS : {}).forEach((j) => j.escenarios.forEach((e) => {
+    ESCENARIOS[j.id + ':' + e.id] = {
+      nombre: tr('{j} · {e} ({a} contra {b} formaciones)', { j: j.nombre, e: e.nombre, a: e.sov.length, b: e.eje.length }),
+      bandos: [{ nombre: Fichas.BANDOS.sov.nombre, formaciones: e.sov }, { nombre: Fichas.BANDOS.eje.nombre, formaciones: e.eje }]
+    };
+  }));
+  $('escenario').innerHTML = Object.entries(ESCENARIOS).map(([k, e]) => `<option value="${k}">${esc(e.nombre)}</option>`).join('');
 
   function nueva() {
     return {
@@ -89,9 +98,9 @@
   // Controles de turno dentro de cada herramienta, para no tener que subir a «Tu partida»
   document.querySelectorAll('[data-turno]').forEach((b) => b.addEventListener('click', () => cambiarTurno(E.turno + Number(b.dataset.turno))));
   $('ejemplo').addEventListener('click', () => {
-    if (todas().length && !confirm(tr('¿Sustituir las formaciones actuales por el ejemplo? Se borrarán las órdenes y el saco.'))) return;
+    if (todas().length && !confirm(tr('¿Sustituir las formaciones actuales por las del escenario? Se borrarán las órdenes y el saco.'))) return;
     const n = nueva();
-    n.bandos = EJEMPLO.map((b) => ({ nombre: b.nombre, formaciones: b.formaciones.map((f) => ({ id: 'f' + n.sig++, nombre: f })) }));
+    n.bandos = ESCENARIOS[$('escenario').value].bandos.map((b) => ({ nombre: b.nombre, formaciones: b.formaciones.map((f) => ({ id: 'f' + n.sig++, nombre: f })) }));
     E = n;
     guardar();
     pintar();

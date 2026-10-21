@@ -19,8 +19,10 @@
     if (v) r = r.replace(/\{(\w+)\}/g, (m, k) => (v[k] !== undefined ? v[k] : m));
     return r;
   }
+  // Textos que no se traducen (nombres propios, como la designación de una unidad)
+  function literal(s) { yaEn.add(s); }
   // Número con la coma o el punto decimal del idioma
   function num(n, dec) { const s = n.toFixed(dec); return en ? s : s.replace('.', ','); }
 
-  root.I18N = { en, lang: en ? 'en' : 'es', t, num, raiz: en ? '../' : '', faltan };
+  root.I18N = { en, lang: en ? 'en' : 'es', t, literal, num, raiz: en ? '../' : '', faltan };
 })(typeof window !== 'undefined' ? window : globalThis);
