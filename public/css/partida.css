@@ -19,6 +19,12 @@
 .formaciones li.vacio { color: var(--muted); background: none; padding-left: 2px; }
 .formaciones button { width: 26px; height: 26px; border-radius: 7px; border: 0; background: transparent; color: var(--muted); font-size: 1.1rem; cursor: pointer; }
 .formaciones button:hover { background: var(--red-soft); color: var(--bad); }
+.f-ctl { display: inline-flex; align-items: center; gap: 4px; flex: none; }
+.formaciones button.f-juego { width: auto; height: 24px; padding: 0 9px; border-radius: 999px; border: 1px solid color-mix(in srgb, var(--ok) 50%, transparent); color: var(--ok); font: 600 .68rem var(--mono); letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+.formaciones button.f-juego:hover { background: var(--surface); color: var(--heading); border-color: var(--amber); }
+.formaciones button.f-juego[aria-pressed="false"] { border-color: var(--border-strong); color: var(--muted); }
+.formaciones li.reserva .f-nombre { opacity: .5; filter: grayscale(.7); }
+.cuaderno__reserva { margin: 0 0 8px; font-size: .85rem; }
 .anadir { display: flex; gap: 6px; }
 .anadir input, .orden__campos input { flex: 1; min-width: 0; height: 36px; padding: 0 10px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2); color: var(--heading); font: inherit; font-size: .9rem; }
 .anadir input:focus, .orden__campos input:focus { outline: none; border-color: var(--amber); }
@@ -107,6 +113,7 @@ button.orden-chip { cursor: pointer; }
 button.orden-chip:hover { border-color: var(--c); }
 .cuaderno { display: grid; gap: 8px; transition: filter .2s; }
 .orden--oculta .orden__botones, .orden--oculta .orden__campos { filter: blur(8px); opacity: .55; pointer-events: none; user-select: none; }
+.orden--oculta .orden-chip { color: var(--muted); border-color: var(--border); background: var(--surface-2); }
 .orden--oculta { background: repeating-linear-gradient(135deg, var(--surface-2) 0 10px, color-mix(in srgb, var(--surface-3) 70%, var(--surface-2)) 10px 20px); }
 .ojo { justify-self: end; grid-column: 2; grid-row: 1; align-self: start; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); font: 600 .76rem var(--mono); letter-spacing: .04em; cursor: pointer; }
 .ojo:hover { border-color: var(--amber); color: var(--amber); }

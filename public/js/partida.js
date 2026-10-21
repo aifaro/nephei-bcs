@@ -55,7 +55,7 @@
     $('bandos').innerHTML = E.bandos.map((b, i) => `
       <div class="tarjeta bando bando--${i}">
         <label class="bando__nombre"><span class="sr">${tr('Nombre del bando')}</span><input type="text" value="${esc(b.nombre)}" data-bando="${i}" maxlength="30" placeholder="${tr('Nombre del bando')}"></label>
-        <ul class="formaciones">${b.formaciones.map((f) => `<li><span class="f-nombre">${icono(f)}${esc(f.nombre)}</span><button type="button" data-quitar="${f.id}" aria-label="${tr('Quitar {x}', { x: esc(f.nombre) })}">×</button></li>`).join('') || `<li class="vacio">${tr('Sin formaciones todavía')}</li>`}</ul>
+        <ul class="formaciones">${b.formaciones.map((f) => `<li${f.reserva ? ' class="reserva"' : ''}><span class="f-nombre">${icono(f)}${esc(f.nombre)}</span><span class="f-ctl"><button type="button" class="f-juego" data-juego="${f.id}" aria-pressed="${!f.reserva}" title="${tr(f.reserva ? 'Meter en el saco: ya ha entrado en juego' : 'Sacar del saco hasta que entre en juego')}">${tr(f.reserva ? 'Fuera' : 'En juego')}</button><button type="button" data-quitar="${f.id}" aria-label="${tr('Quitar {x}', { x: esc(f.nombre) })}">×</button></span></li>`).join('') || `<li class="vacio">${tr('Sin formaciones todavía')}</li>`}</ul>
         <form class="anadir" data-bando="${i}"><input type="text" placeholder="${tr('Nueva formación (p. ej. 11. Panzer)')}" maxlength="40" aria-label="${tr('Nueva formación de {x}', { x: esc(etiquetaBando(i)) })}"><button type="submit" class="boton boton--peq">${tr('Añadir')}</button></form>
       </div>`).join('');
   }
@@ -76,6 +76,7 @@
     $('bandos').querySelector(`form[data-bando="${e.target.dataset.bando}"] input`).focus();
   });
   $('bandos').addEventListener('click', (e) => {
+    if (e.target.dataset.juego) { meterEnJuego(e.target.dataset.juego); return; }
     const id = e.target.dataset.quitar;
     if (!id) return;
     E.bandos.forEach((b) => { b.formaciones = b.formaciones.filter((f) => f.id !== id); });
@@ -84,6 +85,16 @@
     guardar();
     pintar();
   });
+
+  // Formaciones que aún no han entrado en juego (refuerzos): fuera del saco y del cuaderno
+  // hasta que se meten. A diferencia de «apartar este turno», dura hasta que se cambie.
+  function meterEnJuego(id, v) {
+    E.bandos.forEach((b) => b.formaciones.forEach((f) => { if (f.id === id) f.reserva = v === undefined ? !f.reserva : !v; }));
+    if (E.saco.sacadas.includes(id)) E.saco.sacadas = [];         // los sacados vuelven al vaso
+    E.saco.fuera = E.saco.fuera.filter((x) => x !== id);
+    guardar();
+    pintar();
+  }
 
   // ---------- Turno ----------
   function cambiarTurno(n) {
@@ -117,7 +128,8 @@
   function sacoAlDia() {
     if (E.saco.turno !== E.turno) Object.assign(E.saco, { turno: E.turno, usadas: [], sacadas: [], fuera: [] });
   }
-  const enVaso = () => todas().filter((f) => !E.saco.usadas.includes(f.id) && !E.saco.sacadas.includes(f.id) && !E.saco.fuera.includes(f.id));
+  const enJuego = () => todas().filter((f) => !f.reserva);
+  const enVaso = () => enJuego().filter((f) => !E.saco.usadas.includes(f.id) && !E.saco.sacadas.includes(f.id) && !E.saco.fuera.includes(f.id));
   const azar = (lista, n) => {
     const l = lista.slice();
     for (let i = l.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [l[i], l[j]] = [l[j], l[i]]; }
@@ -128,15 +140,16 @@
   function pintarSaco() {
     sacoAlDia();
     document.querySelectorAll('#saco-modo button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.m === E.saco.modo));
-    const vaso = enVaso(), fuera = E.saco.fuera.map(porId).filter(Boolean);
+    const vaso = enVaso(), fuera = E.saco.fuera.map(porId).filter(Boolean), reserva = todas().filter((f) => f.reserva);
     const cuenta = E.bandos.map((b, i) => vaso.filter((f) => f.bando === i).length);
     $('vaso').innerHTML = `<div class="vaso__cab"><strong>${vaso.length}</strong> ${tr(vaso.length === 1 ? 'chit en el vaso' : 'chits en el vaso')}<span class="muted">${cuenta.map((c, i) => `${esc(etiquetaBando(i))}: ${c}`).join(' · ')}</span></div>
       <div class="vaso__fichas">${vaso.map((f) => `<button type="button" class="chit-btn" data-apartar="${f.id}" title="${tr('Apartar este turno (por ejemplo, si aún no ha llegado)')}">${chit(f, ' chit--peq')}</button>`).join('') || `<span class="muted">${tr('Vacío')}</span>`}</div>
-      ${fuera.length ? `<div class="vaso__fuera"><span class="muted">${tr('Fuera este turno:')}</span> ${fuera.map((f) => `<button type="button" class="chit-btn" data-volver="${f.id}" title="${tr('Devolver al vaso')}">${chit(f, ' chit--peq chit--fuera')}</button>`).join('')}</div>` : ''}`;
+      ${fuera.length ? `<div class="vaso__fuera"><span class="muted">${tr('Fuera este turno:')}</span> ${fuera.map((f) => `<button type="button" class="chit-btn" data-volver="${f.id}" title="${tr('Devolver al vaso')}">${chit(f, ' chit--peq chit--fuera')}</button>`).join('')}</div>` : ''}
+      ${reserva.length ? `<div class="vaso__fuera"><span class="muted">${tr('Aún no han entrado en juego:')}</span> ${reserva.map((f) => `<button type="button" class="chit-btn" data-entrar="${f.id}" title="${tr('Meter en el saco: ya ha entrado en juego')}">${chit(f, ' chit--peq chit--fuera')}</button>`).join('')}</div>` : ''}`;
 
     const sac = E.saco.sacadas.map(porId).filter(Boolean);
     let mesa;
-    if (!todas().length) mesa = `<p class="muted mb0">${tr('Añade las formaciones de cada bando arriba para llenar el vaso.')}</p>`;
+    if (!enJuego().length) mesa = `<p class="muted mb0">${tr('Añade las formaciones de cada bando arriba para llenar el vaso.')}</p>`;
     else if (sac.length) {
       const votos = [0, 1].map((i) => sac.filter((f) => f.bando === i).length);
       const may = votos[0] > votos[1] ? 0 : 1;
@@ -150,9 +163,9 @@
     $('sacadas').innerHTML = mesa;
 
     const sacar = $('sacar');
-    const finTurno = todas().length && !vaso.length && !sac.length;
+    const finTurno = enJuego().length && !vaso.length && !sac.length;
     sacar.textContent = finTurno ? tr('Empezar el turno {n}', { n: E.turno + 1 }) : tr(sac.length ? 'Elige una formación' : E.saco.modo === 'modificada' && vaso.length >= 3 ? 'Sacar 3 chits' : 'Sacar 1 chit');
-    sacar.disabled = !todas().length || sac.length > 0;
+    sacar.disabled = !enJuego().length || sac.length > 0;
     $('deshacer').disabled = !sac.length && !E.saco.usadas.length;
     $('usadas').innerHTML = E.saco.usadas.map(porId).filter(Boolean).map((f) => `<li>${chit(f, ' chit--peq')}</li>`).join('') || `<li class="muted">${tr('Ninguna todavía')}</li>`;
   }
@@ -185,7 +198,8 @@
     pintarSaco();
   });
   $('vaso').addEventListener('click', (e) => {
-    const a = e.target.closest('[data-apartar]'), v = e.target.closest('[data-volver]');
+    const a = e.target.closest('[data-apartar]'), v = e.target.closest('[data-volver]'), en = e.target.closest('[data-entrar]');
+    if (en) { meterEnJuego(en.dataset.entrar, true); return; }
     if (a) E.saco.fuera.push(a.dataset.apartar);
     else if (v) E.saco.fuera = E.saco.fuera.filter((x) => x !== v.dataset.volver);
     else return;
@@ -237,12 +251,16 @@
     $('revelar-todas').hidden = !E.secreto;
     $('cuaderno').classList.toggle('secreto', E.secreto);
     $('cuaderno-bando').innerHTML = E.bandos.map((b, i) => `<button type="button" data-b="${i}" aria-pressed="${E.verBando === i}">${esc(etiquetaBando(i))}</button>`).join('');
-    const fs = E.bandos[E.verBando].formaciones;
+    const fs = E.bandos[E.verBando].formaciones.filter((f) => !f.reserva);
+    const nRes = E.bandos[E.verBando].formaciones.length - fs.length;
+    $('cuaderno-reserva').textContent = nRes ? tr(nRes === 1 ? '1 formación aún no ha entrado en juego y no sale aquí.' : '{n} formaciones aún no han entrado en juego y no salen aquí.', { n: nRes }) : '';
+    $('cuaderno-reserva').hidden = !nRes;
     $('cuaderno-lista').innerHTML = fs.length ? fs.map((f) => {
       const v = vigente(E.turno, f.id), propia = v.desde === E.turno;
       const estado = propia ? (v.desde > 1 && JSON.stringify(vigente(E.turno - 1, f.id).o) !== JSON.stringify(v.o) ? `<span class="estado nueva">${tr('Cambiada este turno')}</span>` : `<span class="estado nueva">${tr('Anotada este turno')}</span>`)
         : v.desde ? `<span class="estado">${tr('Vigente desde el turno {n}', { n: v.desde })}</span>` : `<span class="estado">${tr('Por defecto')}</span>`;
       const tapada = oculta(f.id);
+      if (tapada) v.o = [], v.ruta = v.nota = '';
       const ojo = E.secreto ? `<button type="button" class="ojo" data-revelar="${f.id}" aria-pressed="${!tapada}">${tr(tapada ? 'Revelar' : 'Ocultar')}</button>` : '';
       return `<div class="orden${tapada ? ' orden--oculta' : ''}" data-f="${f.id}">
         <div class="orden__cab">${icono(f, 'orden__icono')}<strong>${esc(f.nombre)}</strong>${tapada ? `<span class="estado">${tr('Orden secreta')}</span>` : estado}</div>${ojo}
@@ -257,7 +275,8 @@
     // Historial: una columna por turno, con las órdenes de ese bando
     const ultimo = Math.max(E.turno, ...Object.keys(E.ordenes).map(Number), 1);
     const cols = Array.from({ length: ultimo }, (_, i) => i + 1);
-    $('historial').innerHTML = fs.length ? `<thead><tr><th>${tr('Formación')}</th>${cols.map((t) => `<th class="num">T${t}</th>`).join('')}</tr></thead><tbody>${fs.map((f) => `<tr><td><span class="f-nombre">${icono(f)}${esc(f.nombre)}</span></td>${cols.map((t) => {
+    const fh = E.bandos[E.verBando].formaciones;   // en el historial también las que están fuera
+    $('historial').innerHTML = fh.length ? `<thead><tr><th>${tr('Formación')}</th>${cols.map((t) => `<th class="num">T${t}</th>`).join('')}</tr></thead><tbody>${fh.map((f) => `<tr><td><span class="f-nombre">${icono(f)}${esc(f.nombre)}</span></td>${cols.map((t) => {
       const v = vigente(t, f.id), propia = v.desde === t;
       if (t === E.turno && oculta(f.id)) return `<td class="num heredada" title="${tr('Orden secreta')}">?</td>`;
       return `<td class="num${propia ? '' : ' heredada'}" title="${esc(textoOrden(v))}">${v.o.map((x) => ORDENES[x].corto).join('+')}</td>`;
@@ -303,7 +322,7 @@
     pintarCuaderno();
   });
   $('revelar-todas').addEventListener('click', () => {
-    const fs = E.bandos[E.verBando].formaciones.map((f) => f.id);
+    const fs = E.bandos[E.verBando].formaciones.filter((f) => !f.reserva).map((f) => f.id);
     const todas = fs.every(revelada);
     E.reveladas[E.turno] = (E.reveladas[E.turno] || []).filter((x) => !fs.includes(x)).concat(todas ? [] : fs);
     guardar();
