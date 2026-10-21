@@ -1,0 +1,77 @@
+# Danger Forward. n: cara d | cara m | rasgos (como en ip.txt)
+0: R3 a4 r2 T5 | R2 a4 T14 | H
+1: A a4 P4 | a3 P8 |
+2: A a4 P4 | a3 P8 |
+3: A a5 P4 | a4 P8 |
+4: A a5 P4 | a4 P8 |
+5: A a5 P4 | a4 P8 |
+6: A a5 P4 | a4 P8 |
+7: A a5 P4 | a4 P8 |
+8: A a5 P4 | a4 P8 |
+9: A a5 P4 | a4 P8 |
+10: A a5 P4 | a4 P8 |
+11: A a5 P4 | a4 P8 |
+12: A a5 P4 | a4 P8 |
+13: A a5 P4 | a4 P8 |
+14: A a5 P4 | a4 P8 |
+15: A R1 a4 T16 | - |
+16: R3 a4 r2 T5 | R2 a4 T14 | H
+17: A a4 P4 | A a4 T16 |
+18: A a4 P4 | a3 P8 |
+19: A a4 P4 | a3 P8 |
+20: A a5 P4 | a4 P8 |
+21: A a5 P4 | a4 P8 |
+22: A R2 a4 T4 | A R1 a4 T16 |
+23: A a3 P4 | a2 P8 |
+24: A a4 P4 | a3 P8 |
+25: A a4 P4 | a3 P8 |
+26: A a4 P4 | a3 P8 |
+27: A a4 P4 | a3 P8 |
+28: A a3 P4 | a2 P8 |
+29: A a4 P4 | a3 P8 |
+30: A a3 P4 | a2 P8 |
+31: A a3 P4 | a2 P8 |
+32: A a3 P4 | a2 P8 |
+33: A a3 P4 | a2 P8 |
+34: A a3 P4 | a2 P8 |
+35: A a2 P4 | a1 P8 |
+36: A a2 P4 | a1 P8 |
+37: A a3 P4 | a2 P8 |
+38: SUP R3 | - |
+39: A W0 a2 T3 | A a1 K10 |
+40: a2 P0 | - |
+41: a2 P0 | - |
+42: a2 P0 | - |
+43: a2 P0 | - |
+44: a1 P0 | - |
+45: a1 P0 | - |
+46: a1 P0 | - |
+47: a1 P0 | - |
+48: a2 P0 | - |
+49: a2 P0 | - |
+50: a2 P0 | - |
+51: a2 P0 | - |
+52: a1 P0 | - |
+53: a1 P0 | - |
+54: a1 P0 | - |
+55: a1 P0 | - |
+56: a1 P0 | - |
+57: a1 P0 | - |
+58: A R1 a4 T16 | - |
+59: R3 a4 r2 T4 | R2 a4 T14 | H
+60: R3 a4 r2 T4 | R2 a4 T14 | H
+61: A a4 P4 | a3 K12 |
+62: R5 a4 r3 T3 | R4 a4 r2 T14 | HB
+63: A a3 P4 | A a2 K12 |
+64: A a3 P4 | A a2 K12 |
+65: A R0 a4 T3 | A L0 a3 K10 |
+66: A R0 a4 T3 | A L0 a3 K10 |
+67: A a3 P4 | a2 P8 |
+68: A a2 P4 | A a1 K12 |
+69: A a2 P4 | A a1 K12 |
+70: A a3 P4 | a2 P8 |
+71: A a3 P4 | A a2 K12 |
+72: A a3 P4 | A a2 K12 |
+73: L2 a2 P2 | a1 K12 |
+74: A a2 P4 | a1 P8 |
+75: A R0 a2 T3 | A L0 a1 K10 |

@@ -1,0 +1,207 @@
+# Valley of Tears (Golán). n: cara d | cara m | rasgos (como en ip.txt)
+0: A a5 P4 | a4 P8 |
+1: R8 a4 r2 T4 | R7 a4 r2 T16 | H
+2: R8 a4 r2 T4 | R7 a4 r2 T16 | H
+3: R7 a5 r2 T4 | R6 a5 r2 T16 | H
+4: A a4 P4 | A a4 T14 |
+5: A a4 P4 | A a4 T14 |
+6: A a4 P4 | A a4 T14 |
+7: A a4 P4 | A a4 T14 |
+8: R8 a5 r2 T4 | R7 a5 r2 T16 | H
+9: A R8 a4 T4 | A R7 a4 T16 | H
+10: R8 a5 r2 T4 | R7 a5 r2 T16 | H
+11: R7 a5 r2 T4 | R6 a5 r2 T16 | H
+12: R7 a5 r2 T4 | R6 a5 r2 T16 | H
+13: R7 a5 r2 T4 | R6 a5 r2 T16 | H
+14: R7 a5 r2 T4 | R6 a5 r2 T16 | H
+15: R7 a5 r2 T4 | R6 a5 r2 T16 | H
+16: R7 a5 r2 T4 | R6 a5 r2 T16 | H
+17: R8 a5 r2 T4 | R7 a5 r2 T16 | H
+18: A R8 a4 r2 T4 | A R7 a4 r2 T16 | H
+19: R7 a4 T4 | R6 a4 T14 | H
+20: R8 a4 r2 T3 | R7 a4 r2 T12 | H
+21: R8 a4 r2 T3 | R7 a4 r2 T12 | H
+22: R8 a4 r2 T3 | R7 a4 r2 T12 | H
+23: A a3 P4 | A a3 T14 |
+24: A a3 P4 | A a3 T14 |
+25: A R8 a4 r2 T4 | A R7 a4 r2 T16 | H
+26: A R8 a4 r2 T4 | A R7 a4 r2 T16 | H
+27: R8 a4 r2 T4 | R7 a4 r2 T16 | H
+28: A a3 P4 | A a3 T14 |
+29: R7 a4 T4 | R6 a4 T14 | H
+30: A a3 P4 | A a3 T14 |
+31: A a3 P4 | A a3 T14 |
+32: A a3 P4 | A a3 T14 |
+33: R7 a4 T4 | R6 a4 T14 | H
+34: R8 a4 r2 T4 | R7 a4 r2 T16 | H
+35: R8 a4 r2 T4 | R7 a4 r2 T16 | H
+36: R8 a4 r2 T4 | R7 a4 r2 T16 | H
+37: R8 a4 r2 T3 | R7 a4 r2 T12 | H
+38: R8 a4 r2 T3 | R7 a4 r2 T12 | H
+39: R8 a4 r2 T3 | R7 a4 r2 T12 | H
+40: A a5 P4 | a4 P8 |
+41: A a5 P4 | a4 P8 |
+42: R7 a5 r2 T4 | R6 a5 r2 T16 | H
+43: a4 P0 | - | H
+44: a4 P0 | - | H
+45: a4 P0 | - | H
+46: a4 P0 | - | H
+47: a4 P0 | - | H
+48: a4 P0 | - | H
+49: a4 P0 | - | H
+50: a5 P0 | - | H
+51: a5 P0 | - | H
+52: a5 P0 | - | H
+53: a5 P0 | - | H
+54: A a3 P4 | a2 P8 |
+55: A a3 P4 | a2 P8 |
+56: A a3 P4 | a2 P8 |
+57: A a3 P4 | a2 P8 |
+58: R7 a2 r2 T4 | R6 a2 T16 | H
+59: R7 a2 r2 T4 | R6 a2 T16 | H
+60: R7 a2 r2 T4 | R6 a2 T16 | H
+61: A a1 P4 | W0 a2 T16 |
+62: A a1 P4 | W0 a2 T16 |
+63: A a1 P4 | W0 a2 T16 |
+65: R7 a3 r2 T4 | R6 a3 T16 | H
+66: R7 a3 r2 T4 | R6 a3 T16 | H
+67: R7 a3 r2 T4 | R6 a3 T16 | H
+68: A a1 P4 | W0 a2 T16 |
+69: A a2 P4 | A a1 K12 |
+70: A a2 P4 | A a1 K12 |
+71: A a2 P4 | A a1 K12 |
+72: SUP R7 | R6 a2 T16 | H
+73: R7 a2 r2 T4 | R6 a2 T16 | H
+74: R7 a2 r2 T4 | R6 a2 T16 | H
+75: R7 a2 r2 T4 | R6 a2 T16 | H
+76: A a1 P4 | W0 a2 T16 |
+77: A a1 P4 | W0 a2 T16 |
+78: A a1 P4 | W0 a2 T16 |
+79: A a1 P4 | W0 a2 T16 |
+80: R7 a2 r2 T4 | R6 a2 T16 | H
+81: R7 a2 r2 T4 | R6 a2 T16 | H
+82: R7 a2 r2 T4 | R6 a2 T16 | H
+83: A a1 P4 | W0 a2 T16 |
+84: SUP R7 | R6 a2 T16 | H
+85: A a2 P4 | a1 P8 |
+86: A a2 P4 | a1 P8 |
+87: A a2 P4 | a1 P8 |
+88: A a2 P4 | W0 a3 T16 |
+89: A a2 P4 | W0 a3 T16 |
+90: A a2 P4 | W0 a3 T16 |
+91: R8 a3 r2 T4 | R7 a3 T16 | H
+92: R8 a3 r2 T4 | R7 a3 T16 | H
+93: R8 a3 r2 T4 | R7 a3 T16 | H
+94: A a3 P4 | R8 a3 r2 T16 |
+95: A a3 P4 | R8 a3 r2 T16 |
+96: R8 a3 r2 T4 | R7 a3 T16 | H
+97: R8 a3 r2 T4 | R7 a3 T16 | H
+98: R8 a3 r2 T4 | R7 a3 T16 | H
+99: L9 a3 r2 T6 | a3 T16 |
+100: SUP R8 | R7 a3 T16 | H
+101: A a1 P4 | W0 a2 T16 |
+102: A a1 P4 | W0 a2 T16 |
+103: A a1 P4 | W0 a2 T16 |
+104: R7 a2 r2 T4 | R6 a2 T16 | H
+105: R7 a2 r2 T4 | R6 a2 T16 | H
+106: R7 a2 r2 T4 | R6 a2 T16 | H
+107: A a1 P4 | W0 a2 T16 |
+108: L9 a3 r2 T6 | a3 T16 |
+109: SUP R7 | R6 a2 T16 | H
+110: A a3 P4 | a2 P8 |
+111: R7 a2 r2 T4 | R6 a2 T16 | H
+112: A a1 P4 | W0 a2 T16 |
+113: R7 a3 r2 T4 | R6 a3 T16 | H
+114: R7 a2 r2 T4 | R6 a2 T16 | H
+115: R7 a3 r2 T4 | R6 a3 T16 | H
+116: R7 a3 r2 T4 | R6 a3 T16 | H
+117: A a1 P4 | W0 a2 T16 |
+118: R7 a3 r2 T4 | R6 a3 T16 | H
+119: A a2 P4 | a1 K12 |
+120: A a2 P4 | a1 K12 |
+121: A a2 P4 | a1 K12 |
+122: A a2 P4 | a1 K12 |
+123: A a2 P4 | a1 K12 |
+124: A a2 P4 | a1 K12 |
+125: A a1 P4 | W0 a2 T16 |
+126: A a1 P4 | W0 a2 T16 |
+127: R7 a3 r2 T4 | R6 a3 T16 | H
+128: A a1 P4 | W0 a2 T16 |
+129: L9 a2 r2 T6 | a2 T16 |
+130: SUP R7 | - |
+131: A a3 P4 | a2 P8 |
+132: R8 a3 r2 T4 | R7 a3 T16 | H
+133: R7 a2 r2 T4 | R6 a2 T16 | H
+134: A a2 P4 | a1 K12 |
+135: A a2 P4 | a1 K12 |
+136: A a2 P4 | a1 K12 |
+137: A a2 P4 | a1 K12 |
+138: R7 a2 r2 T4 | R6 a2 T16 | H
+139: R7 a2 r2 T4 | R6 a2 T16 | H
+140: R7 a2 r2 T4 | R6 a2 T16 | H
+141: A a1 P4 | W0 a2 T16 |
+142: R7 a3 r2 T4 | R6 a3 T16 | H
+143: A a1 P4 | W0 a2 T16 |
+144: R7 a3 r2 T4 | R6 a3 T16 | H
+145: R7 a3 r2 T4 | R6 a3 T16 | H
+146: A a2 P4 | a1 K12 |
+147: A a2 P4 | a1 K12 |
+148: A a2 P4 | a1 K12 |
+149: R7 a2 r2 T4 | R6 a2 T16 | H
+150: A a1 P4 | W0 a2 T16 |
+151: A a1 P4 | W0 a2 T16 |
+152: A a1 P4 | W0 a2 T16 |
+153: L9 a2 r2 T6 | a2 T16 |
+154: SUP R7 | - |
+155: A a3 P4 | a2 P8 |
+156: A a2 P4 | a1 K12 |
+157: A a2 P4 | a1 K12 |
+158: A a2 P4 | a1 K12 |
+159: R7 a2 r2 T4 | R6 a2 T16 | H
+160: A a1 P4 | W0 a2 T16 |
+161: R7 a2 r2 T4 | R6 a2 T16 | H
+162: R7 a2 r2 T4 | R6 a2 T16 | H
+163: R7 a3 r2 T4 | R6 a3 T16 | H
+164: R7 a3 r2 T4 | R6 a3 T16 | H
+165: R7 a3 r2 T4 | R6 a3 T16 | H
+166: A a1 P4 | W0 a2 T16 |
+167: A a2 P4 | a1 K12 |
+168: A a2 P4 | a1 K12 |
+169: A a2 P4 | a1 K12 |
+170: SUP R7 | - |
+171: L9 a2 r2 T6 | a2 T16 |
+172: A a2 P4 | a1 K12 |
+173: A a2 P4 | a1 K12 |
+174: A a2 P4 | a1 K12 |
+175: SUP R7 | - |
+176: A a2 P4 | a1 K12 |
+177: A a2 P4 | a1 K12 |
+178: A a2 P4 | a1 K12 |
+179: SUP R7 | - |
+180: R8 a3 r2 T4 | R7 a3 T16 | H
+181: R8 a3 r2 T4 | R7 a3 T16 | H
+182: A a2 P4 | W0 a3 T16 |
+183: A a4 P4 | a3 P8 |
+184: A a5 P4 | a4 P8 |
+185: A a3 P4 | a2 P8 |
+186: A a3 P4 | a2 P8 |
+187: A a3 P4 | a2 P8 |
+188: A a3 P4 | a2 P8 |
+189: L9 a2 r2 T6 | a2 T16 |
+190: L9 a2 r2 T6 | a2 T16 |
+191: A a3 P0 | - |
+192: A a3 P0 | - |
+193: A a3 P0 | - |
+194: A a3 P0 | - |
+195: A R8 a3 r2 T3 | A R7 a3 T12 | H
+196: A R8 a3 r2 T3 | A R7 a3 T12 | H
+197: A R8 a3 r2 T3 | A R7 a3 T12 | H
+198: A a2 P4 | A a2 T16 |
+199: R8 a2 r2 T3 | R7 a2 T12 | H
+200: R8 a2 r2 T3 | R7 a2 T12 | H
+201: A R6 a2 r2 T6 | A R5 a2 T16 |
+202: A a3 P4 | a2 K12 |
+203: R7 a2 r2 T5 | R6 a2 T16 | H
+204: A a1 P4 | W0 a2 T16 |
+205: A a3 P4 | a2 K12 |
+64: A a1 P4 | W0 a2 T16 |

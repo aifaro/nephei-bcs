@@ -13,19 +13,17 @@
     pd: { corto: 'PD', nombre: tr('Defensa preparada') },
     rec: { corto: tr('Rec'), nombre: tr('Recuperación') }
   };
-  const EJEMPLO = [
-    { nombre: tr('EE. UU.'), formaciones: ['CCA / 4th Armored', 'CCB / 4th Armored', '35th Infantry'] },
-    { nombre: tr('Alemania'), formaciones: ['11. Panzer', '21. Panzer', '15. Panzergrenadier', '559. Volksgrenadier'] }
-  ];
-  // Escenarios de los juegos (juegos.js): las formaciones con chit de activación que juegan en cada uno
-  const ESCENARIOS = { ejemplo: { nombre: tr('Ejemplo: Arracourt, septiembre de 1944'), bandos: EJEMPLO } };
-  Object.values(window.Juegos ? Juegos.JUEGOS : {}).forEach((j) => j.escenarios.forEach((e) => {
-    ESCENARIOS[j.id + ':' + e.id] = {
-      nombre: tr('{j} · {e} ({a} contra {b} formaciones)', { j: j.nombre, e: e.nombre, a: e.sov.length, b: e.eje.length }),
-      bandos: [{ nombre: Fichas.BANDOS.sov.nombre, formaciones: e.sov }, { nombre: Fichas.BANDOS.eje.nombre, formaciones: e.eje }]
-    };
-  }));
-  $('escenario').innerHTML = Object.entries(ESCENARIOS).map(([k, e]) => `<option value="${k}">${esc(e.nombre)}</option>`).join('');
+  // Juegos y escenarios (juegos.js): las formaciones con chit de activación que juegan en cada uno
+  const JG = Juegos.JUEGOS;
+  const RAIZ = I18N.raiz;
+  const icono = (f, cls) => f.icono ? `<img class="${cls || 'f-icono'}" src="${RAIZ + f.icono}" alt="" draggable="false">` : '';
+  function pintarEscenarios() {
+    const j = JG[$('juego').value] || JG[Juegos.ORDEN[0]];
+    $('escenario').innerHTML = j.escenarios.map((e, i) => `<option value="${i}">${esc(tr('{e} ({a} y {b} formaciones)', { e: e.nombre, a: e.bandos[0].formaciones.length, b: e.bandos[1].formaciones.length }))}</option>`).join('');
+  }
+  $('juego').innerHTML = Juegos.ORDEN.map((id) => `<option value="${id}">${esc(JG[id].nombre)}</option>`).join('');
+  $('juego').addEventListener('change', pintarEscenarios);
+  pintarEscenarios();
 
   function nueva() {
     return {
@@ -57,7 +55,7 @@
     $('bandos').innerHTML = E.bandos.map((b, i) => `
       <div class="tarjeta bando bando--${i}">
         <label class="bando__nombre"><span class="sr">${tr('Nombre del bando')}</span><input type="text" value="${esc(b.nombre)}" data-bando="${i}" maxlength="30" placeholder="${tr('Nombre del bando')}"></label>
-        <ul class="formaciones">${b.formaciones.map((f) => `<li><span>${esc(f.nombre)}</span><button type="button" data-quitar="${f.id}" aria-label="${tr('Quitar {x}', { x: esc(f.nombre) })}">×</button></li>`).join('') || `<li class="vacio">${tr('Sin formaciones todavía')}</li>`}</ul>
+        <ul class="formaciones">${b.formaciones.map((f) => `<li><span class="f-nombre">${icono(f)}${esc(f.nombre)}</span><button type="button" data-quitar="${f.id}" aria-label="${tr('Quitar {x}', { x: esc(f.nombre) })}">×</button></li>`).join('') || `<li class="vacio">${tr('Sin formaciones todavía')}</li>`}</ul>
         <form class="anadir" data-bando="${i}"><input type="text" placeholder="${tr('Nueva formación (p. ej. 11. Panzer)')}" maxlength="40" aria-label="${tr('Nueva formación de {x}', { x: esc(etiquetaBando(i)) })}"><button type="submit" class="boton boton--peq">${tr('Añadir')}</button></form>
       </div>`).join('');
   }
@@ -100,7 +98,9 @@
   $('ejemplo').addEventListener('click', () => {
     if (todas().length && !confirm(tr('¿Sustituir las formaciones actuales por las del escenario? Se borrarán las órdenes y el saco.'))) return;
     const n = nueva();
-    n.bandos = ESCENARIOS[$('escenario').value].bandos.map((b) => ({ nombre: b.nombre, formaciones: b.formaciones.map((f) => ({ id: 'f' + n.sig++, nombre: f })) }));
+    const esc0 = JG[$('juego').value].escenarios[+$('escenario').value];
+    // El icono se guarda sin la raíz del idioma, para que sirva en las dos versiones
+    n.bandos = esc0.bandos.map((b) => ({ nombre: b.nombre, formaciones: b.formaciones.map((f) => ({ id: 'f' + n.sig++, nombre: f.nombre, icono: f.icono ? f.icono.slice(RAIZ.length) : null })) }));
     E = n;
     guardar();
     pintar();
@@ -123,7 +123,7 @@
     for (let i = l.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [l[i], l[j]] = [l[j], l[i]]; }
     return l.slice(0, n);
   };
-  const chit = (f, extra) => `<span class="chit chit--${f.bando}${extra || ''}"><small>${esc(etiquetaBando(f.bando))}</small>${esc(f.nombre)}</span>`;
+  const chit = (f, extra) => `<span class="chit chit--${f.bando}${f.icono ? ' chit--img' : ''}${extra || ''}">${icono(f, 'chit__img')}<span class="chit__txt"><small>${esc(etiquetaBando(f.bando))}</small>${esc(f.nombre)}</span></span>`;
 
   function pintarSaco() {
     sacoAlDia();
@@ -245,7 +245,7 @@
       const tapada = oculta(f.id);
       const ojo = E.secreto ? `<button type="button" class="ojo" data-revelar="${f.id}" aria-pressed="${!tapada}">${tr(tapada ? 'Revelar' : 'Ocultar')}</button>` : '';
       return `<div class="orden${tapada ? ' orden--oculta' : ''}" data-f="${f.id}">
-        <div class="orden__cab"><strong>${esc(f.nombre)}</strong>${tapada ? `<span class="estado">${tr('Orden secreta')}</span>` : estado}</div>${ojo}
+        <div class="orden__cab">${icono(f, 'orden__icono')}<strong>${esc(f.nombre)}</strong>${tapada ? `<span class="estado">${tr('Orden secreta')}</span>` : estado}</div>${ojo}
         <div class="orden__botones" role="group" aria-label="${tr('Orden de {x}', { x: esc(f.nombre) })}">${Object.entries(ORDENES).map(([k, o]) => `<button type="button" class="orden-chip ${k}" data-o="${k}" aria-pressed="${v.o.includes(k)}">${o.nombre}</button>`).join('')}</div>
         <div class="orden__campos">
           ${v.o.includes('hq') ? `<label><span>${tr('Ruta del HQ')}</span><input type="text" data-campo="ruta" value="${esc(v.ruta || '')}" placeholder="${tr('Puntos de paso y hex final: por 12.08 y 15.10 hasta 18.12')}" maxlength="160"></label>` : ''}
@@ -257,7 +257,7 @@
     // Historial: una columna por turno, con las órdenes de ese bando
     const ultimo = Math.max(E.turno, ...Object.keys(E.ordenes).map(Number), 1);
     const cols = Array.from({ length: ultimo }, (_, i) => i + 1);
-    $('historial').innerHTML = fs.length ? `<thead><tr><th>${tr('Formación')}</th>${cols.map((t) => `<th class="num">T${t}</th>`).join('')}</tr></thead><tbody>${fs.map((f) => `<tr><td>${esc(f.nombre)}</td>${cols.map((t) => {
+    $('historial').innerHTML = fs.length ? `<thead><tr><th>${tr('Formación')}</th>${cols.map((t) => `<th class="num">T${t}</th>`).join('')}</tr></thead><tbody>${fs.map((f) => `<tr><td><span class="f-nombre">${icono(f)}${esc(f.nombre)}</span></td>${cols.map((t) => {
       const v = vigente(t, f.id), propia = v.desde === t;
       if (t === E.turno && oculta(f.id)) return `<td class="num heredada" title="${tr('Orden secreta')}">?</td>`;
       return `<td class="num${propia ? '' : ' heredada'}" title="${esc(textoOrden(v))}">${v.o.map((x) => ORDENES[x].corto).join('+')}</td>`;

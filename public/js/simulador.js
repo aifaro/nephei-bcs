@@ -22,42 +22,47 @@
       explica: t('Artillería o aviación contra un hex en una OBJ Zone, con un observador. Bombardeo de destrucción: un dado por cada punto y por cada unidad del hex.') }
   };
 
-  // Juego del que salen las fichas: '' son las de ejemplo; los demás vienen de juegos.js
-  const JG = window.Juegos ? Juegos.JUEGOS : {};
-  const EJEMPLO = Object.keys(U).filter((k) => !U[k].juego);
-  const ROL_AV_EJ = ['tq-us', 'tq-de', 'panther', 'tiger', 'td', 'flak', 'rec-us', 'rec-de'];
-  const HOSTS_EJ = ['inf-us', 'inf-de', 'mec-us', 'mec-de'];
-  // Equivalentes en cada juego de las fichas de ejemplo que usan los valores iniciales
-  const EQUIV = {
-    ip: { 'inf-us': 'ip-132', 'tq-us': 'ip-126', 'mec-us': 'ip-126', 'inf-de': 'ip-31', panther: 'ip-10', flak: 'ip-289' }
-  };
-  let juego = '';
-  const eq = (k) => (juego && EQUIV[juego] && EQUIV[juego][k]) || k;
+  // Juego y escenario de los que salen las fichas (juegos.js)
+  const JG = Juegos.JUEGOS;
+  let juego = Juegos.ORDEN[0], escenario = 0;
+  const pool = () => JG[juego].escenarios[escenario].unidades;
   function rol(nombre) {
-    if (!juego) return nombre === 'av' ? ROL_AV_EJ : nombre === 'host' ? HOSTS_EJ : EJEMPLO;
-    const ks = JG[juego].unidades;
+    const ks = pool();
     if (nombre === 'av') return ks.filter((k) => R.tieneAv(U[k].d) || R.tieneAv(U[k].m));
     if (nombre === 'host') return ks.filter((k) => R.puedeSerHost(U[k].d));
     return ks;
+  }
+  // Unidad del escenario para cada papel de los valores iniciales: [bando, qué tiene que ser]
+  const PAPEL = {
+    'inf-us': [0, (u) => u.d.asalto && u.d.av === undefined && u.d.ma > 0 && u.d.ar >= 3],
+    'tq-us': [0, (u) => u.d.tipoAv === 'red' && u.duro && u.d.ar >= 3],
+    'mec-us': [0, (u) => u.m.asalto && u.m.claseMa === 'tac'],
+    'inf-de': [1, (u) => u.d.asalto && u.d.av === undefined && u.m.av === undefined && u.d.ma > 0],   // sin AV en ninguna cara: vale para el choque y el fuego
+    panther: [1, (u) => u.d.tipoAv === 'red' && u.duro],
+    flak: [1, (u) => u.d.av !== undefined]
+  };
+  function eq(k) {
+    const [lado, f] = PAPEL[k], ks = pool(), ok = (x) => f(U[x]);
+    return ks.find((x) => U[x].lado === lado && ok(x)) || ks.find(ok) || ks.find((x) => U[x].lado === lado) || ks[0];
   }
 
   function nueva(k, lado) { k = eq(k); return { k, lado: lado || 'd', pasos: U[k].pasos }; }
 
   function estadoInicial(modo) {
-    const base = { modo, juego, terreno: 'abierto', claveTerreno: false, ladoHex: false, pdDef: false, pdAtt: false, msrAtt: false, msrDef: false,
+    const base = { modo, juego, escenario, terreno: 'abierto', claveTerreno: false, ladoHex: false, pdDef: false, pdAtt: false, msrAtt: false, msrDef: false,
       dobleObj: false, bombardeo: 'ninguno', puntos: 1, desdeFuera: false, fuegoPrevio: false, costeMp: true, arDef: 0,
       apoyoAtt: null, apoyoDef: null, asistente: null };
     switch (modo) {
       case 'regular': return Object.assign(base, { atacante: nueva('inf-us'), apoyoAtt: 'red', asistente: nueva('tq-us'), defensores: [nueva('inf-de')], apoyoDef: null, bombardeo: 'supresion' });
       case 'shock': return Object.assign(base, { atacante: nueva('mec-us', 'm'), apoyoAtt: 'red', defensores: [nueva('inf-de', 'm')] });
-      case 'enfrentamiento': return Object.assign(base, { tirador: nueva('tq-us'), blancoTipo: 'real', blanco: nueva('panther'), host: nueva('inf-de'), apoyoBlanco: 'standoff', distancia: Math.min(2, U[eq('tq-us')].d.alcance), variosApoyos: false, pantalla: false, opcionalLejos: false });
+      case 'enfrentamiento': return Object.assign(base, { tirador: nueva('tq-us'), blancoTipo: 'real', blanco: nueva('panther'), host: nueva('inf-de'), apoyoBlanco: 'standoff', distancia: Math.min(2, U[eq('tq-us')].d.alcance || 1), variosApoyos: false, pantalla: false, opcionalLejos: false });
       case 'fuego': return Object.assign(base, { tirador: nueva('tq-us'), defensores: [nueva('inf-de'), nueva('inf-de', 'm')] });
       case 'bombardeo': return Object.assign(base, { defensores: [nueva('inf-de'), nueva('flak')], puntos: 1, enAtaque: false });
     }
   }
 
-  let S = cargar() || estadoInicial('regular');
-  juego = JG[S.juego] ? S.juego : '';
+  let S = cargar();
+  if (S) { juego = S.juego; escenario = S.escenario; } else S = estadoInicial('regular');
   let resultado = null;     // efectos de la última tirada sobre el mapa
   let animando = false;
   let historial = [];
@@ -68,7 +73,7 @@
     try {
       const s = JSON.parse(Comun.leer('bcs-sim'));
       const insts = [s.atacante, s.asistente, s.tirador, s.blanco, s.host].concat(s.defensores || []).filter(Boolean);
-      if (s && MODOS[s.modo] && insts.every((i) => U[i.k])) return s;
+      if (s && MODOS[s.modo] && JG[s.juego] && JG[s.juego].escenarios[s.escenario] && insts.every((i) => U[i.k] && U[i.k].juego === s.juego)) return s;
     } catch (e) { /* estado ilegible */ }
     return null;
   }
@@ -347,9 +352,8 @@
   function selectorUnidad(valor, opciones, al) {
     const sel = document.createElement('select');
     const opt = (k) => `<option value="${k}"${k === valor ? ' selected' : ''}>${esc(F.etiqueta(U[k]))}</option>`;
-    const fuera = opciones.includes(valor) ? '' : opt(valor);      // la unidad actual, aunque sea de otro juego
-    if (!juego) sel.innerHTML = fuera + opciones.map(opt).join('');
-    else sel.innerHTML = fuera + Juegos.grupos(juego, (u, k) => opciones.includes(k)).map(([g, ks]) => `<optgroup label="${esc(g)}">${ks.map(opt).join('')}</optgroup>`).join('');
+    const fuera = opciones.includes(valor) ? '' : opt(valor);      // la unidad actual, aunque no encaje en este papel
+    sel.innerHTML = fuera + Juegos.grupos(opciones).map(([g, ks]) => `<optgroup label="${esc(g)}">${ks.map(opt).join('')}</optgroup>`).join('');
     sel.addEventListener('change', () => al(sel.value));
     return sel;
   }
@@ -404,17 +408,19 @@
   }
 
   function pintarJuego() {
-    const sel = $('#juego');
-    if (!sel) return;
-    sel.innerHTML = `<option value="">${t('Fichas de ejemplo (Arracourt, Danger Forward)')}</option>` +
-      Object.values(JG).map((j) => `<option value="${j.id}"${j.id === juego ? ' selected' : ''}>${esc(j.nombre)}</option>`).join('');
-    sel.value = juego;
+    const sj = $('#juego'), se = $('#escenario');
+    sj.innerHTML = Object.values(JG).map((j) => `<option value="${j.id}">${esc(j.nombre)}</option>`).join('');
+    sj.value = juego;
+    se.innerHTML = JG[juego].escenarios.map((e, i) => `<option value="${i}">${esc(e.nombre)}</option>`).join('');
+    se.value = String(escenario);
   }
-  if ($('#juego')) $('#juego').addEventListener('change', (e) => {
-    if (animando) { e.target.value = juego; return; }
-    juego = e.target.value;
+  function cambiarFichas(j, e) {
+    if (animando) { pintarJuego(); return; }
+    juego = j; escenario = e;
     S = estadoInicial(S.modo); resultado = null; limpiarTirada(); pintarTodo();
-  });
+  }
+  $('#juego').addEventListener('change', (e) => cambiarFichas(e.target.value, 0));
+  $('#escenario').addEventListener('change', (e) => cambiarFichas(juego, +e.target.value));
 
   function pintarSlots() {
     pintarJuego();

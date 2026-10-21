@@ -1,0 +1,109 @@
+# Arracourt. n: cara d | cara m | rasgos (como en ip.txt; además I = el módulo da primero la cara de movimiento, P0 = unidad estática)
+0: a4 P0 | - |
+1: A R1 a4 T16 | - |
+2: R5 a4 r3 T4 | R4 a4 r2 T16 | HI
+3: R4 a4 r2 T4 | R3 a4 T14 | HI
+4: A a4 P4 | A a4 T16 | I
+5: A a4 P4 | A a3 K10 | I
+6: A a4 P4 | A a3 K10 | I
+7: A a4 P4 | A a3 K10 | I
+8: A a4 P4 | a3 K10 | I
+9: A a3 P4 | a2 K10 | I
+10: A R1 a4 T16 | - |
+11: R5 a3 r3 T4 | R4 a3 r2 T16 | HI
+12: R4 a3 r2 T4 | R3 a3 T14 | HI
+13: A a4 P4 | A a3 K12 | I
+14: A a4 P4 | A a3 K12 | I
+15: A a4 P4 | A a3 K12 | I
+16: A a4 P4 | A a3 K12 | I
+17: A a3 P4 | A a2 K12 | I
+18: A a3 P4 | A a2 K12 | I
+19: A a4 P4 | a3 K12 | I
+20: S5 a4 r3 K2 | a3 K12 | I
+21: R5 a3 r3 T4 | R4 a3 r2 T16 | HI
+22: R4 a3 r2 T4 | R3 a3 T14 | HI
+23: SUP R3 | L2 a3 T14 | HI
+24: A a3 P4 | A a2 K10 | I
+25: A a3 P4 | A a2 K10 | I
+26: A a3 P4 | a2 K10 | I
+27: R5 a3 r3 T4 | R4 a3 r2 T16 | HI
+28: R4 a3 r2 T4 | R3 a3 T14 | HI
+29: SUP R3 | L2 a3 T14 | HI
+30: A a3 P4 | A a2 K10 | I
+31: A a3 P4 | A a2 K10 | I
+32: A a3 P4 | a2 K10 | I
+33: A R1 a4 T16 | - |
+34: SUP L4 | L3 a4 T14 | HI
+35: A a4 P4 | A a3 K10 | I
+36: A a4 P4 | A a3 K10 | I
+37: A a4 P4 | A a3 K10 | I
+38: A a4 P4 | A a3 K10 | I
+39: A a4 P4 | a3 K10 | I
+40: A a2 P4 | a1 P8 |
+41: A a2 P4 | A a1 K10 | I
+42: A a2 P4 | a1 P8 |
+43: A a4 P4 | a3 P8 |
+44: A a2 P4 | a1 P8 |
+45: A R5 a3 r3 T4 | A R4 a3 r2 T16 | HI
+46: A R5 a3 r2 T4 | A R4 a3 T16 | I
+47: A a4 P4 | A a3 K10 | I
+48: A a3 P4 | A a2 K10 | I
+49: SUP L3 | - |
+50: A a3 P4 | a2 P8 |
+51: A a3 P4 | a2 P8 |
+52: A a3 P4 | a2 P8 |
+53: A a3 P4 | a2 P8 |
+54: A a3 P4 | a2 P8 |
+55: A a3 P4 | a2 P8 |
+56: A a3 P4 | a2 P8 |
+57: A a3 P4 | a2 P8 |
+58: L3 a4 r3 T6 | L2 a4 r2 T16 | I
+59: L3 a3 K2 | L2 a3 K12 | I
+60: A a3 P4 | A a2 K12 | I
+61: A a3 P4 | A a2 K12 | I
+62: A R1 a4 T16 | - |
+63: R3 a5 r2 T5 | R2 a5 T14 | HI
+64: R3 a5 r2 T5 | R2 a5 T14 | HI
+65: R3 a5 r2 T5 | R2 a5 T14 | HI
+66: L3 a5 r2 T6 | L2 a5 T16 | I
+67: A a4 P4 | A a4 T16 | I
+68: A a4 P4 | A a4 T16 | I
+69: A a4 P4 | A a4 T16 | I
+70: A a2 P4 | a1 K12 | I
+71: A R1 a4 T16 | - |
+72: A R3 a4 r2 T5 | A R2 a4 T14 | HI
+73: A R3 a4 T5 | A R2 a4 T14 | I
+74: R3 a4 r2 T5 | R2 a4 T14 | HI
+75: A a4 P4 | A a4 T16 | I
+76: A a2 P4 | a1 K12 | I
+77: SUP L3 | - |
+78: A R3 a4 r2 T5 | A R2 a4 T14 | HI
+79: A R3 a4 T5 | A R2 a4 T14 | I
+80: A R1 a4 T16 | - |
+81: A R1 a4 T16 | - |
+82: A R1 a4 T16 | - |
+83: A R1 a4 T16 | - |
+84: R2 a3 T6 | R1 a3 T16 | HI
+85: A R1 a3 T16 | - |
+86: A R1 a3 T16 | - |
+87: SUP L3 | - |
+88: SUP R3 | - |
+89: A a3 P4 | a2 P8 |
+90: A a3 P4 | a2 P8 |
+91: A a3 P4 | a2 P8 |
+92: A a3 P4 | a2 P8 |
+93: A a3 P4 | a2 P8 |
+94: SUP R3 | - |
+95: SUP L3 | - |
+96: A a3 P4 | a2 P8 |
+97: A a3 P4 | a2 P8 |
+98: A a3 P4 | a2 P8 |
+99: A a3 P4 | a2 P8 |
+100: A a3 P4 | a2 P8 |
+101: A a4 P4 | a3 P8 |
+102: A a3 P4 | a2 P8 |
+103: A a3 P4 | a2 P8 |
+104: A a3 P4 | a2 P8 |
+105: A R3 a4 r2 T5 | A R2 a4 T14 | HI
+106: A R3 a4 r2 T5 | A R2 a4 T14 | HI
+107: A R3 a4 T5 | A R2 a4 T14 | I

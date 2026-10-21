@@ -197,7 +197,8 @@
   .panel__cuerpo { padding: 14px; }
 }
 
-/* Juego del que salen las fichas */
-.juego-sel { display: flex; align-items: center; gap: 8px; font-size: .82rem; min-width: 0; }
-.juego-sel select { height: 32px; max-width: 220px; border-radius: 9px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--heading); font: inherit; padding: 0 8px; }
-@media (max-width: 560px) { .juego-sel .muted { display: none; } }
+/* Juego y escenario de los que salen las fichas */
+.juego-sel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 10px; margin-bottom: 12px; }
+.juego-sel label { display: grid; gap: 4px; font-size: .74rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.juego-sel select { height: 34px; border-radius: 9px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--heading); font: inherit; font-family: var(--body); font-size: .86rem; text-transform: none; letter-spacing: 0; padding: 0 8px; max-width: 100%; }
+@media (max-width: 420px) { .juego-sel { grid-template-columns: 1fr; } }

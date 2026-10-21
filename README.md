@@ -14,7 +14,7 @@ La instrucción empieza por la **lección 0** (`intro.html`: qué es el BCS, esc
 Además:
 
 - **Simulador.** Se colocan las fichas en un mapa de hexes, se marcan las circunstancias y calcula los modificadores, los requisitos y la probabilidad de cada resultado. Al tirar, aplica el resultado sobre las fichas: bajas, retiradas, avance y tráfico.
-- **Fichas de un juego.** El simulador puede usar las fichas de ejemplo o todas las de *Inflection Point*, agrupadas por mapa, bando y formación, y la partida carga las formaciones de cada escenario del juego para el saco y el cuaderno.
+- **Fichas de los juegos.** El simulador usa las fichas reales de *Arracourt*, *Danger Forward*, *Inflection Point* y *Valley of Tears* (Golán): se elige el juego y el escenario, y las unidades salen agrupadas por bando y formación. La partida carga las formaciones de cada escenario para el saco y el cuaderno, con el chit de activación de cada una como icono. Las fichas de ejemplo de `fichas.js` quedan solo para las lecciones.
 - **Tablas y glosario.** Las tablas de la serie para consultar o imprimir, y más de setenta términos en inglés y castellano. Los términos del texto enlazan al glosario y muestran su definición al pasar por encima; cada entrada del glosario dice en qué lección se explica (`DONDE` en `datos.js`) y qué términos conviene ver con ella (`VER`).
 
 Sitio estático, sin dependencias ni paso de compilación. En castellano en la raíz y en inglés en `/en/`, con un conmutador ES/EN en la cabecera que lleva a la misma página en el otro idioma.
@@ -34,8 +34,8 @@ Sitio estático, sin dependencias ni paso de compilación. En castellano en la r
 | `public/js/reglas.js` | El motor: tablas transcritas y cálculo de modificadores. No toca el DOM. |
 | `public/js/fichas.js` | Las unidades de ejemplo con los valores impresos en sus fichas reales, y cómo se pintan. |
 | `public/js/simulador.js` | El simulador. |
-| `public/js/juegos.js` | Registra las fichas de cada juego en `Fichas.UNIDADES` y da sus escenarios a la partida. |
-| `public/js/juegos-ip.js`, `public/fichas/ip/` | *Inflection Point*: escenarios, formaciones y fichas. Generados con `python tools/vassal-ip.py "<ruta>/BCS Inflection Point-1.0.3.vmod"`; los valores impresos de cada ficha se leyeron a ojo y están en `tools/ip-valores.txt`. |
+| `public/js/juegos.js` | Registra las fichas de cada juego en `Fichas.UNIDADES` y da sus escenarios, formaciones y chits al simulador y a la partida. |
+| `public/js/juegos-<juego>.js`, `public/fichas/<juego>/` | *Arracourt* (`arr`), *Danger Forward* (`df`), *Inflection Point* (`ip`) y *Valley of Tears*, solo el Golán (`vot`): escenarios, formaciones con su chit de activación y su HQ, y fichas. Generados con `python tools/vassal.py <juego> "<ruta del .vmod>"`; los valores impresos de cada ficha se leyeron a ojo y están en `tools/valores/<juego>.txt` (con `--hojas <carpeta>`, el script hace las hojas de contacto numeradas para transcribirlos). |
 | `public/js/partida.js`, `public/css/partida.css` | Saco de activaciones y cuaderno de órdenes. |
 | `public/js/datos.js` | El glosario y el índice del buscador (Ctrl+K). |
 | `public/js/i18n.js`, `public/js/en.js` | Idioma de la página y textos en inglés. |
