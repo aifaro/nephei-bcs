@@ -399,7 +399,6 @@ html.con-despacho { overflow: hidden; }
 .cuaderno--sobres .sobres { padding: 4px 2px; }
 .cuaderno__ayuda { font-size: .88rem; margin: 0; }
 .saco__barra { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 14px; }
-.mesa__nota { margin: 12px 0 0; font-size: .85rem; color: #b6c8b4; text-align: center; }
 
 /* Despacho: todos los sobres de un vistazo */
 .despacho__vistas { flex-wrap: nowrap; }

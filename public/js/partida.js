@@ -243,9 +243,9 @@
         <div class="mesa__tres">${sac.map((f) => `<button type="button" class="chit-btn chit-btn--grande" data-activar="${f.id}">${chit(f, f.bando === may ? ' chit--mayoria' : '', 'mesa')}<span class="chit-btn__accion">${tr('Activar')}</span></button>`).join('')}</div>`;
     } else if (E.saco.usadas.length) {
       const u = porId(E.saco.usadas[E.saco.usadas.length - 1]);
-      const sobre = !u || !E.usarOrdenes ? ''
-        : estadoSobre(u) === 'lacrada' ? `<button type="button" class="boton boton--peq boton-sobre" data-abrir="${u.id}">${tr('Abrir su sobre de órdenes')}</button>`
-          : estadoSobre(u) === 'borrador' ? `<p class="mesa__nota">${tr('Las órdenes de {x} aún no se han enviado.', { x: esc(etiquetaBando(u.bando)) })}</p>` : '';
+      // Solo si su bando envió las órdenes: es normal que un bando no las lleve aquí
+      // (las usa un solo jugador, o cada uno en su navegador)
+      const sobre = u && E.usarOrdenes && estadoSobre(u) === 'lacrada' ? `<button type="button" class="boton boton--peq boton-sobre" data-abrir="${u.id}">${tr('Abrir su sobre de órdenes')}</button>` : '';
       mesa = u ? `<p class="mesa__aviso">${tr('Se activa:')}</p><div class="mesa__tres mesa__activa">${chit(u, ' chit--grande chit--activa', 'activa')}</div>${sobre}` : '';
       if (!vaso.length) mesa += `<p class="mesa__aviso mesa__fin aparece">${tr('Todas las formaciones han actuado este turno.')}</p>`;
     } else mesa = `<p class="muted mb0">${tr(E.saco.modo === 'modificada' ? 'Saca tres chits: el bando con mayoría elige cuál activa.' : 'Saca un chit: esa formación se activa.')}</p>`;

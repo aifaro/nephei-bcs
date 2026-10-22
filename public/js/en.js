@@ -255,7 +255,7 @@
     'Destruya este documento una vez leído.': 'Destroy this document once read.',
     'Informe de la ejecución a este Cuartel General.': 'Report execution to this Headquarters.',
     'Sin más novedades. Buena suerte.': 'Nothing further. Good luck.',
-    'Las órdenes de {x} aún no se han enviado.': '{x} has not sent its orders yet.', 'enviadas': 'sent',
+    'enviadas': 'sent',
     'No hay formaciones para {x}. Cárgalas en el paso 1.': 'There are no formations for {x}. Load them in step 1.',
     'Confirmar y enviar las órdenes de {x}': 'Confirm and send the orders for {x}',
     '¿Enviar las órdenes de {x}? Quedan lacradas y no se pueden cambiar en este turno.': 'Send the orders for {x}? They will be sealed and cannot be changed this turn.',
