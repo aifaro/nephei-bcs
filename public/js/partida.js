@@ -37,14 +37,19 @@
       saco: { modo: 'modificada', recipiente: 'bolsa', turno: 1, usadas: [], sacadas: [], fuera: [] },
       ordenes: {},
       verBando: 0,
-      secreto: false, reveladas: {}, borradores: {}
+      usarOrdenes: true, usarSaco: true,
+      enviadas: {}, reveladas: {}
     };
   }
   let E;
   try { E = JSON.parse(Comun.leer(CLAVE)); } catch (e) { E = null; }
   if (!E || E.version !== 1) E = nueva();
   E.reveladas = E.reveladas || {};
-  E.borradores = E.borradores || {};
+  E.enviadas = E.enviadas || {};
+  E.usarOrdenes = E.usarOrdenes !== false;
+  E.usarSaco = E.usarSaco !== false;
+  delete E.secreto;
+  delete E.borradores;
   E.saco.recipiente = E.saco.recipiente || 'bolsa';
 
   function guardar() {
@@ -123,9 +128,7 @@
     guardar();
     pintar();
   }
-  $('turno-menos').addEventListener('click', () => cambiarTurno(E.turno - 1));
-  $('turno-mas').addEventListener('click', () => cambiarTurno(E.turno + 1));
-  // Controles de turno dentro de cada herramienta (y del despacho), para no tener que subir a «Tu partida»
+  // Cada herramienta (y el despacho) tiene su control de turno; todos mueven el mismo turno
   document.addEventListener('click', (e) => {
     const b = e.target.closest('[data-turno]');
     if (b && !b.disabled) cambiarTurno(E.turno + Number(b.dataset.turno));
@@ -137,6 +140,8 @@
     // El icono se guarda sin la raíz del idioma, para que sirva en las dos versiones
     n.bandos = esc0.bandos.map((b) => ({ nombre: b.nombre, formaciones: b.formaciones.map((f) => ({ id: 'f' + n.sig++, nombre: f.nombre, icono: f.icono ? f.icono.slice(RAIZ.length) : null })) }));
     n.saco.recipiente = E.saco.recipiente;
+    n.usarOrdenes = E.usarOrdenes;
+    n.usarSaco = E.usarSaco;
     E = n;
     guardar();
     pintar();
@@ -212,7 +217,11 @@
   }
 
   function pintarSaco() {
-    const antes = listo ? capturar() : null;
+    $('usar-saco').setAttribute('aria-pressed', E.usarSaco);
+    $('saco-cuerpo').hidden = !E.usarSaco;
+    $('saco-apagado').hidden = E.usarSaco;
+    $('saco').classList.toggle('paso--apagado', !E.usarSaco);
+    const antes = listo && E.usarSaco ? capturar() : null;
     sacoAlDia();
     document.querySelectorAll('#saco-modo button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.m === E.saco.modo));
     document.querySelectorAll('#saco-recipiente button').forEach((b) => b.setAttribute('aria-pressed', b.dataset.r === E.saco.recipiente));
@@ -234,7 +243,9 @@
         <div class="mesa__tres">${sac.map((f) => `<button type="button" class="chit-btn chit-btn--grande" data-activar="${f.id}">${chit(f, f.bando === may ? ' chit--mayoria' : '', 'mesa')}<span class="chit-btn__accion">${tr('Activar')}</span></button>`).join('')}</div>`;
     } else if (E.saco.usadas.length) {
       const u = porId(E.saco.usadas[E.saco.usadas.length - 1]);
-      const sobre = u && E.secreto && !revelada(u.id) ? `<button type="button" class="boton boton--peq boton-sobre" data-abrir="${u.id}">${tr('Abrir su sobre de órdenes')}</button>` : '';
+      const sobre = !u || !E.usarOrdenes ? ''
+        : estadoSobre(u) === 'lacrada' ? `<button type="button" class="boton boton--peq boton-sobre" data-abrir="${u.id}">${tr('Abrir su sobre de órdenes')}</button>`
+          : estadoSobre(u) === 'borrador' ? `<p class="mesa__nota">${tr('Las órdenes de {x} aún no se han enviado.', { x: esc(etiquetaBando(u.bando)) })}</p>` : '';
       mesa = u ? `<p class="mesa__aviso">${tr('Se activa:')}</p><div class="mesa__tres mesa__activa">${chit(u, ' chit--grande chit--activa', 'activa')}</div>${sobre}` : '';
       if (!vaso.length) mesa += `<p class="mesa__aviso mesa__fin aparece">${tr('Todas las formaciones han actuado este turno.')}</p>`;
     } else mesa = `<p class="muted mb0">${tr(E.saco.modo === 'modificada' ? 'Saca tres chits: el bando con mayoría elige cuál activa.' : 'Saca un chit: esa formación se activa.')}</p>`;
@@ -349,15 +360,30 @@
       await FX.espera(620);
     }
     agitando = false;
+    let activa = null;
     if (E.saco.modo === 'modificada' && vaso.length >= 3) E.saco.sacadas = azar(vaso, 3).map((f) => f.id);
-    else E.saco.usadas.push(azar(vaso, 1)[0].id);
+    else E.saco.usadas.push(activa = azar(vaso, 1)[0].id);
     guardar();
     pintarSaco();
     pintarCuaderno();
+    if (activa) trasActivar(activa);
+  });
+  // Si el bando ya envió sus órdenes, el sobre de la formación activada se abre solo
+  function trasActivar(id) {
+    const f = porId(id);
+    if (!f || !E.usarOrdenes || estadoSobre(f) !== 'lacrada') return;
+    setTimeout(() => {
+      if (E.saco.usadas[E.saco.usadas.length - 1] === id) Despacho.abrir(id, { abrirSobre: true, desdeSaco: true });
+    }, FX.quieto() ? 0 : 1150);
+  }
+  $('usar-saco').addEventListener('click', () => {
+    E.usarSaco = !E.usarSaco;
+    guardar();
+    pintarSaco();
   });
   $('sacadas').addEventListener('click', (e) => {
     const s = e.target.closest('[data-abrir]');
-    if (s) { Despacho.abrir(s.dataset.abrir, { abrirSobre: true }); return; }
+    if (s) { Despacho.abrir(s.dataset.abrir, { abrirSobre: true, desdeSaco: true }); return; }
     const b = e.target.closest('[data-activar]');
     if (!b) return;
     E.saco.usadas.push(b.dataset.activar);
@@ -365,6 +391,7 @@
     guardar();
     pintarSaco();
     pintarCuaderno();
+    trasActivar(b.dataset.activar);
   });
   $('vaso').addEventListener('click', (e) => {
     const a = e.target.closest('[data-apartar]'), v = e.target.closest('[data-volver]'), en = e.target.closest('[data-entrar]');
@@ -412,52 +439,63 @@
       n.o.sort((a, c) => Object.keys(ORDENES).indexOf(a) - Object.keys(ORDENES).indexOf(c));
     });
   }
-  // Modo secreto: cada orden va en un sobre. Por defecto está lacrado; mientras se redacta es
-  // un borrador, y al abrirlo (a mano o cuando el saco activa la formación) queda revelada.
-  // Al empezar otro turno todos los sobres vuelven a estar lacrados.
-  const lista = (m, id) => (m[E.turno] || []).includes(id);
-  function poner(m, id, v) {
-    const l = (m[E.turno] || []).filter((x) => x !== id);
-    if (v) l.push(id);
+  // Fase de órdenes: cada bando redacta sus órdenes y las envía. Desde ese momento van lacradas
+  // en su sobre y no se pueden cambiar en este turno; cada sobre se abre cuando el saco activa
+  // la formación, o a mano. En el turno siguiente vuelve la fase de órdenes.
+  const lista = (m, x) => (m[E.turno] || []).includes(x);
+  function poner(m, x, v) {
+    const l = (m[E.turno] || []).filter((y) => y !== x);
+    if (v) l.push(x);
     m[E.turno] = l;
   }
+  const enviada = (b) => lista(E.enviadas, b);
   const revelada = (id) => lista(E.reveladas, id);
-  const enBorrador = (id) => lista(E.borradores, id);
-  const oculta = (id) => E.secreto && !revelada(id);
-  const estadoSobre = (id) => !E.secreto ? 'abierta' : enBorrador(id) ? 'borrador' : revelada(id) ? 'revelada' : 'lacrada';
-  const porAbrir = (id) => E.secreto && E.saco.turno === E.turno && E.saco.usadas.includes(id) && !revelada(id) && !enBorrador(id);
+  const estadoSobre = (f) => !enviada(f.bando) ? 'borrador' : revelada(f.id) ? 'revelada' : 'lacrada';
+  const oculta = (f) => estadoSobre(f) === 'lacrada';
+  const porAbrir = (f) => E.usarOrdenes && oculta(f) && E.saco.turno === E.turno && E.saco.usadas.includes(f.id);
   const textoOrden = (v) => v.o.map((x) => ORDENES[x].nombre).join(' + ') + (v.o.includes('hq') && v.ruta ? ` (${tr('ruta')}: ${v.ruta})` : '');
   const enJuegoBando = (b) => E.bandos[b].formaciones.filter((f) => !f.reserva).map((f) => ({ ...f, bando: b }));
+  const numero = (n) => `${E.turno}/${String(n + 1).padStart(2, '0')}`;
+  const textoEstado = (f) => ({ lacrada: tr(porAbrir(f) ? '¡Activada! Abre su sobre' : 'Lacrada'), borrador: tr('En redacción'), revelada: tr('Abierta') })[estadoSobre(f)];
 
-  function miniatura(f, n) {
-    const st = estadoSobre(f.id);
-    const v = vigente(E.turno, f.id);
-    const vista = st === 'lacrada' ? Sobres.sobre({ f, bando: etiquetaBando(f.bando), turno: E.turno, mini: true })
-      : st === 'borrador' ? `<span class="hoja-mini hoja-mini--borrador"><b>${tr('Borrador')}</b><i></i><i></i><i></i></span>`
-        : `<span class="hoja-mini"><small>${tr('Orden n.º')} ${E.turno}/${String(n + 1).padStart(2, '0')}</small><b>${esc(textoOrden(v))}</b>${v.nota ? `<em>${esc(v.nota)}</em>` : '<i></i><i></i>'}</span>`;
-    const txt = { lacrada: tr(porAbrir(f.id) ? '¡Activada! Abre su sobre' : 'Lacrada'), borrador: tr('En redacción'), revelada: tr('Abierta') }[st];
-    return `<button type="button" class="sobre-mini sobre-mini--${st}${porAbrir(f.id) ? ' sobre-mini--activa' : ''}" data-abrir="${f.id}" aria-label="${esc(f.nombre)}: ${txt}">
-      <span class="sobre-mini__vista">${vista}</span>
-      <span class="sobre-mini__pie">${icono(f)}<span><strong>${esc(f.nombre)}</strong><small>${txt}</small></span></span>
+  // Vista pequeña de una orden: el sobre lacrado, o la hoja (el borrador, o la carta ya abierta)
+  function vistaMini(f, n) {
+    const st = estadoSobre(f), v = vigente(E.turno, f.id);
+    if (st === 'lacrada') return Sobres.sobre({ f, bando: etiquetaBando(f.bando), turno: E.turno, mini: true });
+    return `<span class="hoja-mini${st === 'borrador' ? ' hoja-mini--borrador' : ''}"><small>${st === 'borrador' ? tr('Borrador') : tr('Orden n.º') + ' ' + numero(n)}</small><b>${esc(textoOrden(v))}</b>${v.nota ? `<em>${esc(v.nota)}</em>` : '<i></i><i></i>'}</span>`;
+  }
+  function miniatura(f, n, cls) {
+    const st = estadoSobre(f);
+    return `<button type="button" class="${cls} ${cls}--${st}${porAbrir(f) ? ` ${cls}--activa` : ''}" data-abrir="${f.id}" data-ir="${n}" aria-label="${esc(f.nombre)}: ${textoEstado(f)}">
+      <span class="${cls}__vista">${vistaMini(f, n)}</span>
+      <span class="${cls}__pie">${icono(f)}<span><strong>${esc(f.nombre)}</strong><small>${textoEstado(f)}</small></span></span>
     </button>`;
+  }
+  function textoBando(b) {
+    const fs = enJuegoBando(b);
+    if (!fs.length) return '';
+    if (!enviada(b)) return tr('Redactando las órdenes');
+    const abiertas = fs.filter((f) => revelada(f.id)).length;
+    return abiertas === fs.length ? tr('Enviadas · todas abiertas') : tr('Enviadas · {a} de {b} abiertas', { a: abiertas, b: fs.length });
   }
 
   function pintarCuaderno() {
     document.querySelectorAll('[data-turno-n]').forEach((e) => { e.textContent = E.turno; });
     document.querySelectorAll('[data-turno="-1"]').forEach((b) => { b.disabled = E.turno <= 1; });
-    const btn = $('ocultar');
-    btn.setAttribute('aria-pressed', E.secreto);
-    btn.textContent = tr(E.secreto ? 'Desactivar el modo secreto' : 'Modo secreto: sobres lacrados');
-    $('revelar-todas').hidden = !E.secreto;
-    $('cuaderno').classList.toggle('secreto', E.secreto);
-    $('cuaderno-bando').innerHTML = E.bandos.map((b, i) => `<button type="button" data-b="${i}" aria-pressed="${E.verBando === i}">${esc(etiquetaBando(i))}</button>`).join('');
-    const fs = enJuegoBando(E.verBando);
+    $('usar-ordenes').setAttribute('aria-pressed', E.usarOrdenes);
+    $('cuaderno-cuerpo').hidden = !E.usarOrdenes;
+    $('cuaderno-apagado').hidden = E.usarOrdenes;
+    $('cuaderno').classList.toggle('paso--apagado', !E.usarOrdenes);
+    $('cuaderno-bando').innerHTML = E.bandos.map((b, i) => `<button type="button" data-b="${i}" aria-pressed="${E.verBando === i}">${esc(etiquetaBando(i))}${enviada(i) ? ' <span class="lacrito" aria-label="' + tr('enviadas') + '"></span>' : ''}</button>`).join('');
+    const fs = enJuegoBando(E.verBando), env = enviada(E.verBando);
     const nRes = E.bandos[E.verBando].formaciones.length - fs.length;
-    $('lacrar-todas').hidden = !E.secreto || !fs.some((f) => enBorrador(f.id));
     $('cuaderno-reserva').textContent = nRes ? tr(nRes === 1 ? '1 formación aún no ha entrado en juego y no sale aquí.' : '{n} formaciones aún no han entrado en juego y no salen aquí.', { n: nRes }) : '';
     $('cuaderno-reserva').hidden = !nRes;
-    if (!fs.length) $('cuaderno-lista').innerHTML = `<p class="muted mb0">${tr('No hay formaciones para {x}. Añádelas en «Tu partida».', { x: esc(etiquetaBando(E.verBando)) })}</p>`;
-    else if (E.secreto) $('cuaderno-lista').innerHTML = `<div class="sobres">${fs.map(miniatura).join('')}</div>`;
+    $('cuaderno-estado').textContent = textoBando(E.verBando);
+    $('cuaderno-estado').className = 'cuaderno__estado' + (env ? ' cuaderno__estado--enviada' : '');
+    $('cuaderno-lista').classList.toggle('cuaderno--sobres', env);
+    if (!fs.length) $('cuaderno-lista').innerHTML = `<p class="muted mb0">${tr('No hay formaciones para {x}. Cárgalas en el paso 1.', { x: esc(etiquetaBando(E.verBando)) })}</p>`;
+    else if (env) $('cuaderno-lista').innerHTML = `<div class="sobres">${fs.map((f, n) => miniatura(f, n, 'sobre-mini')).join('')}</div>`;
     else $('cuaderno-lista').innerHTML = fs.map((f) => {
       const v = vigente(E.turno, f.id), propia = v.desde === E.turno;
       const estado = propia ? (v.desde > 1 && JSON.stringify(vigente(E.turno - 1, f.id).o) !== JSON.stringify(v.o) ? `<span class="estado nueva">${tr('Cambiada este turno')}</span>` : `<span class="estado nueva">${tr('Anotada este turno')}</span>`)
@@ -471,14 +509,18 @@
         </div>
       </div>`;
     }).join('');
+    $('enviar').hidden = env || !fs.length;
+    $('enviar').textContent = tr('Confirmar y enviar las órdenes de {x}', { x: etiquetaBando(E.verBando) });
+    const quedan = fs.filter(oculta).length;
+    $('abrir-todas').hidden = !env || !quedan;
 
     // Historial: una columna por turno, con las órdenes de ese bando
     const ultimo = Math.max(E.turno, ...Object.keys(E.ordenes).map(Number), 1);
     const cols = Array.from({ length: ultimo }, (_, i) => i + 1);
-    const fh = E.bandos[E.verBando].formaciones;   // en el historial también las que están fuera
+    const fh = E.bandos[E.verBando].formaciones.map((f) => ({ ...f, bando: E.verBando }));   // en el historial también las que están fuera
     $('historial').innerHTML = fh.length ? `<thead><tr><th>${tr('Formación')}</th>${cols.map((t) => `<th class="num">T${t}</th>`).join('')}</tr></thead><tbody>${fh.map((f) => `<tr><td><span class="f-nombre">${icono(f)}${esc(f.nombre)}</span></td>${cols.map((t) => {
       const v = vigente(t, f.id), propia = v.desde === t;
-      if (t === E.turno && oculta(f.id)) return `<td class="num heredada" title="${tr('Orden secreta')}">?</td>`;
+      if (t === E.turno && oculta(f)) return `<td class="num heredada" title="${tr('Orden secreta')}">?</td>`;
       return `<td class="num${propia ? '' : ' heredada'}" title="${esc(textoOrden(v))}">${v.o.map((x) => ORDENES[x].corto).join('+')}</td>`;
     }).join('')}</tr>`).join('')}</tbody>` : '';
     Despacho.pintar();
@@ -492,60 +534,61 @@
   });
   $('cuaderno-lista').addEventListener('click', (e) => {
     const s = e.target.closest('[data-abrir]');
-    if (s) { Despacho.abrir(s.dataset.abrir, { abrirSobre: porAbrir(s.dataset.abrir) }); return; }
+    if (s) { const f = porId(s.dataset.abrir); Despacho.abrir(f.id, { abrirSobre: porAbrir(f) }); return; }
     const b = e.target.closest('[data-o]');
-    if (!b) return;
+    if (!b || enviada(E.verBando)) return;
     elegirOrden(b.closest('.orden').dataset.f, b.dataset.o);
     pintarCuaderno();
   });
   $('cuaderno-lista').addEventListener('input', (e) => {
     const c = e.target.dataset.campo;
-    if (!c) return;
+    if (!c || enviada(E.verBando)) return;
     fijar(e.target.closest('.orden').dataset.f, (n) => { n[c] = e.target.value; });
     const est = e.target.closest('.orden').querySelector('.estado');
     est.className = 'estado nueva';
     est.textContent = tr('Anotada este turno');
   });
-  // Al pasar al modo secreto, las órdenes de este turno quedan como borradores para redactarlas y lacrarlas
-  function ponerSecreto(v) {
-    E.secreto = v;
-    if (v) {
-      E.reveladas[E.turno] = [];
-      E.borradores[E.turno] = enJuego().map((f) => f.id);
-    }
-    guardar();
-    pintarCuaderno();
-    pintarSaco();
-  }
-  $('ocultar').addEventListener('click', () => ponerSecreto(!E.secreto));
-  $('revelar-todas').addEventListener('click', () => {
-    const fs = enJuegoBando(E.verBando).map((f) => f.id);
-    const abiertas = fs.every(revelada);
-    E.reveladas[E.turno] = (E.reveladas[E.turno] || []).filter((x) => !fs.includes(x)).concat(abiertas ? [] : fs);
-    E.borradores[E.turno] = (E.borradores[E.turno] || []).filter((x) => !fs.includes(x));
+  $('usar-ordenes').addEventListener('click', () => {
+    E.usarOrdenes = !E.usarOrdenes;
     guardar();
     pintarCuaderno();
     pintarSaco();
   });
-  $('lacrar-todas').addEventListener('click', () => lacrarTodas());
-  function lacrarTodas() {
-    const fs = enJuegoBando(E.verBando).map((f) => f.id).filter(enBorrador);
-    E.borradores[E.turno] = (E.borradores[E.turno] || []).filter((x) => !fs.includes(x));
+
+  // Enviar las órdenes de un bando: quedan lacradas hasta que se abren, y fijas hasta el turno siguiente
+  function enviar(b) {
+    poner(E.enviadas, b, true);
     guardar();
     pintarCuaderno();
-    // Cada sobre recibe su lacre, uno detrás de otro
-    if (FX.quieto()) return;
-    fs.forEach((id, i) => {
-      const l = document.querySelector(`#cuaderno-lista [data-abrir="${id}"] .lacre`);
-      if (!l) return;
-      l.animate([{ transform: 'translate(-50%, -50%) scale(2.4)', opacity: 0 }, { transform: 'translate(-50%, -50%) scale(.9)', opacity: 1, offset: 0.7 }, { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }], { duration: 380, delay: i * 140, easing: 'ease-in', fill: 'backwards' });
-      FX.sonar('lacre', i * 140 + 260);
+    pintarSaco();
+  }
+  // Cae el lacre en cada sobre de `cont`, uno detrás de otro
+  function sellar(cont) {
+    if (FX.quieto() || !cont) return;
+    cont.querySelectorAll('.lacre').forEach((l, i) => {
+      l.animate([{ transform: 'translate(-50%, -50%) scale(2.4)', opacity: 0 }, { transform: 'translate(-50%, -50%) scale(.9)', opacity: 1, offset: 0.7 }, { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }], { duration: 380, delay: i * 120, easing: 'ease-in', fill: 'backwards' });
+      if (i < 12) FX.sonar('lacre', i * 120 + 260);
     });
   }
+  $('enviar').addEventListener('click', () => {
+    const b = E.verBando;
+    if (!confirm(tr('¿Enviar las órdenes de {x}? Quedan lacradas y no se pueden cambiar en este turno.', { x: etiquetaBando(b) }))) return;
+    enviar(b);
+    sellar($('cuaderno-lista'));
+  });
+  function abrirTodas(b) {
+    enJuegoBando(b).forEach((f) => poner(E.reveladas, f.id, true));
+    guardar();
+    FX.sonar('papel');
+    pintarCuaderno();
+    pintarSaco();
+  }
+  $('abrir-todas').addEventListener('click', () => abrirTodas(E.verBando));
   $('abrir-despacho').addEventListener('click', () => Despacho.abrir(null, { completa: true }));
   $('copiar').addEventListener('click', async (e) => {
     const txt = [tr('Órdenes · turno {n}', { n: E.turno })].concat(E.bandos.flatMap((b, i) => b.formaciones.length ? ['', etiquetaBando(i)].concat(b.formaciones.map((f) => {
       const v = vigente(E.turno, f.id);
+      if (oculta({ ...f, bando: i })) return `- ${f.nombre}: ${tr('lacrada')}`;
       return `- ${f.nombre}: ${textoOrden(v)}${v.nota ? ' · ' + v.nota : ''}`;
     })) : [])).join('\n');
     const btn = e.currentTarget, antes = btn.textContent;
@@ -555,20 +598,24 @@
   $('vaciar-ordenes').addEventListener('click', () => {
     if (!confirm(tr('¿Borrar las órdenes de todos los turnos y de los dos bandos?'))) return;
     E.ordenes = {};
+    E.enviadas = {};
+    E.reveladas = {};
     guardar();
     pintarCuaderno();
+    pintarSaco();
   });
 
-  // ---------- Despacho: las órdenes a pantalla completa, de una en una ----------
+  // ---------- Despacho: las órdenes a pantalla completa, como una aplicación ----------
+  // Dos vistas: «todas» (los sobres de un bando de un vistazo) y «una» (una orden en grande).
   const Despacho = (function () {
     const el = document.createElement('div');
     el.className = 'despacho';
     el.id = 'despacho';
     el.hidden = true;
+    el.tabIndex = -1;
     el.setAttribute('role', 'dialog');
     el.setAttribute('aria-modal', 'true');
     el.setAttribute('aria-label', tr('Despacho de órdenes'));
-    el.tabIndex = -1;
     const fsOk = !!(el.requestFullscreen || el.webkitRequestFullscreen);
     el.innerHTML = `
       <div class="despacho__barra">
@@ -576,7 +623,10 @@
         <div class="conmutador despacho__bandos" id="despacho-bandos" role="group" aria-label="${tr('Bando')}"></div>
         <div class="despacho__ctl">
           <div class="turno-mini" role="group" aria-label="${tr('Turno de juego')}"><button type="button" data-turno="-1" aria-label="${tr('Turno anterior')}">−</button><span>${tr('Turno')} <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="${tr('Turno siguiente')}">+</button></div>
-          <button type="button" class="despacho__btn" id="despacho-secreto" aria-pressed="false" title="${tr('Modo secreto: sobres lacrados')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="m3 7 9 7 9-7"/></svg><span>${tr('Sobres')}</span></button>
+          <div class="conmutador despacho__vistas" role="group" aria-label="${tr('Vista')}">
+            <button type="button" data-vista="todas" title="${tr('Todas las órdenes')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="sr">${tr('Todas las órdenes')}</span></button>
+            <button type="button" data-vista="una" title="${tr('De una en una')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="3" width="14" height="18" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg><span class="sr">${tr('De una en una')}</span></button>
+          </div>
           <button type="button" class="despacho__btn" data-sonido aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="onda" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="mudo" d="m16 9 6 6m0-6-6 6"/></svg><span class="sr">${tr('Sonido')}</span></button>
           ${fsOk ? `<button type="button" class="despacho__btn" id="despacho-completa" title="${tr('Pantalla completa')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="sr">${tr('Pantalla completa')}</span></button>` : ''}
           <button type="button" class="despacho__btn despacho__cerrar" id="despacho-cerrar" aria-label="${tr('Cerrar el despacho')}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
@@ -594,7 +644,7 @@
       </div>
       <div class="despacho__aviso" id="despacho-aviso" aria-live="polite"></div>`;
     document.body.appendChild(el);
-    const D = { idx: 0, editando: false, ocupado: false };
+    const D = { idx: 0, vista: 'todas', ocupado: false, desdeSaco: false, confirmar: false };
     const q = (id) => el.querySelector('#' + id);
 
     function actual() {
@@ -603,53 +653,59 @@
       return { fs, f: fs[D.idx] };
     }
     const datos = (f) => ({ f, bando: etiquetaBando(f.bando), turno: E.turno, n: D.idx, v: vigente(E.turno, f.id), ordenes: NOMBRES });
-    function htmlMesa(f) {
-      const st = estadoSobre(f.id);
-      if (st === 'lacrada') return `<div class="escena-sobre">${Sobres.sobre({ f, bando: etiquetaBando(f.bando), turno: E.turno })}<p class="escena-sobre__pista">${tr(porAbrir(f.id) ? '¡Formación activada! Toca el sobre para romper el lacre.' : 'Toca el sobre para romper el lacre.')}</p></div>`;
-      if (st === 'borrador' || (st === 'abierta' && D.editando)) return Sobres.borrador(datos(f));
+    function htmlUna(f) {
+      const st = estadoSobre(f);
+      if (st === 'lacrada') return `<div class="escena-sobre">${Sobres.sobre({ f, bando: etiquetaBando(f.bando), turno: E.turno })}<p class="escena-sobre__pista">${tr(porAbrir(f) ? '¡Formación activada! Toca el sobre para romper el lacre.' : 'Toca el sobre para romper el lacre.')}</p></div>`;
+      if (st === 'borrador') return Sobres.borrador(datos(f));
       return Sobres.carta(datos(f));
     }
+    const htmlTodas = (fs) => `<div class="despacho__rejilla">${fs.map((f, n) => miniatura(f, n, 'dcarta')).join('')}</div>`;
     function acciones(f, fs) {
-      const st = estadoSobre(f.id);
       const b = (id, txt, prim) => `<button type="button" class="boton${prim ? ' boton--primario' : ''}" data-accion="${id}">${txt}</button>`;
-      const quedan = E.secreto && fs.filter((x) => enBorrador(x.id)).length;
-      const r = {
-        abierta: D.editando ? b('hecho', tr('Ver la orden'), true) : b('editar', tr('Redactar la orden'), true),
-        borrador: b('lacrar', tr('Lacrar la orden'), true),
-        lacrada: b('abrir', tr('Romper el lacre'), true) + b('cambiar', tr('Cambiar la orden')),
-        revelada: b('guardar', tr('Volver a meterla en el sobre'))
-      }[st];
-      return r + (quedan > 1 ? b('lacrar-todas', tr('Lacrar los {n} borradores', { n: quedan })) : '');
+      if (!enviada(E.verBando)) {
+        return D.confirmar
+          ? `<span class="despacho__pregunta">${tr('Una vez enviadas, no se pueden cambiar en este turno.')}</span>${b('enviar-no', tr('Seguir redactando'))}${b('enviar-si', tr('Lacrar y enviar'), true)}`
+          : b('enviar', tr('Confirmar y enviar las órdenes'), true);
+      }
+      const quedan = fs.filter(oculta).length;
+      let r = '';
+      if (D.vista === 'una' && oculta(f)) r += b('abrir', tr('Romper el lacre'), true);
+      if (D.vista === 'una' && D.desdeSaco && !oculta(f)) r += b('saco', tr('Volver al saco'), true);
+      if (quedan > 1) r += b('abrir-todas', tr('Abrir los {n} sobres', { n: quedan }));
+      if (!quedan) r += `<span class="despacho__pregunta">${tr('Todas las órdenes de este turno están abiertas.')}</span>`;
+      return r;
     }
     function pintar(dir) {
       if (el.hidden) return;
       const { fs, f } = actual();
-      q('despacho-bandos').innerHTML = E.bandos.map((b, i) => `<button type="button" data-b="${i}" aria-pressed="${E.verBando === i}">${esc(etiquetaBando(i))}</button>`).join('');
-      q('despacho-secreto').setAttribute('aria-pressed', E.secreto);
+      q('despacho-bandos').innerHTML = E.bandos.map((b, i) => `<button type="button" data-b="${i}" aria-pressed="${E.verBando === i}">${esc(etiquetaBando(i))}${enviada(i) ? ' <span class="lacrito"></span>' : ''}</button>`).join('');
+      el.querySelectorAll('[data-vista]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.vista === D.vista));
       el.querySelectorAll('[data-turno-n]').forEach((e) => { e.textContent = E.turno; });
       el.querySelector('[data-turno="-1"]').disabled = E.turno <= 1;
-      el.classList.toggle('despacho--secreto', E.secreto);
+      el.classList.toggle('despacho--todas', D.vista === 'todas');
+      const mesa = q('despacho-mesa');
       if (!f) {
-        q('despacho-mesa').innerHTML = `<p class="despacho__vacio">${tr('No hay formaciones para {x}. Añádelas en «Tu partida».', { x: esc(etiquetaBando(E.verBando)) })}</p>`;
+        mesa.innerHTML = `<p class="despacho__vacio">${tr('No hay formaciones para {x}. Cárgalas en el paso 1.', { x: esc(etiquetaBando(E.verBando)) })}</p>`;
         q('despacho-quien').innerHTML = q('despacho-puntos').innerHTML = q('despacho-acciones').innerHTML = '';
         return;
       }
-      const mesa = q('despacho-mesa');
-      mesa.innerHTML = htmlMesa(f);
+      mesa.innerHTML = D.vista === 'todas' ? htmlTodas(fs) : htmlUna(f);
       mesa.scrollTop = 0;
       if (dir && !FX.quieto()) mesa.firstElementChild.animate([{ transform: `translateX(${dir * 70}px) rotate(${dir * 2}deg)`, opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 320, easing: 'cubic-bezier(.2,.8,.3,1)' });
-      q('despacho-quien').innerHTML = `${icono(f, 'despacho__icono')}<span><strong>${esc(f.nombre)}</strong><small>${tr('{a} de {b}', { a: D.idx + 1, b: fs.length })} · ${esc(etiquetaBando(f.bando))}</small></span>`;
-      q('despacho-puntos').innerHTML = fs.map((x, i) => `<button type="button" class="dpunto dpunto--${estadoSobre(x.id)}${i === D.idx ? ' dpunto--actual' : ''}${porAbrir(x.id) ? ' dpunto--activa' : ''}" data-ir="${i}" aria-label="${esc(x.nombre)}"></button>`).join('');
+      q('despacho-quien').innerHTML = D.vista === 'todas'
+        ? `<span><strong>${esc(etiquetaBando(E.verBando))}</strong><small>${textoBando(E.verBando)}</small></span>`
+        : `${icono(f, 'despacho__icono')}<span><strong>${esc(f.nombre)}</strong><small>${tr('{a} de {b}', { a: D.idx + 1, b: fs.length })} · ${textoEstado(f)}</small></span>`;
+      q('despacho-puntos').innerHTML = D.vista === 'todas' ? '' : fs.map((x, i) => `<button type="button" class="dpunto dpunto--${estadoSobre(x)}${i === D.idx ? ' dpunto--actual' : ''}${porAbrir(x) ? ' dpunto--activa' : ''}" data-ir="${i}" aria-label="${esc(x.nombre)}"></button>`).join('');
       q('despacho-acciones').innerHTML = acciones(f, fs);
       q('despacho-prev').disabled = el.querySelector('[data-nav="-1"]').disabled = D.idx === 0;
       q('despacho-sig').disabled = el.querySelector('[data-nav="1"]').disabled = D.idx >= fs.length - 1;
     }
     function ir(d) {
+      if (D.vista !== 'una' || D.ocupado) return;
       const { fs } = actual();
       const n = Math.max(0, Math.min(fs.length - 1, D.idx + d));
-      if (n === D.idx || D.ocupado) return;
+      if (n === D.idx) return;
       D.idx = n;
-      D.editando = false;
       FX.sonar('papel', 0, 0.22);
       pintar(d);
     }
@@ -659,51 +715,53 @@
       a.classList.remove('visible');
       void a.offsetWidth;
       a.classList.add('visible');
+      a.addEventListener('animationend', () => a.classList.remove('visible'), { once: true });
     }
     const anim = (n, fr, o) => (n && !FX.quieto() ? n.animate(fr, Object.assign({ fill: 'forwards', easing: 'ease-in-out' }, o)).finished.catch(() => {}) : Promise.resolve());
 
-    // Lacrar: la hoja se dobla, entra en el sobre, se cierra la solapa y cae el lacre
-    async function lacrar() {
+    // Lacrar la hoja que está en la mesa: se dobla, entra en el sobre, se cierra la solapa y cae el lacre
+    async function lacrarHoja(f) {
+      const mesa = q('despacho-mesa');
+      const hoja = mesa.querySelector('.carta');
+      if (!hoja || FX.quieto()) return;
+      FX.sonar('papel');
+      await anim(hoja, [{ transform: 'none' }, { transform: 'perspective(900px) rotateX(28deg) scaleY(.6)', offset: 0.45 }, { transform: 'perspective(900px) translateY(18%) scale(.42, .2)', opacity: 0.2 }], { duration: 520 });
+      mesa.innerHTML = `<div class="escena-sobre">${Sobres.sobre({ f, bando: etiquetaBando(f.bando), turno: E.turno, abierto: true })}<p class="escena-sobre__pista">&nbsp;</p></div>`;
+      const s = mesa.querySelector('.sobre'), papel = s.querySelector('.sobre__papel'), solapa = s.querySelector('.sobre__solapa'), lacreEl = s.querySelector('.lacre');
+      lacreEl.style.opacity = 0;
+      await anim(papel, [{ transform: 'translateY(-62%)' }, { transform: 'translateY(0)' }], { duration: 420, easing: 'cubic-bezier(.5,0,.6,1)' });
+      FX.sonar('papel', 0, 0.3);
+      solapa.style.zIndex = 4;
+      await anim(solapa, [{ transform: 'rotateX(180deg)' }, { transform: 'rotateX(0deg)' }], { duration: 380 });
+      s.classList.remove('sobre--abierto');
+      solapa.getAnimations().forEach((a) => a.cancel());
+      solapa.style.zIndex = '';
+      lacreEl.style.opacity = '';
+      FX.sonar('lacre', 230);
+      await anim(lacreEl, [{ transform: 'translate(-50%, -50%) scale(2.6) rotate(-25deg)', opacity: 0 }, { transform: 'translate(-50%, -50%) scale(.86, .8)', opacity: 1, offset: 0.72 }, { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }], { duration: 330, easing: 'ease-in', fill: 'none' });
+      const r = lacreEl.getBoundingClientRect();
+      FX.chispas(r.left + r.width / 2, r.top + r.height / 2, { color: '#a3241c', n: 16, dist: 60 });
+      anim(s, [{ transform: 'translateY(0)' }, { transform: 'translateY(5px) scale(.985)' }, { transform: 'none' }], { duration: 220, fill: 'none' });
+      await FX.espera(500);
+    }
+    // Enviar: la orden que está a la vista se lacra delante del jugador; después, todos los sobres del bando
+    async function enviarDespacho() {
       const { f } = actual();
       if (!f || D.ocupado) return;
       D.ocupado = true;
-      const mesa = q('despacho-mesa');
-      const hoja = mesa.querySelector('.carta');
-      if (hoja && !FX.quieto()) {
-        FX.sonar('papel');
-        await anim(hoja, [{ transform: 'none' }, { transform: 'perspective(900px) rotateX(28deg) scaleY(.6)', offset: 0.45 }, { transform: 'perspective(900px) translateY(18%) scale(.42, .2)', opacity: 0.2 }], { duration: 520 });
-        mesa.innerHTML = `<div class="escena-sobre">${Sobres.sobre({ f, bando: etiquetaBando(f.bando), turno: E.turno, abierto: true })}<p class="escena-sobre__pista">&nbsp;</p></div>`;
-        const s = mesa.querySelector('.sobre'), papel = s.querySelector('.sobre__papel'), solapa = s.querySelector('.sobre__solapa'), lacreEl = s.querySelector('.lacre');
-        lacreEl.style.opacity = 0;
-        await anim(papel, [{ transform: 'translateY(-62%)' }, { transform: 'translateY(0)' }], { duration: 420, easing: 'cubic-bezier(.5,0,.6,1)' });
-        FX.sonar('papel', 0, 0.3);
-        solapa.style.zIndex = 4;
-        await anim(solapa, [{ transform: 'rotateX(180deg)' }, { transform: 'rotateX(0deg)' }], { duration: 380 });
-        s.classList.remove('sobre--abierto');
-        solapa.getAnimations().forEach((a) => a.cancel());
-        solapa.style.zIndex = '';
-        lacreEl.style.opacity = '';
-        FX.sonar('lacre', 230);
-        await anim(lacreEl, [{ transform: 'translate(-50%, -50%) scale(2.6) rotate(-25deg)', opacity: 0 }, { transform: 'translate(-50%, -50%) scale(.86, .8)', opacity: 1, offset: 0.72 }, { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 }], { duration: 330, easing: 'ease-in', fill: 'none' });
-        const r = lacreEl.getBoundingClientRect();
-        FX.chispas(r.left + r.width / 2, r.top + r.height / 2, { color: '#a3241c', n: 16, dist: 60 });
-        anim(s, [{ transform: 'translateY(0)' }, { transform: 'translateY(5px) scale(.985)' }, { transform: 'none' }], { duration: 220, fill: 'none' });
-        await FX.espera(450);
-      }
-      poner(E.borradores, f.id, false);
-      poner(E.reveladas, f.id, false);
-      guardar();
+      if (D.vista === 'una') await lacrarHoja(f);
       D.ocupado = false;
-      aviso(tr('Orden lacrada'));
-      pintarCuaderno();
-      const sig = q('despacho-sig');
-      if (!sig.disabled) sig.classList.add('pulsa');
+      D.confirmar = false;
+      D.vista = 'todas';
+      enviar(E.verBando);
+      sellar(q('despacho-mesa'));
+      aviso(tr('Órdenes enviadas'));
     }
 
     // Abrir: se rompe el lacre, se levanta la solapa, sale la carta y se escribe a máquina
     async function abrirSobre() {
       const { f } = actual();
-      if (!f || D.ocupado || estadoSobre(f.id) !== 'lacrada') return;
+      if (!f || D.ocupado || !oculta(f)) return;
       D.ocupado = true;
       const mesa = q('despacho-mesa');
       const s = mesa.querySelector('.sobre');
@@ -720,7 +778,6 @@
         solapa.style.zIndex = 4;
         await anim(solapa, [{ transform: 'rotateX(0deg)' }, { transform: 'rotateX(90deg)', offset: 0.5 }, { transform: 'rotateX(180deg)' }], { duration: 400 });
         solapa.style.zIndex = 1;
-        papel.style.visibility = 'visible';
         FX.sonar('papel', 0, 0.5);
         await anim(papel, [{ transform: 'translateY(0)' }, { transform: 'translateY(-78%)' }], { duration: 480, easing: 'cubic-bezier(.3,.6,.4,1)' });
         await anim(s, [{ transform: 'none', opacity: 1 }, { transform: 'translateY(60px) scale(.92)', opacity: 0 }], { duration: 300 });
@@ -747,26 +804,24 @@
     }
 
     function abrir(id, op = {}) {
-      const fs = enJuegoBando(E.verBando);
       if (id) {
         const f = porId(id);
         if (f && f.bando !== E.verBando) { E.verBando = f.bando; guardar(); pintarCuaderno(); }
         D.idx = Math.max(0, enJuegoBando(E.verBando).findIndex((x) => x.id === id));
-      } else if (D.idx >= fs.length) D.idx = 0;
-      D.editando = false;
+        D.vista = 'una';
+      } else D.vista = 'todas';
+      D.desdeSaco = !!op.desdeSaco;
+      D.confirmar = false;
+      D.ocupado = false;
+      const yaAbierto = !el.hidden;
       el.hidden = false;
       document.documentElement.classList.add('con-despacho');
       if (op.completa && fsOk && !document.fullscreenElement) (el.requestFullscreen || el.webkitRequestFullscreen).call(el).catch(() => {});
       pintar();
-      if (!FX.quieto()) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220 });
+      if (!yaAbierto && !FX.quieto()) el.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 220 });
       FX.sonar('papel', 0, 0.3);
       el.focus({ preventScroll: true });
-      if (op.abrirSobre) {
-        // Si la formación se activa con la orden aún en borrador, se lacra tal cual y se abre
-        const f = actual().f;
-        if (f && enBorrador(f.id)) { poner(E.borradores, f.id, false); guardar(); pintarCuaderno(); }
-        setTimeout(abrirSobre, 380);
-      }
+      if (op.abrirSobre) setTimeout(abrirSobre, 420);
     }
     function cerrar() {
       if (document.fullscreenElement === el) (document.exitFullscreen || document.webkitExitFullscreen).call(document).catch(() => {});
@@ -780,7 +835,7 @@
       const t = e.target;
       if (t.closest('#despacho-cerrar')) { cerrar(); return; }
       if (t.closest('#despacho-prev')) { ir(-1); return; }
-      if (t.closest('#despacho-sig')) { t.closest('#despacho-sig').classList.remove('pulsa'); ir(1); return; }
+      if (t.closest('#despacho-sig')) { ir(1); return; }
       const nav = t.closest('[data-nav]');
       if (nav) { ir(+nav.dataset.nav); return; }
       if (t.closest('#despacho-completa')) {
@@ -788,15 +843,24 @@
         else (el.requestFullscreen || el.webkitRequestFullscreen).call(el).catch(() => {});
         return;
       }
-      if (t.closest('#despacho-secreto')) { ponerSecreto(!E.secreto); return; }
+      if (D.ocupado) return;
+      const vista = t.closest('[data-vista]');
+      if (vista) { if (vista.dataset.vista !== D.vista) { D.vista = vista.dataset.vista; pintar(1); } return; }
       const bando = t.closest('#despacho-bandos [data-b]');
-      if (bando) { E.verBando = +bando.dataset.b; D.idx = 0; guardar(); pintarCuaderno(); pintar(1); return; }
+      if (bando) { E.verBando = +bando.dataset.b; D.idx = 0; D.confirmar = false; guardar(); pintarCuaderno(); pintar(1); return; }
       const p = t.closest('[data-ir]');
-      if (p) { const n = +p.dataset.ir; if (n !== D.idx) { const d = n > D.idx ? 1 : -1; D.idx = n; D.editando = false; pintar(d); } return; }
+      if (p) {
+        const n = +p.dataset.ir, d = n >= D.idx ? 1 : -1;
+        D.idx = n;
+        D.vista = 'una';
+        FX.sonar('papel', 0, 0.22);
+        pintar(d);
+        return;
+      }
       const casilla = t.closest('.carta--borrador [data-o]');
       if (casilla) {
-        const { f } = actual();
-        elegirOrden(f.id, casilla.dataset.o);
+        if (enviada(E.verBando)) return;
+        elegirOrden(actual().f.id, casilla.dataset.o);
         FX.sonar('tecla');
         pintar();
         pintarCuaderno();
@@ -804,20 +868,18 @@
       }
       if (t.closest('.escena-sobre .sobre')) { abrirSobre(); return; }
       const a = t.closest('[data-accion]');
-      if (!a || D.ocupado) return;
-      const { f } = actual();
+      if (!a) return;
       const acc = a.dataset.accion;
-      if (acc === 'lacrar') lacrar();
+      if (acc === 'enviar') { D.confirmar = true; pintar(); }
+      else if (acc === 'enviar-no') { D.confirmar = false; pintar(); }
+      else if (acc === 'enviar-si') enviarDespacho();
       else if (acc === 'abrir') abrirSobre();
-      else if (acc === 'lacrar-todas') { lacrarTodas(); aviso(tr('Órdenes lacradas')); pintar(); }
-      else if (acc === 'cambiar') { poner(E.borradores, f.id, true); guardar(); pintarCuaderno(); pintar(); }
-      else if (acc === 'guardar') { poner(E.reveladas, f.id, false); guardar(); FX.sonar('papel'); pintarCuaderno(); pintarSaco(); pintar(); }
-      else if (acc === 'editar') { D.editando = true; pintar(); }
-      else if (acc === 'hecho') { D.editando = false; pintar(); }
+      else if (acc === 'abrir-todas') { abrirTodas(E.verBando); aviso(tr('Órdenes abiertas')); }
+      else if (acc === 'saco') { cerrar(); $('saco').scrollIntoView({ behavior: FX.quieto() ? 'auto' : 'smooth', block: 'start' }); }
     });
     el.addEventListener('input', (e) => {
       const c = e.target.dataset.campo;
-      if (!c) return;
+      if (!c || enviada(E.verBando)) return;
       fijar(actual().f.id, (n) => { n[c] = e.target.value; });
     });
     // El teclado manda mientras el despacho está abierto, aunque el foco se haya perdido al repintar
@@ -847,7 +909,6 @@
   })();
 
   function pintar() {
-    $('turno').textContent = E.turno;
     pintarBandos();
     pintarSaco();
     pintarCuaderno();

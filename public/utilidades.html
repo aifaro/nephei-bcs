@@ -67,13 +67,13 @@
     <div class="wrap">
       <span class="antetitulo">Intendencia</span>
       <h1>Utilidades para la mesa</h1>
-      <p class="lead">Todo lo que se usa mientras juegas, en un solo sitio: la partida con su saco de activaciones y su cuaderno de órdenes, la calculadora de SNAFU y el asistente para elegir ataque. El simulador tiene su propia página.</p>
+      <p class="lead">Todo lo que se usa mientras juegas, en un solo sitio: la partida con su cuaderno de órdenes y su saco de chits, la calculadora de SNAFU y el asistente para elegir ataque. El simulador tiene su propia página.</p>
     </div>
   </section>
 
   <nav class="pestanas" aria-label="Utilidades">
     <div class="wrap pestanas__fila" role="tablist">
-      <a class="pestana" role="tab" href="#partida" data-panel="partida"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 11h-11z"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/></svg></span><span>Partida<small>Saco de activaciones · órdenes</small></span></a>
+      <a class="pestana" role="tab" href="#partida" data-panel="partida"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h14l-1.5 11h-11z"/><path d="M8 9V6a4 4 0 0 1 8 0v3"/></svg></span><span>Partida<small>Órdenes · saco de chits</small></span></a>
       <a class="pestana" role="tab" href="#snafu" data-panel="snafu"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="13" width="8" height="8" rx="2"/></svg></span><span>SNAFU<small>Modificadores y probabilidades</small></span></a>
       <a class="pestana" role="tab" href="#ataque" data-panel="ataque"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.01"/></svg></span><span>¿Qué ataque uso?<small>Según tu unidad y el blanco</small></span></a>
       <a class="pestana pestana--fuera" href="simulador.html"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20 20 4M14 4h6v6"/></svg></span><span>Simulador de ataques<small>Abre su página →</small></span></a>
@@ -84,84 +84,96 @@
     <div class="wrap">
       <div class="seccion__cab">
         <div><span class="antetitulo">Partida</span><h2>Tu partida</h2></div>
-        <p>Escribe las formaciones de cada bando. Las usan el saco de activaciones y el cuaderno de órdenes. Todo se guarda solo en este navegador, y lo puedes borrar cuando quieras.</p>
+        <p>Sigue el turno de arriba abajo: formaciones, órdenes y activaciones. Órdenes y saco son opcionales; si usas los dos, al sacar una formación se abre su sobre. Todo se guarda solo en este navegador.</p>
       </div>
-      <div class="partida">
+
+      <div class="herramienta paso" id="cargar">
+        <div class="paso__cab"><span class="paso__n">1</span><div><span class="antetitulo">Antes de empezar</span><h3>Carga las formaciones</h3></div></div>
+        <div class="cargar">
+          <label class="cargar__campo"><span>Juego</span><select id="juego"></select></label>
+          <label class="cargar__campo cargar__campo--ancho"><span>Escenario</span><select id="escenario"></select></label>
+          <button type="button" class="boton boton--primario" id="ejemplo">Cargar el escenario</button>
+          <button type="button" class="boton boton--peq peligro" id="borrar">Borrar la partida</button>
+        </div>
+        <p class="muted mb0 cargar__nota" id="guardado">Guardado en este navegador.</p>
+      </div>
+
+      <div class="herramienta paso" id="formaciones">
+        <div class="paso__cab"><span class="paso__n">2</span><div><span class="antetitulo">Orden de batalla</span><h3>Formaciones de cada bando</h3></div></div>
+        <p class="paso__ayuda">Marca como <strong>fuera</strong> las que aún no han entrado en juego (los refuerzos): no salen en el cuaderno ni en el saco hasta que las vuelvas a meter. También puedes añadir formaciones a mano.</p>
         <div class="bandos" id="bandos"></div>
-        <div class="tarjeta partida__ctl">
-          <div class="turno">
-            <span class="antetitulo">Turno de juego</span>
-            <div class="turno__fila">
-              <button type="button" class="boton-icono" id="turno-menos" aria-label="Turno anterior">−</button>
-              <strong id="turno">1</strong>
-              <button type="button" class="boton-icono" id="turno-mas" aria-label="Turno siguiente">+</button>
-            </div>
+      </div>
+
+      <div class="herramienta paso" id="cuaderno">
+        <div class="herramienta__cab">
+          <div class="paso__cab"><span class="paso__n">3</span><div><span class="antetitulo">Fase de órdenes · opcional (2.4)</span><h3>Cuaderno de órdenes</h3></div></div>
+          <div class="flex">
+            <div class="turno-mini" role="group" aria-label="Turno de juego"><button type="button" data-turno="-1" aria-label="Turno anterior">−</button><span>Turno <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Turno siguiente">+</button></div>
+            <button type="button" class="interruptor" id="usar-ordenes" aria-pressed="true"><span class="interruptor__pista" aria-hidden="true"></span>Usar órdenes</button>
           </div>
-          <div class="escenario">
-            <span class="antetitulo">Formaciones de un juego</span>
-            <select id="juego" aria-label="Juego"></select>
-            <select id="escenario" aria-label="Escenario que cargar"></select>
+        </div>
+        <p class="paso__apagado muted" id="cuaderno-apagado" hidden>No usas órdenes en esta partida. Actívalas cuando quieras: cada formación empieza sin órdenes.</p>
+        <div id="cuaderno-cuerpo">
+          <div class="cuaderno__barra">
+            <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Bando"></div>
+            <span class="cuaderno__estado" id="cuaderno-estado"></span>
+            <button type="button" class="boton boton--peq" id="abrir-despacho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Pantalla completa</button>
           </div>
-          <div class="botones">
-            <button type="button" class="boton boton--peq" id="ejemplo">Cargar el escenario</button>
-            <button type="button" class="boton boton--peq peligro" id="borrar">Borrar la partida</button>
+          <p id="cuaderno-reserva" class="muted cuaderno__reserva" hidden></p>
+          <div id="cuaderno-lista" class="cuaderno"></div>
+          <div class="cuaderno__pie">
+            <button type="button" class="boton boton--primario" id="enviar">Confirmar y enviar las órdenes</button>
+            <button type="button" class="boton boton--peq" id="abrir-todas" hidden>Abrir todos los sobres</button>
+            <button type="button" class="boton boton--peq" id="copiar">Copiar las órdenes del turno</button>
+            <button type="button" class="boton boton--peq peligro" id="vaciar-ordenes">Borrar todas las órdenes</button>
           </div>
-          <p class="muted mb0" style="font-size:.82rem" id="guardado">Guardado en este navegador.</p>
+          <details class="historial">
+            <summary>Cómo funciona</summary>
+            <p class="muted cuaderno__ayuda">Cada bando redacta una orden por formación; si no cambias nada, conserva la del turno anterior (2.4f). Cuando acabes, <strong>confirma y envía</strong>: las órdenes quedan lacradas en sus sobres y ya no se pueden cambiar en este turno. Cada sobre se abre cuando el saco de chits saca su formación, o a mano. En el turno siguiente vuelve la fase de órdenes. La <strong>pantalla completa</strong> enseña todos los sobres de un vistazo y deja leer las cartas una a una, como una aplicación.</p>
+          </details>
+          <details class="historial">
+            <summary>Historial de órdenes por turno</summary>
+            <div class="tabla-wrap"><table class="t" id="historial"></table></div>
+          </details>
         </div>
       </div>
-      <div class="herramienta" id="saco">
+
+      <div class="herramienta paso" id="saco">
         <div class="herramienta__cab">
-          <div class="herramienta__tit"><div><span class="antetitulo">Utilidad</span><h3>Saco de activaciones</h3></div><div class="turno-mini" role="group" aria-label="Turno de juego"><button type="button" data-turno="-1" aria-label="Turno anterior">−</button><span>Turno <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Turno siguiente">+</button></div></div>
-          <div class="conmutador" id="saco-modo" role="group" aria-label="Modo de sorteo">
-            <button type="button" data-m="modificada" aria-pressed="true">De 3 en 3 (2.5m)</button>
-            <button type="button" data-m="aleatoria" aria-pressed="false">De 1 en 1 (2.5l)</button>
-          </div>
+          <div class="paso__cab"><span class="paso__n">4</span><div><span class="antetitulo">Fase de activaciones · opcional (2.5k)</span><h3>Saco de chits</h3></div></div>
           <div class="flex">
+            <div class="turno-mini" role="group" aria-label="Turno de juego"><button type="button" data-turno="-1" aria-label="Turno anterior">−</button><span>Turno <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Turno siguiente">+</button></div>
+            <button type="button" class="interruptor" id="usar-saco" aria-pressed="true"><span class="interruptor__pista" aria-hidden="true"></span>Usar el saco</button>
+          </div>
+        </div>
+        <p class="paso__apagado muted" id="saco-apagado" hidden>No usas chits de activación en esta partida. Si usas órdenes, abre cada sobre a mano cuando la formación actúe.</p>
+        <div id="saco-cuerpo">
+          <div class="saco__barra">
+            <div class="conmutador" id="saco-modo" role="group" aria-label="Modo de sorteo">
+              <button type="button" data-m="modificada" aria-pressed="true">De 3 en 3 (2.5m)</button>
+              <button type="button" data-m="aleatoria" aria-pressed="false">De 1 en 1 (2.5l)</button>
+            </div>
             <div class="conmutador" id="saco-recipiente" role="group" aria-label="Recipiente">
               <button type="button" data-r="bolsa" aria-pressed="true">Bolsa</button>
               <button type="button" data-r="taza" aria-pressed="false">Taza</button>
             </div>
             <button type="button" class="boton boton--peq boton-sonido" data-sonido aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="onda" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="mudo" d="m16 9 6 6m0-6-6 6"/></svg>Sonido</button>
           </div>
-        </div>
-        <div class="saco">
-          <div class="vaso" id="vaso"></div>
-          <div class="mesa">
-            <div class="mesa__fichas" id="sacadas" aria-live="polite"></div>
-            <div class="mesa__ctl">
-              <button type="button" class="boton boton--primario" id="sacar">Sacar del vaso</button>
-              <button type="button" class="boton boton--peq" id="deshacer">Deshacer la última</button>
+          <div class="saco">
+            <div class="vaso" id="vaso"></div>
+            <div class="mesa">
+              <div class="mesa__fichas" id="sacadas" aria-live="polite"></div>
+              <div class="mesa__ctl">
+                <button type="button" class="boton boton--primario" id="sacar">Sacar del vaso</button>
+                <button type="button" class="boton boton--peq" id="deshacer">Deshacer la última</button>
+              </div>
+            </div>
+            <div class="usadas">
+              <h4>Activadas este turno</h4>
+              <ol id="usadas"></ol>
             </div>
           </div>
-          <div class="usadas">
-            <h4>Activadas este turno</h4>
-            <ol id="usadas"></ol>
-          </div>
         </div>
-      </div>
-
-      <div class="herramienta" id="cuaderno">
-        <div class="herramienta__cab">
-          <div class="herramienta__tit"><div><span class="antetitulo">Utilidad</span><h3>Cuaderno de órdenes</h3></div><div class="turno-mini" role="group" aria-label="Turno de juego"><button type="button" data-turno="-1" aria-label="Turno anterior">−</button><span>Turno <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Turno siguiente">+</button></div></div>
-          <div class="flex">
-            <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Bando"></div>
-            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Modo secreto: sobres lacrados</button>
-            <button type="button" class="boton boton--peq" id="lacrar-todas" hidden>Lacrar los borradores</button>
-            <button type="button" class="boton boton--peq" id="revelar-todas" hidden>Abrir o lacrar todas</button>
-            <button type="button" class="boton boton--peq boton--primario" id="abrir-despacho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Despacho a pantalla completa</button>
-          </div>
-        </div>
-        <p class="muted" style="font-size:.88rem;margin:0 0 14px">Si no cambias nada, cada formación conserva la orden del turno anterior (aparece como <em>vigente desde el turno N</em>). Con el <strong>modo secreto</strong> cada orden va en un sobre: la redactas, la lacras, y nadie la ve hasta que se rompe el lacre, cuando el saco de activaciones saca su formación o cuando tú quieras. Al empezar otro turno todos los sobres vuelven a estar lacrados. El <strong>despacho</strong> enseña las órdenes de una en una, a pantalla completa, para usarlo en la mesa como una aplicación.</p>
-        <p id="cuaderno-reserva" class="muted cuaderno__reserva" hidden></p>
-        <div id="cuaderno-lista" class="cuaderno"></div>
-        <div class="cuaderno__pie">
-          <button type="button" class="boton boton--peq" id="copiar">Copiar las órdenes del turno</button>
-          <button type="button" class="boton boton--peq peligro" id="vaciar-ordenes">Borrar todas las órdenes</button>
-        </div>
-        <details class="historial">
-          <summary>Historial de órdenes por turno</summary>
-          <div class="tabla-wrap"><table class="t" id="historial"></table></div>
-        </details>
       </div>
     </div>
   </div>

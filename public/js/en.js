@@ -254,7 +254,16 @@
     'Acuse recibo por el enlace. Cumpla.': 'Acknowledge receipt by runner. Carry out.',
     'Destruya este documento una vez leído.': 'Destroy this document once read.',
     'Informe de la ejecución a este Cuartel General.': 'Report execution to this Headquarters.',
-    'Sin más novedades. Buena suerte.': 'Nothing further. Good luck.'
+    'Sin más novedades. Buena suerte.': 'Nothing further. Good luck.',
+    'Las órdenes de {x} aún no se han enviado.': '{x} has not sent its orders yet.', 'enviadas': 'sent',
+    'No hay formaciones para {x}. Cárgalas en el paso 1.': 'There are no formations for {x}. Load them in step 1.',
+    'Confirmar y enviar las órdenes de {x}': 'Confirm and send the orders for {x}',
+    '¿Enviar las órdenes de {x}? Quedan lacradas y no se pueden cambiar en este turno.': 'Send the orders for {x}? They will be sealed and cannot be changed this turn.',
+    'lacrada': 'sealed', 'Redactando las órdenes': 'Writing the orders', 'Enviadas · todas abiertas': 'Sent · all open', 'Enviadas · {a} de {b} abiertas': 'Sent · {a} of {b} open',
+    'Vista': 'View', 'Todas las órdenes': 'All the orders', 'De una en una': 'One at a time',
+    'Una vez enviadas, no se pueden cambiar en este turno.': 'Once sent, they cannot be changed this turn.', 'Seguir redactando': 'Keep writing', 'Lacrar y enviar': 'Seal and send',
+    'Confirmar y enviar las órdenes': 'Confirm and send the orders', 'Volver al saco': 'Back to the cup', 'Abrir los {n} sobres': 'Open the {n} envelopes',
+    'Todas las órdenes de este turno están abiertas.': 'Every order for this turn is open.', 'Órdenes enviadas': 'Orders sent', 'Órdenes abiertas': 'Orders opened'
   };
 
   // Glossary definitions in English, keyed by the term
