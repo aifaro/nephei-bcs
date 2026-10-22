@@ -86,6 +86,8 @@
       </div>
     </div>`;
     document.body.prepend(h);
+    // Franja de clasificación, como en los documentos de la época (se va al bajar; la cabecera se queda)
+    document.body.prepend(clasif());
 
     const btnTema = h.querySelector('#btn-tema');
     const pintarTema = () => { btnTema.innerHTML = temaActual() === 'dark' ? ICONOS.sol : ICONOS.luna; };
@@ -115,6 +117,14 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') grupos.forEach((g) => abrirGrupo(g, false)); });
   }
 
+  function clasif(pie) {
+    const d = document.createElement('div');
+    d.className = 'clasif' + (pie ? ' clasif--pie' : '');
+    d.setAttribute('aria-hidden', 'true');
+    d.innerHTML = `<b>${tr('Confidencial')}</b><span> · ${tr('Material de instrucción')}</span><span class="clasif__x"> · ${tr('Academia BCS')} · </span><b class="clasif__x">${tr('Confidencial')}</b>`;
+    return d;
+  }
+
   // Hoja de servicio: lecciones superadas, guardadas en este navegador
   function lecciones() { try { return JSON.parse(leer('bcs-lecciones')) || []; } catch (e) { return []; } }
   function marcarLeccion(href, hecha) {
@@ -133,7 +143,12 @@
     tira.className = 'capitulos';
     tira.setAttribute('aria-label', tr('Capítulos del reglamento'));
     tira.innerHTML = `<div class="wrap"><ol>${CAPITULOS.map(([h, t], i) => `<li><a href="${h}" title="${tr('Lección {n}', { n: i })} · ${t}"${i === capActual ? ' aria-current="page"' : ''}><span class="nav__n">${i}</span><span class="capitulos__t">${t}</span></a></li>`).join('')}</ol></div>`;
-    if (hero) hero.after(tira);
+    if (hero) {
+      hero.after(tira);
+      // Sello del expediente: cada lección es un expediente desclasificado para el recluta
+      const w = hero.querySelector('.wrap') || hero;
+      w.insertAdjacentHTML('beforeend', `<span class="hero__expediente" aria-hidden="true">${tr('Expediente BCS-{n}', { n: String(capActual).padStart(2, '0') })}<b>${tr('Desclasificado')}</b></span>`);
+    }
     const ol = tira.querySelector('ol'), sel = ol.querySelector('[aria-current]').parentElement;
     ol.scrollLeft = sel.offsetLeft - (ol.clientWidth - sel.offsetWidth) / 2;
     const ant = CAPITULOS[capActual - 1], sig = CAPITULOS[capActual + 1];
@@ -279,7 +294,7 @@
       try { Object.keys(localStorage).filter((k) => k.startsWith('bcs-')).forEach((k) => localStorage.removeItem(k)); } catch (e) { /* sin almacenamiento */ }
       location.reload();
     });
-    document.body.append(f);
+    document.body.append(f, clasif(true));
   }
 
   // ---------- Buscador ----------

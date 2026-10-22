@@ -11,7 +11,7 @@
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto+Condensed:wght@700&family=Saira+Stencil+One&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/bcs.css">
   <style>
     .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
@@ -31,7 +31,7 @@
     .franja span { font-size: 0.85rem; color: var(--muted); }
     .franja .tabla-uso { font: 600 0.72rem var(--mono); color: var(--amber); text-transform: uppercase; letter-spacing: .06em; }
     .activacion { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
-    .activacion span { padding: 8px 12px; border-radius: 10px; background: var(--surface-2); border: 1px solid var(--border); font-size: .9rem; color: var(--heading); }
+    .activacion span { padding: 8px 12px; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--border); font-size: .9rem; color: var(--heading); }
     .activacion b { color: var(--amber); font-family: var(--mono); }
     .vocab { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
     @media (max-width: 960px) { .vocab { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
@@ -41,14 +41,14 @@
     .palabra .icono .ficha, .palabra .icono .marcador { width: 52px; }
     .palabra .icono img.ficha-real { width: 52px; height: 52px; }
     .palabra .icono .ma-muestra { width: 44px; height: 44px; font-size: 1.5rem; }
-    .palabra .icono .sigla { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--amber-soft); color: var(--amber); font: 700 .82rem var(--mono); text-align: center; line-height: 1.05; }
+    .palabra .icono .sigla { width: 48px; height: 48px; border-radius: 3px; display: grid; place-items: center; background: var(--amber-soft); color: var(--amber); font: 700 .82rem var(--mono); text-align: center; line-height: 1.05; }
     .palabra h3 { margin: 0; font-size: 1rem; display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
     .palabra p { margin: 4px 0 6px; font-size: .88rem; color: var(--text); }
     .palabra .ir-leccion { font: 600 .72rem var(--mono); letter-spacing: .04em; }
     .camino { display: grid; gap: 8px; counter-reset: c; }
-    .camino a { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 12px; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+    .camino a { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 12px 16px; border-radius: 3px; background: var(--surface); border: 1px solid var(--border); color: var(--text); }
     .camino a:hover { text-decoration: none; border-color: var(--amber); }
-    .camino .n { width: 30px; height: 30px; border-radius: 9px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 .85rem var(--mono); }
+    .camino .n { width: 30px; height: 30px; border-radius: 3px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 .85rem var(--mono); }
     .camino strong { color: var(--heading); font-family: var(--head); }
     .camino small { display: block; color: var(--muted); font-size: .84rem; }
   </style>

@@ -11,7 +11,7 @@
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto+Condensed:wght@700&family=Saira+Stencil+One&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/bcs.css">
   <style>
     .indice { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
@@ -28,14 +28,14 @@
     .num-ataque { font: 700 .78rem var(--mono); color: var(--amber); letter-spacing: .1em; }
     .secuencia-at { list-style: none; counter-reset: s; padding: 0; margin: 0 0 1em; display: grid; gap: 6px; }
     .secuencia-at li { counter-increment: s; position: relative; min-height: 26px; padding: 3px 0 0 40px; font-size: .95rem; }
-    .secuencia-at li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 8px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 .8rem var(--mono); }
-    .ejemplo { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; margin: 1em 0; }
+    .secuencia-at li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 26px; height: 26px; border-radius: 3px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 .8rem var(--mono); }
+    .ejemplo { background: var(--surface-2); border: 1px solid var(--border); border-radius: 3px; padding: 14px 16px; margin: 1em 0; }
     .ejemplo h4 { font-size: .8rem; font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--amber); margin-bottom: 8px; }
     .ejemplo .cuenta { display: grid; grid-template-columns: 1fr auto; gap: 2px 14px; font-size: .9rem; }
     .ejemplo .cuenta .v { font-family: var(--mono); font-weight: 700; text-align: right; }
     .ejemplo .cuenta .t { border-top: 1px dashed var(--border-strong); padding-top: 4px; margin-top: 2px; font-weight: 600; color: var(--heading); }
     .flujo { display: grid; gap: 12px; }
-    .flujo .caso { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 14px; overflow: hidden; background: var(--surface); }
+    .flujo .caso { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 0; border: 1px solid var(--border); border-radius: 3px; overflow: hidden; background: var(--surface); }
     @media (max-width: 720px) { .flujo .caso { grid-template-columns: 1fr; } }
     .flujo .caso > div:first-child { padding: 14px 16px; background: var(--surface-3); font-family: var(--head); font-weight: 600; color: var(--heading); display: flex; align-items: center; gap: 10px; }
     .flujo .caso > div:first-child::before { content: ''; width: 10px; height: 10px; border-radius: 50%; background: var(--red); flex: none; }

@@ -11,14 +11,14 @@
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Roboto+Condensed:wght@700&family=Saira+Stencil+One&family=Special+Elite&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/bcs.css">
   <link rel="stylesheet" href="css/simulador.css">
   <style>
     .fases-turno { display: grid; gap: 10px; }
     .ft { display: grid; grid-template-columns: 48px 220px minmax(0, 1fr); gap: 16px; align-items: start; padding: 16px 18px; border-radius: var(--radius); background: var(--surface); border: 1px solid var(--border); }
     @media (max-width: 760px) { .ft { grid-template-columns: 40px 1fr; } .ft > div:last-child { grid-column: 1 / -1; } }
-    .ft .letra { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 1.05rem var(--mono); }
+    .ft .letra { width: 40px; height: 40px; border-radius: 3px; display: grid; place-items: center; background: var(--surface-3); color: var(--amber); font: 700 1.05rem var(--mono); }
     .ft h3 { margin: 6px 0 0; }
     .ft ul { margin: 0; }
     .ft.clave { border-color: color-mix(in srgb, var(--amber) 45%, var(--border)); background: linear-gradient(120deg, var(--amber-soft), transparent 45%), var(--surface); }
@@ -32,9 +32,9 @@
     table.estados td.si { color: var(--ok); font-weight: 700; }
     table.estados td.no { color: var(--bad); }
     .ejemplo-act { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
-    .ejemplo-act li { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 11px; background: var(--surface-2); border: 1px solid var(--border); font-size: .92rem; }
+    .ejemplo-act li { display: grid; grid-template-columns: 46px minmax(0, 1fr) auto; gap: 12px; align-items: center; padding: 10px 12px; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--border); font-size: .92rem; }
     .ejemplo-act li .ficha { width: 46px; }
-    .ejemplo-act .estado-u { font: 700 .7rem var(--mono); letter-spacing: .06em; padding: 3px 8px; border-radius: 6px; white-space: nowrap; }
+    .ejemplo-act .estado-u { font: 700 .7rem var(--mono); letter-spacing: .06em; padding: 3px 8px; border-radius: 3px; white-space: nowrap; }
     .ejemplo-act .e-act { background: var(--olive-soft); color: var(--olive); }
     .ejemplo-act .e-stop { background: var(--amber-soft); color: var(--amber); }
     .ejemplo-act .e-fin { background: var(--red-soft); color: var(--red); }
@@ -42,7 +42,7 @@
     .seg { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
     @media (max-width: 860px) { .seg { grid-template-columns: 1fr; } }
     .dial { display: flex; gap: 6px; flex-wrap: wrap; margin: 10px 0; }
-    .barra-prob { height: 12px; border-radius: 6px; background: var(--surface-3); overflow: hidden; margin: 8px 0 4px; }
+    .barra-prob { height: 12px; border-radius: 3px; background: var(--surface-3); overflow: hidden; margin: 8px 0 4px; }
     .barra-prob div { height: 100%; background: var(--ok); transition: width .3s; }
   </style>
 </head>
