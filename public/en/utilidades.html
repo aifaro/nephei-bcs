@@ -11,7 +11,7 @@
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&family=Roboto+Condensed:wght@700&family=Space+Grotesk:wght@500;600;700&family=Special+Elite&family=Caveat:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/bcs.css">
   <link rel="stylesheet" href="../css/simulador.css">
   <link rel="stylesheet" href="../css/partida.css">
@@ -116,6 +116,13 @@
             <button type="button" data-m="modificada" aria-pressed="true">Three at a time (2.5m)</button>
             <button type="button" data-m="aleatoria" aria-pressed="false">One at a time (2.5l)</button>
           </div>
+          <div class="flex">
+            <div class="conmutador" id="saco-recipiente" role="group" aria-label="Container">
+              <button type="button" data-r="bolsa" aria-pressed="true">Bag</button>
+              <button type="button" data-r="taza" aria-pressed="false">Cup</button>
+            </div>
+            <button type="button" class="boton boton--peq boton-sonido" data-sonido aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="onda" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11"/><path class="mudo" d="m16 9 6 6m0-6-6 6"/></svg>Sound</button>
+          </div>
         </div>
         <div class="saco">
           <div class="vaso" id="vaso"></div>
@@ -138,11 +145,13 @@
           <div class="herramienta__tit"><div><span class="antetitulo">Tool</span><h3>Orders log</h3></div><div class="turno-mini" role="group" aria-label="Game turn"><button type="button" data-turno="-1" aria-label="Previous turn">−</button><span>Turn <strong data-turno-n>1</strong></span><button type="button" data-turno="1" aria-label="Next turn">+</button></div></div>
           <div class="flex">
             <div class="conmutador" id="cuaderno-bando" role="group" aria-label="Side"></div>
-            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Secret mode</button>
-            <button type="button" class="boton boton--peq" id="revelar-todas" hidden>Reveal or hide all</button>
+            <button type="button" class="boton boton--peq" id="ocultar" aria-pressed="false">Secret mode: sealed envelopes</button>
+            <button type="button" class="boton boton--peq" id="lacrar-todas" hidden>Seal the drafts</button>
+            <button type="button" class="boton boton--peq" id="revelar-todas" hidden>Open or seal all</button>
+            <button type="button" class="boton boton--peq boton--primario" id="abrir-despacho"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>Full-screen dispatch</button>
           </div>
         </div>
-        <p class="muted" style="font-size:.88rem;margin:0 0 14px">If you change nothing, each formation keeps the previous turn's order (shown as <em>in force since turn N</em>). In <strong>secret mode</strong> every order is covered and revealed one at a time: automatically when the formation activates from the activation cup, or by hand with its "Reveal" button. When a new turn starts, they are all covered again.</p>
+        <p class="muted" style="font-size:.88rem;margin:0 0 14px">If you change nothing, each formation keeps the previous turn's order (shown as <em>in force since turn N</em>). In <strong>secret mode</strong> every order goes in an envelope: you write it, you seal it, and nobody sees it until the seal is broken, when the activation cup draws its formation or whenever you choose. When a new turn starts, every envelope is sealed again. The <strong>dispatch</strong> shows the orders one at a time, full screen, so you can use it at the table like an app.</p>
         <p id="cuaderno-reserva" class="muted cuaderno__reserva" hidden></p>
         <div id="cuaderno-lista" class="cuaderno"></div>
         <div class="cuaderno__pie">
@@ -207,6 +216,8 @@
 <script src="../js/datos.js"></script>
 <script src="../js/reglas.js"></script>
 <script src="../js/comun.js"></script>
+<script src="../js/efectos.js"></script>
+<script src="../js/sobres.js"></script>
 <script src="../js/partida.js"></script>
 <script>
 // Pestañas del panel: cada una es un ancla, y los enlaces a #saco u #ordenes abren la de la partida

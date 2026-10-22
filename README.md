@@ -9,7 +9,7 @@ La instrucción empieza por la **lección 0** (`intro.html`: qué es el BCS, esc
 3. **Mando y suministro.** Formaciones y mancha, radio de mando, Prepared Defense, HQ y trenes, la MSR, los OBJ y sus zonas, Safe Path, aislamiento y saltos.
 4. **Movimiento y ZOC.** Clases de movimiento, la Terrain Effects Chart de *Arracourt* con hexes recortados de su mapa, apilamiento, un mapa interactivo con los cinco tipos de ZOC (No ZOC, Non-AV, Support AV, Real AV y Engagement Zone), pantallas, tráfico y retiradas voluntarias.
 5. **Combate.** Un asistente para saber qué ataque puedes usar y una ficha por cada tipo: ataque regular, de choque, enfrentamiento, ataque por fuego y bombardeo. Retiradas y Stopping Engagements.
-6. **Reglas opcionales.** Órdenes (2.4) con un **cuaderno de órdenes** por formación y turno, chits de activación (2.5k–2.5n) con un **saco de activaciones** de 3 en 3, Planned Fatigue, Soft Jumps, Unit Traffic y el resto. La partida (formaciones, saco y órdenes) se guarda en `localStorage` (`bcs-partida`) y se borra con un botón.
+6. **Reglas opcionales.** Órdenes (2.4) con un **cuaderno de órdenes** por formación y turno, chits de activación (2.5k–2.5n) con un **saco de activaciones** de 3 en 3, Planned Fatigue, Soft Jumps, Unit Traffic y el resto. La partida (formaciones, saco y órdenes) se guarda en `localStorage` (`bcs-partida`) y se borra con un botón. El saco se dibuja como bolsa o taza y los chits vuelan de ella a la mesa; en modo secreto cada orden va en un sobre lacrado que se abre con su animación, y el **despacho** las enseña de una en una a pantalla completa (flechas, deslizar, Intro y Escape).
 
 Además:
 
@@ -37,6 +37,8 @@ Sitio estático, sin dependencias ni paso de compilación. En castellano en la r
 | `public/js/juegos.js` | Registra las fichas de cada juego en `Fichas.UNIDADES` y da sus escenarios, formaciones y chits al simulador y a la partida. |
 | `public/js/juegos-<juego>.js`, `public/fichas/<juego>/` | *Arracourt* (`arr`), *Danger Forward* (`df`), *Inflection Point* (`ip`) y *Valley of Tears*, solo el Golán (`vot`): escenarios, formaciones con su chit de activación y su HQ, y fichas. Generados con `python tools/vassal.py <juego> "<ruta del .vmod>"`; los valores impresos de cada ficha se leyeron a ojo y están en `tools/valores/<juego>.txt` (con `--hojas <carpeta>`, el script hace las hojas de contacto numeradas para transcribirlos). |
 | `public/js/partida.js`, `public/css/partida.css` | Saco de activaciones y cuaderno de órdenes. |
+| `public/js/sobres.js` | Sobre lacrado, borrador y carta del Estado Mayor de cada orden (solo HTML y textos). |
+| `public/js/efectos.js` | Sonidos sintetizados con Web Audio (sin archivos; se apagan y se guarda en `bcs-sonido`), chits que vuelan, chispas y texto a máquina. |
 | `public/js/datos.js` | El glosario y el índice del buscador (Ctrl+K). |
 | `public/js/i18n.js`, `public/js/en.js` | Idioma de la página y textos en inglés. |
 | `public/en/` | La versión inglesa, generada con `tools/traducir.py`. |
